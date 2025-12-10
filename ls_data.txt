@@ -1,0 +1,34 @@
+hiện tại dự án cần file hoặc dữ liệu thời tiếtlịch sử 1 file nhưng tôi k thể và k có file nào 
+
+ý tưởng ở đây tạo trang web bên trong localhot 8080 vs tên cập nhật data chỉ cần ấn vào cập nhật sẽ lấy các thông 
+
+
+và thông tin như Thành phố , Ngày đã lưu , Nhiệt độ , Độ ẩm , Điều kiện , Tốc độ gió (m/s) , Thời gian cập nhật 
+
+
+
+ Dựa trên tên của chức năng "Lưu thời tiết ngày hiện tại" trong trang admin, logic hoạt động khả năng cao nhất là để thu thập dữ liệu thời tiết và lưu trữ vào cơ sở dữ liệu
+  của bạn.
+
+  Đây là các bước chi tiết:
+
+   1. Kích hoạt: Admin nhấn vào nút "Lưu thời tiết ngày hiện tại". Một yêu cầu được gửi từ trình duyệt đến máy chủ PHP.
+
+   2. Lấy dữ liệu từ bên ngoài:
+       * Hệ thống PHP sẽ gọi đến một API thời tiết của bên thứ ba (ví dụ: OpenWeatherMap, WeatherAPI, Open Meteo...). Đây là một dịch vụ chuyên cung cấp dữ liệu thời tiết trực tuyến.
+       * Nó yêu cầu dữ liệu thời tiết cho ngày hiện tại tại một địa điểm đã được cấu hình sẵn.
+
+   3. Xử lý dữ liệu:
+       * Hệ thống nhận dữ liệu từ API về (thường ở định dạng JSON), bao gồm các thông tin như nhiệt độ, độ ẩm, tốc độ gió, tình trạng mây, v.v.
+       * Nó sẽ trích xuất và định dạng lại các thông tin quan trọng này.
+
+   4. Lưu vào cơ sở dữ liệu:
+       * Hệ thống sử dụng models/AI XGBoos  để thực hiện một lệnh `INSERT` vào bảng dữ liệu thời tiết trong cơ sở dữ liệu của bạn.
+       * Một bản ghi mới chứa thông tin thời tiết của ngày hôm đó được tạo ra.
+
+   5. Phản hồi: Hệ thống trả về một thông báo cho trang admin, ví dụ: "Lưu dữ liệu thành công!"
+
+  Mục đích chính của chức năng này là gì?
+
+  Chức năng này dùng để xây dựng bộ dữ liệu lịch sử. Càng có nhiều dữ liệu thời tiết của những ngày trong quá khứ được lưu lại, mô hình XGBoost sẽ càng có nhiều dữ liệu để    
+  "học" và trở nên thông minh hơn, từ đó đưa ra các dự đoán trong tương lai chính xác hơn.

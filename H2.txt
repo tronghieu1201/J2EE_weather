@@ -1,0 +1,52 @@
+cập nhật lại ở thanh điều hướng thứ nhất ở cái Tỉnh/thành phố thay vì ấn ô thì chỉ cần di chuyển trỏ chuột đến đó thì hiển thị 
+
+Khi bạn không cần nhấp chuột, chỉ cần di chuyển trỏ chuột (hover) vào mục Tỉnh/Thành phố và một bảng lớn như hình xuất hiện, thì trong UI/UX nó được gọi là:
+
+✅ Mega Menu
+
+hoặc
+
+✅ Hover Dropdown Mega Menu
+📌 Giải thích:
+🔹 Mega Menu
+
+Là một loại menu mở rộng lớn (wide menu)
+
+Hiển thị nhiều nhóm nội dung cùng lúc (ví dụ: Đông Bắc Bộ, Tây Bắc Bộ, Tây Nguyên…)
+
+Thường dùng ở website tin tức, thương mại điện tử, thời tiết, du lịch.
+
+🔹 Hover Trigger (kích hoạt bằng hover)
+
+Điểm quan trọng là menu xuất hiện khi hover, không phải click.
+→ Vì vậy gọi đầy đủ là:
+
+👉 “Hover Mega Menu”
+
+hoặc
+
+👉 “Mega Dropdown Menu on Hover”
+📌 Tại sao không chỉ gọi là Dropdown Menu?
+
+Dropdown thông thường chỉ là một danh sách nhỏ rơi xuống.
+Còn Mega Menu:
+
+Có nhiều cột
+
+Có tiêu đề nhóm
+
+Chứa nhiều mục cùng lúc
+→ Lớn và phức tạp hơn dropdown.
+
+🎯 Tóm lại:
+
+Khi di chuột vào “Tỉnh/Thành phố” mà mở ra danh sách lớn như hình, đó là:
+
+👉 Mega Menu kích hoạt bằng Hover (Hover Mega Menu)
+
+
+thay vì ấn vô hiển thị 63 tỉnh thành thì như trên rồi ấn vô 1 trong cách tỉnh trong danh sách đó 
+
+cũng như vậy cập nhật ở Tin thời tiết sẽ có sẽ có 3 ý 1 là Tin tức hằng ngày , Thời tiết du lịch , Thiên nhiên ( ở phần này có thể gọi API về không chứ tôi k có tin tức cụ thể  )
+
+Xem lịch vạn nhiên thì ấn vô ra trang @Screenshot 2025-12-11 031515.png 

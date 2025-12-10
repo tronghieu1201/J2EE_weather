@@ -1,0 +1,7 @@
+tôi dùng PostgreSQL 
+
+PostgreSQL 18 : 
+'localhost'
+Database : weather-j2ee
+Pass : 123456 
+Port 5432 

@@ -1,0 +1,770 @@
+tổng thể dự án là dử dụng API data open meteo 
+thuần java dùng xgboost 
+
+
+
+
+
+
+
+
+trong dự án code thuần java như các molde hay là các cấu trúc jdk 17 , 25 gì đó hay là pom.xml và vấn đề tôi hỏi bạn về đề tài của tôi là thời tiết thì dùng API kéo data của các trang web open meteo về thì nên dùng dạng data nào và môi trường data là gì 
+
+
+✅ 1. Trong dự án Java thuần, nên dùng dạng data nào để gọi API thời tiết?
+➡️ Nên dùng JSON
+
+Open-Meteo trả dữ liệu chủ yếu ở dạng JSON, và đây cũng là chuẩn phổ biến nhất để trao đổi dữ liệu với API.
+
+Ví dụ JSON mà Open-Meteo trả về:
+
+{
+  "latitude": 21.0245,
+  "longitude": 105.8412,
+  "current": {
+    "temperature_2m": 32.1,
+    "wind_speed_10m": 3.2
+  }
+}
+
+
+Java xử lý JSON rất dễ bằng các thư viện như:
+
+Jackson (phổ biến nhất)
+
+Gson
+
+JSON-B (Jakarta EE)
+
+→ Khuyến nghị: dùng Jackson vì nhanh, mạnh, dễ mapping sang POJO.
+
+✅ 2. Môi trường data là gì? (Lưu trữ & xử lý phía backend)
+
+Tùy dự án bạn chọn:
+
+Trường hợp A – Chỉ lấy dữ liệu thời tiết rồi trả về luôn cho client
+
+➡️ Không cần database, chỉ cần xử lý JSON trong RAM.
+Phù hợp nếu:
+
+App chỉ hiển thị thông tin thời tiết “real-time”
+
+Không cần lưu lịch sử, không phân tích dữ liệu
+
+Data environment khi này = Java Runtime + JSON Parser
+
+Trường hợp B – Cần lưu dữ liệu thời tiết để phân tích
+
+➡️ Bạn cần database. Có thể dùng:
+
+SQL database
+
+PostgreSQL (rất mạnh cho time-series)
+
+MySQL / MariaDB
+
+H2 (nhẹ, dùng khi dev)
+
+NoSQL database
+
+MongoDB: lưu JSON rất tiện
+
+InfluxDB: chuyên lưu dữ liệu thời gian (time-series)
+
+→ Dùng PostgreSQL hoặc MongoDB là hợp lý nhất cho thời tiết.
+
+✅ 3. Dùng Java thuần (JDK 17/21/25) thì gọi API Open-Meteo bằng cách nào?
+Dùng HttpClient của Java (có sẵn từ JDK 11 trở lên)
+
+Ví dụ:
+
+HttpClient client = HttpClient.newHttpClient();
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("https://api.open-meteo.com/v1/forecast?latitude=21.02&longitude=105.83&current=temperature_2m"))
+    .build();
+
+HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+System.out.println(response.body());
+
+
+Sau đó parse JSON bằng Jackson:
+
+ObjectMapper mapper = new ObjectMapper();
+WeatherResponse data = mapper.readValue(response.body(), WeatherResponse.class);
+
+✅ 4. Vậy: Nên dùng dạng data nào?
+→ JSON là lựa chọn đúng nhất.
+✅ 5. Môi trường data nên dùng gì?
+
+Tùy mục tiêu dự án:
+
+Mục đích	Môi trường data	Ghi chú
+Chỉ xem thời tiết real-time	Không cần DB	parse JSON là đủ
+Lưu lịch sử, phân tích	PostgreSQL / MongoDB	phù hợp dữ liệu thời gian
+Dự án nhỏ, demo	H2 in-memory	cấu hình đơn giản
+📌 Nếu bạn muốn, tôi có thể hỗ trợ thêm:
+
+✔ Tạo chuẩn POJO Java để mapping dữ liệu Open-Meteo
+✔ Viết đoạn code hoàn chỉnh (Java 17 trở lên)
+✔ Tư vấn cấu trúc dự án (packages, services, models…)
+✔ Tạo pom.xml phù hợp (nếu dùng Maven)
+
+
+
+
+
+hướng của tôi là dự báo thời tiết bằng AI thuật toán xgboost dự đoán thời tiết , nhập tỉnh thành thì dự báo 1 tuần 7 ngày bắt đầu từ ngày nhập tìm kiếm tỉnh thành và rõ hơn chi tiết là ví dụ ngày hôm nay là ngày 10/10/2025 và ngày hôm nay dự đoán 7 ngày nghĩa là đưa ra kết quả 7 ngyà tiếp theo in ra màng hình 7 ngày tiếp là in ra ngày 11/10/2025 đến ngày 17/10/2025  và ấn vào 1 ngày nào đó để xem chi tiết thì trong ngày đó ví dụ ấn vô ngày 12/10/2025 sẽ ra chi tiết dự báo liên tục cách nhau 3giờ và load hết 24 tiếng  đó là logic cốt lỗi tôi cần làm 
+
+Dưới đây là bản thiết kế logic hoàn chỉnh cho dự án AI dự báo thời tiết 7 ngày bằng XGBoost theo đúng hướng của bạn. Mình chia rõ thành:
+
+Luồng nghiệp vụ (logic cốt lõi)
+
+Data cần thu thập
+
+Môi trường data + cấu trúc JSON đầu ra
+
+Cách xử lý 7 ngày & chi tiết từng ngày 3 giờ/lần
+
+Cách triển khai XGBoost trong Java
+
+Bạn có thể dùng nguyên bản này để triển khai dự án.
+
+⭐ 1. Luồng logic cốt lõi của dự án (đúng theo yêu cầu của bạn)
+Bước 1 – Người dùng nhập tỉnh/thành
+
+Ví dụ: "Hà Nội"
+
+✔ Hệ thống convert sang tọa độ (lat, lon)
+→ lấy từ Open-Meteo Geocoding API.
+
+Ví dụ Hà Nội →
+lat = 21.0245, lon = 105.8412
+
+Bước 2 – Lấy dữ liệu thời tiết lịch sử (training data)
+
+Muốn dự báo bằng XGBoost → phải có:
+
+Nhiệt độ quá khứ
+
+Độ ẩm
+
+Lượng mưa
+
+Gió
+
+Áp suất
+
+… trong vài năm gần đây
+
+✔ Open-Meteo Historical API hỗ trợ free.
+
+Dữ liệu này bạn lưu vào database để train model.
+
+Bước 3 – User nhập ngày muốn dự báo
+
+Ví dụ: ngày 10/10/2025
+
+➡ Dự báo 7 ngày tiếp theo:
+
+STT	Ngày
+1	11/10/2025
+2	12/10/2025
+3	13/10/2025
+4	14/10/2025
+5	15/10/2025
+6	16/10/2025
+7	17/10/2025
+
+✔ XGBoost sẽ dự đoán từng ngày một, không phải dự đoán cả tuần 1 lần.
+Mỗi ngày dự báo được 1 giá trị (hoặc nhiều giá trị → nhiệt độ max/min, mưa… tùy bạn thiết kế).
+
+Bước 4 – User bấm vào 1 ngày để xem chi tiết
+
+Ví dụ chọn 12/10/2025
+
+Hệ thống mở chi tiết 24h, chia thành các mốc 3 giờ:
+
+00:00
+03:00
+06:00
+09:00
+12:00
+15:00
+18:00
+21:00
+
+
+➡ Bạn cần 8 lần dự đoán XGBoost cho ngày đó
+(mỗi lần dự đoán 1 mốc 3 giờ hoặc train mô hình multi-output).
+
+Output cho từng giờ có thể gồm:
+
+nhiệt độ
+
+mưa
+
+gió
+
+độ ẩm
+
+áp suất
+
+tình trạng thời tiết (mã weather-code)
+
+⭐ 2. Dữ liệu cần thu thập để train XGBoost
+
+Dự báo tốt = data phải đúng.
+
+a. Weather features cần thiết
+Feature	Lý do
+temperature_2m	yếu tố chính
+relative_humidity_2m	ảnh hưởng mưa
+dewpoint_2m	độ ẩm điểm sương
+precipitation	lượng mưa
+wind_speed_10m	gió
+pressure_msl	áp suất mức biển
+cloudcover	mây
+
+➡ Open-Meteo cung cấp đầy đủ.
+
+b. Target (nhãn để mô hình học)
+
+Tùy mục tiêu:
+
+Dự đoán nhiệt độ max/min mỗi ngày
+hoặc
+
+Dự đoán nhiệt độ từng giờ
+hoặc
+
+Dự đoán mưa / không mưa
+
+✔ Với yêu cầu của bạn → cần cả:
+
+1) Dự báo 7 ngày → output theo ngày
+
+→ dùng mô hình Daily Forecast Model
+
+2) Dự báo chi tiết 3h → output theo giờ
+
+→ dùng mô hình Hourly Forecast Model
+
+Hai mô hình sẽ riêng biệt.
+
+⭐ 3. Môi trường thực thi / data environment
+Bạn nên dùng kiến trúc như sau:
+✔ Java 17 / 21 / 25
+✔ Maven + pom.xml
+✔ Thư viện:
+
+XGBoost4J (training + inference)
+
+Jackson (JSON)
+
+HttpClient (Java 11+)
+
+PostgreSQL hoặc MongoDB để lưu data
+
+✔ Database đề xuất:
+
+PostgreSQL
+vì nó hỗ trợ time-series tốt (qua extension TimescaleDB).
+
+⭐ 4. Luồng chi tiết để dự báo 7 ngày + xem chi tiết theo ngày
+
+Dưới đây là logic cốt lõi bạn cần implement:
+
+📌 4.1 Dự báo 7 ngày
+
+Input:
+
+province: "Hà Nội"
+
+date: 10/10/2025
+
+Process:
+
+Convert province → (lat, lon)
+
+Tạo list 7 ngày kế tiếp
+
+Với mỗi ngày d:
+
+dựng feature dataset từ dữ liệu các ngày trước đó
+
+đưa vào mô hình XGBoost → trả về prediction
+
+Trả danh sách 7 ngày
+
+Output JSON mẫu:
+
+{
+  "location": "Hà Nội",
+  "start_date": "10/10/2025",
+  "forecast_days": [
+    {
+      "date": "11/10/2025",
+      "temp_max": 32.1,
+      "temp_min": 24.4,
+      "rain_prob": 0.22
+    },
+    {
+      "date": "12/10/2025",
+      "temp_max": 31.8,
+      "temp_min": 23.9,
+      "rain_prob": 0.35
+    }
+  ]
+}
+
+📌 4.2 Khi click vào 1 ngày → dự báo 3h cho ngày đó
+
+Ví dụ user click vào 12/10/2025
+
+Process:
+
+Generate 8 timestamp:
+00:00, 03:00, …, 21:00
+
+Với mỗi timestamp t:
+
+build features
+
+chạy model hourly XGBoost
+
+Trả list 8 bản ghi
+
+Output JSON mẫu:
+
+{
+  "date": "12/10/2025",
+  "hourly": [
+    {"time": "00:00", "temp": 25.1, "rain": 0.12},
+    {"time": "03:00", "temp": 24.5, "rain": 0.18},
+    {"time": "06:00", "temp": 24.0, "rain": 0.10},
+    {"time": "09:00", "temp": 27.8, "rain": 0.05},
+    {"time": "12:00", "temp": 31.2, "rain": 0.20},
+    {"time": "15:00", "temp": 32.0, "rain": 0.40},
+    {"time": "18:00", "temp": 29.1, "rain": 0.33},
+    {"time": "21:00", "temp": 27.3, "rain": 0.15}
+  ]
+}
+
+⭐ 5. XGBoost trong Java – cách tổ chức mô hình
+
+Bạn sẽ dùng XGBoost4J.
+
+💡 Bạn phải có 2 mô hình:
+1️⃣ Model Daily: dự đoán 7 ngày
+
+Input: feature của 7–30 ngày trước đó
+
+Output: temp_max, temp_min, rain…
+
+2️⃣ Model Hourly: dự đoán chi tiết 3 giờ
+
+Input: dữ liệu thời tiết giờ trong quá khứ
+
+Output: temp, rain, wind…
+
+File mô hình:
+/model/daily_xgb.model
+/model/hourly_xgb.model
+
+Load trong Java:
+Booster model = XGBoost.loadModel("model/daily_xgb.model");
+
+⭐ 6. Bạn cần tôi viết phần nào tiếp theo?
+
+Bạn muốn tôi hỗ trợ tiếp:
+
+Thiết kế database cho weather + training data
+
+Viết code Java gọi API Open-Meteo để thu thập dữ liệu
+
+Viết code dự đoán XGBoost trong Java
+
+Tạo toàn bộ pom.xml?
+
+Thiết kế cấu trúc project (model, service, controller)
+
+Sinh giao diện JSON đầy đủ?
+
+
+khoang rồi làm trước hết tôi tôi cần bàn luận logic như v và gọi API về và nơi lưu trữ dữ liệu khi gọi api về và lịch sử dụ báo thì nên dùng data nào
+
+
+Ok, giờ mình sẽ tập trung bàn luận đúng 3 phần bạn đang hỏi:
+
+Logic xử lý dữ liệu khi gọi API về
+
+Nơi lưu trữ dữ liệu API trả về
+
+Loại data (database) phù hợp cho lịch sử + training + dự báo
+
+Mình giải thích chi tiết theo đúng hướng xây dựng mô hình AI dự báo thời tiết bằng XGBoost.
+
+⭐ 1. Logic xử lý khi gọi API thời tiết về
+
+Trong hệ thống của bạn sẽ có 2 loại API phải gọi:
+
+A. API lấy dữ liệu lịch sử (để train XGBoost)
+
+Lấy dữ liệu quá khứ: 1–10 năm
+
+Mục tiêu: lưu trữ và dùng để huấn luyện mô hình AI
+
+Đây là dữ liệu dài hạn
+
+Chỉ gọi 1 lần → rồi lưu vào database
+
+Workflow:
+
+Call API lịch sử → Lưu DB → Xử lý feature → Train XGBoost
+
+B. API lấy dữ liệu real-time cho người dùng (hiện tại hoặc tương lai)
+
+Mục đích:
+
+Xác thực (validation) mô hình
+
+Lấy feature đầu vào để dự báo
+
+Cho người dùng xem dữ liệu gần nhất
+
+Workflow:
+
+Call API real-time → Parse JSON → Lưu vào DB hoặc dùng luôn
+
+Vậy gọi API xong thì làm gì với dữ liệu?
+✔ Bạn phải chuẩn hóa dữ liệu thành WeatherRecord (POJO)
+
+Ví dụ:
+
+class WeatherRecord {
+    LocalDate date;
+    LocalTime time;
+    double temperature;
+    double humidity;
+    double windSpeed;
+    double precipitation;
+    double pressure;
+}
+
+
+Mục đích:
+
+Dễ lưu vào database
+
+Dễ convert sang feature cho XGBoost
+
+Dễ xử lý khi hiển thị
+
+⭐ 2. Nơi lưu trữ dữ liệu sau khi gọi API
+
+Có 2 loại dữ liệu cần lưu:
+
+A. Dữ liệu lịch sử (training data)
+→ bắt buộc phải lưu vào database
+
+Vì:
+
+Bạn cần dữ liệu quá khứ để train AI
+
+Bạn có thể update dữ liệu hàng ngày
+
+Cần truy vấn nhanh để build features
+
+Nên lưu vào SQL database (PostgreSQL).
+
+✔ dữ liệu thời tiết dạng time-series → PostgreSQL / TimescaleDB là số 1.
+
+Bảng dữ liệu gợi ý:
+
+weather_history
+---------------
+id
+province
+lat
+lon
+date
+time
+temperature
+humidity
+wind_speed
+precipitation
+pressure
+cloudcover
+...
+
+B. Dữ liệu real-time / forecast của user
+
+Với người dùng, khi họ nhập tỉnh thành → bạn có 2 lựa chọn:
+
+1) Lưu dữ liệu lại trong DB (khuyến nghị)
+
+Nếu bạn muốn:
+
+so sánh dự báo AI vs dự báo chính thống (validation)
+
+lưu lịch sử dự báo
+
+thống kê độ chính xác
+
+→ Lưu vào DB.
+
+Table:
+
+forecast_history
+----------------
+id
+province
+request_date
+forecast_date
+temperature_predicted
+temperature_actual (optional)
+...
+
+2) Không lưu, chỉ trả về → tạm thời trong RAM
+
+Nếu:
+
+dự án nhỏ
+
+không cần lưu lịch sử người dùng
+
+→ không cần DB.
+
+Nhưng với AI dự báo, lưu lại là tốt nhất.
+
+⭐ 3. Nên dùng loại Database nào?
+
+Dưới đây là bảng chọn tối ưu nhất cho dự án của bạn:
+
+Loại Data	Yêu cầu	Database phù hợp
+Dữ liệu thời tiết lịch sử (10 năm)	Cần truy vấn theo thời gian, dữ liệu lớn	PostgreSQL + TimescaleDB
+Dữ liệu API real-time	Không quá lớn, nhưng cần truy vấn nhanh	PostgreSQL hoặc Redis cache
+Lịch sử dự báo AI	Ít dữ liệu, dạng log	PostgreSQL
+Feature Store cho AI	Query nhiều, có time-order	PostgreSQL hoặc Parquet files trong filesystem
+→ Kết luận: PostgreSQL là lựa chọn số 1.
+⭐ 4. Tại sao không dùng MongoDB / NoSQL?
+
+MongoDB thích hợp nếu:
+
+Bạn lưu dữ liệu JSON thô
+
+Không cần query theo time-series
+
+Nhưng thời tiết = dữ liệu time-series, nên PostgreSQL + Timescale tốt hơn rất nhiều.
+
+⭐ 5. Quy trình đầy đủ khi gọi API → lưu → dự báo
+
+Dưới đây là luồng chuẩn:
+
+[User Input: Tỉnh]
+        ↓
+Call Geocoding API → Lấy lat/lon
+        ↓
+Call API thời tiết real-time hoặc historical
+        ↓
+Parse JSON
+        ↓
+Chuẩn hóa về WeatherRecord
+        ↓
+Lưu vào PostgreSQL (weather_history)
+        ↓
+Xây dựng feature vector
+        ↓
+Dùng XGBoost dự báo 7 ngày
+        ↓
+Lưu kết quả dự báo vào bảng forecast_history
+        ↓
+Hiển thị ra màn hình
+
+⭐ 6. Bạn đang cần logic nào tiếp theo?
+
+Từ câu trả lời của bạn trước, bạn đang đi theo 3 hướng:
+
+✔ Logic dự báo 7 ngày bắt đầu từ ngày nhập
+✔ Khi xem 1 ngày → hiển thị dự báo chi tiết mỗi 3 giờ
+✔ Lưu lịch sử dự báo
+✔ Gọi API Open-Meteo và lưu vào DB
+
+Bạn muốn tôi làm tiếp phần nào:
+
+Thiết kế bảng DB PostgreSQL cho toàn hệ thống?
+
+Vẽ sơ đồ ERD cho dữ liệu thời tiết?
+
+Thiết kế cấu trúc project Java (model, service, repository)?
+
+Viết code Java gọi API Open-Meteo + lưu PostgreSQL?
+
+Thiết kế chuẩn đầu vào/đầu ra API (JSON contract)?
+
+Cách xây dựng feature để train XGBoost?
+
+và tôi dùng SQLl là PostgreSQL thông tin kết nối vs PostgreSQL là ở file @sql.txt
+
+ok trước hết thì logic hoạt động bài như nào , nhưng đầu tiền tôi cần biết hiện tại xgboost là ai và dùgn py thon là tốt nhất nhưng việc đổi sang java thuần thì sao được không
+
+Ok, mình sẽ giải thích rõ – dễ hiểu – đúng trọng tâm cho bạn về:
+
+XGBoost là gì?
+
+Vì sao Python là tốt nhất?
+
+Có chuyển sang Java thuần được không?
+
+Trong dự án dự báo thời tiết của bạn thì dùng Java như nào?
+
+⭐ 1. XGBoost là gì? (giải thích dễ hiểu)
+
+XGBoost (Extreme Gradient Boosting) là một thuật toán Machine Learning rất mạnh dùng cho:
+
+dự báo thời tiết
+
+dự đoán giá chứng khoán
+
+dự báo nhu cầu
+
+phân loại, hồi quy
+
+bài toán real-time forecasting
+
+Kaggle competitions (gần như luôn top)
+
+Mạnh ở điểm:
+→ xử lý data dạng bảng (tabular) cực tốt
+→ chạy nhanh
+→ chính xác cao
+→ không cần GPU
+→ ít overfitting
+→ cực phù hợp với dữ án của bạn
+
+Trong dự án của bạn:
+XGBoost sẽ:
+
+✔ Nhập dữ liệu thời tiết quá khứ → học quy luật
+✔ Dự đoán 7 ngày tương lai
+✔ Dự đoán từng giờ (3h/time step)
+⭐ 2. Tại sao người ta dùng Python cho XGBoost?
+
+Python mạnh hơn cho AI vì:
+
+thư viện ML phong phú (pandas, numpy, sklearn)
+
+dễ xử lý dữ liệu
+
+dễ training mô hình
+
+cộng đồng hỗ trợ cực lớn
+
+xgboost trong python đầy đủ features nhất
+
+→ Python = tốt nhất cho TRAINING mô hình XGBoost.
+
+⭐ 3. Vậy nếu dự án của bạn dùng Java thì sao?
+Java vẫn dùng được XGBoost thông qua XGBoost4J
+
+→ Đây là phiên bản Java chính thức của XGBoost.
+
+Bạn có thể:
+
+✔ Train model bằng Python
+
+→ lưu file model (.model, .json, .bin)
+
+✔ Load model đó vào Java
+
+→ và dự đoán trong Java = hoàn toàn OK
+
+Điều quan trọng:
+
+Bạn KHÔNG cần train mô hình trong Java (khó & mất thời gian).
+
+Bạn chỉ cần dự đoán (inference) trong Java → rất phù hợp với yêu cầu của bạn.
+
+⭐ 4. Quy trình dùng XGBoost cho dự án của bạn
+
+Dự án bạn sẽ chia làm hai phần:
+
+PHẦN 1 – Training (huấn luyện AI) → làm bằng Python
+
+Bạn sẽ:
+
+Thu dữ liệu thời tiết lịch sử từ Open-Meteo → lưu PostgreSQL
+
+Xuất data sang CSV
+
+Dùng Python + XGBoost để train mô hình
+
+Lưu mô hình:
+
+daily_model.json → dự báo 7 ngày
+
+hourly_model.json → dự báo từng giờ
+
+Copy hai file model sang Java
+
+PHẦN 2 – Dùng mô hình trong Java (Java thuần)
+
+Trong Java bạn sẽ:
+
+User nhập tỉnh thành
+
+Java gọi API lấy feature thời tiết hiện tại
+
+Java load model:
+
+Booster model = XGBoost.loadModel("daily_model.json");
+
+
+Java đưa feature vào model → model trả về dự đoán
+
+Java hiển thị kết quả cho user
+
+⭐ 5. Tại sao không train XGBoost bằng Java?
+
+Bạn có thể, nhưng:
+
+Java xử lý data khó hơn Python
+
+Thiếu thư viện hỗ trợ phân tích dữ liệu
+
+Training trong Java chậm hơn
+
+Code dài và phức tạp hơn rất nhiều
+
+Cộng đồng ít dùng XGBoost4J để TRAIN
+
+→ 99% dự án doanh nghiệp làm theo kiểu:
+
+"Train mô hình bằng Python → Dự đoán bằng Java/C#/Go"
+⭐ 6. Kết luận cho câu hỏi của bạn
+Câu hỏi	Trả lời
+XGBoost là ai?	Một thuật toán ML cực mạnh, chuẩn industry, chuyên cho dự báo thời tiết.
+Python có tốt nhất không?	Có. Python tốt nhất để huấn luyện XGBoost.
+Java có dùng được XGBoost không?	Có! Dùng XGBoost4J để chạy mô hình.
+Java có train được không?	Có, nhưng KHÔNG nên. Train bằng Python, dự đoán bằng Java là tối ưu.
+⭐ 7. Nếu bạn muốn, mình có thể tạo cho bạn:
+
+Quy trình training XGBoost bằng Python
+
+File daily_model.json mẫu để chạy thử trong Java
+
+Code Java load model và dự đoán
+
+Kiến trúc tổng thể cho dự án weather forecast AI
+
+Chuẩn data training từ Open-Meteo (dạng CSV)
+
+🔥 Bạn muốn tiếp theo là:
+
+A. Giải thích chi tiết logic dự báo của hệ thống?
+B. Cách lấy dữ liệu lịch sử từ Open-Meteo?
+C. Training XGBoost bằng Python?
+D. Tích hợp XGBoost vào Java thuần?
+E. Thiết kế database (PostgreSQL)?
+

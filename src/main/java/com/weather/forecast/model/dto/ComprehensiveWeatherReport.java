@@ -77,12 +77,24 @@ public class ComprehensiveWeatherReport {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class HourlyData {
         @JsonProperty("time") private List<String> time = new ArrayList<>();
+        @JsonProperty("temperature_2m") private List<Double> temperature2m = new ArrayList<>(); // Added
+        @JsonProperty("weather_code") private List<Integer> weatherCode = new ArrayList<>();    // Added
+        @JsonProperty("precipitation_probability") private List<Integer> precipitationProbability = new ArrayList<>(); // Added
+        @JsonProperty("wind_speed_10m") private List<Double> windSpeed10m = new ArrayList<>(); // Added
         @JsonProperty("uv_index") private List<Double> uvIndex = new ArrayList<>();
         @JsonProperty("visibility") private List<Double> visibility = new ArrayList<>();
 
         //<editor-fold desc="Getters and Setters">
         public List<String> getTime() { return time; }
         public void setTime(List<String> time) { this.time = time; }
+        public List<Double> getTemperature2m() { return temperature2m; } // Added
+        public void setTemperature2m(List<Double> temperature2m) { this.temperature2m = temperature2m; } // Added
+        public List<Integer> getWeatherCode() { return weatherCode; } // Added
+        public void setWeatherCode(List<Integer> weatherCode) { this.weatherCode = weatherCode; } // Added
+        public List<Integer> getPrecipitationProbability() { return precipitationProbability; } // Added
+        public void setPrecipitationProbability(List<Integer> precipitationProbability) { this.precipitationProbability = precipitationProbability; } // Added
+        public List<Double> getWindSpeed10m() { return windSpeed10m; } // Added
+        public void setWindSpeed10m(List<Double> windSpeed10m) { this.windSpeed10m = windSpeed10m; } // Added
         public List<Double> getUvIndex() { return uvIndex; }
         public void setUvIndex(List<Double> uvIndex) { this.uvIndex = uvIndex; }
         public List<Double> getVisibility() { return visibility; }

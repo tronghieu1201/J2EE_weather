@@ -3,18 +3,25 @@ package com.weather.forecast.model;
 import java.time.LocalTime;
 
 /**
- * POJO for the detailed 3-hourly forecast for a specific day.
+ * POJO for a single hourly forecast entry for a specific day.
  */
 public class HourlyForecast {
     private LocalTime time;
     private double temperature;
-    private double rain;
-    // Add other relevant fields like humidity, wind speed etc.
+    private int weatherCode;
+    private int precipitationProbability;
+    private double windSpeed;
 
-    public HourlyForecast(LocalTime time, double temperature, double rain) {
+    // No-arg constructor for Spring/Jackson
+    public HourlyForecast() {
+    }
+
+    public HourlyForecast(LocalTime time, double temperature, int weatherCode, int precipitationProbability, double windSpeed) {
         this.time = time;
         this.temperature = temperature;
-        this.rain = rain;
+        this.weatherCode = weatherCode;
+        this.precipitationProbability = precipitationProbability;
+        this.windSpeed = windSpeed;
     }
 
     // Getters and Setters
@@ -34,12 +41,28 @@ public class HourlyForecast {
         this.temperature = temperature;
     }
 
-    public double getRain() {
-        return rain;
+    public int getWeatherCode() {
+        return weatherCode;
     }
 
-    public void setRain(double rain) {
-        this.rain = rain;
+    public void setWeatherCode(int weatherCode) {
+        this.weatherCode = weatherCode;
+    }
+
+    public int getPrecipitationProbability() {
+        return precipitationProbability;
+    }
+
+    public void setPrecipitationProbability(int precipitationProbability) {
+        this.precipitationProbability = precipitationProbability;
+    }
+
+    public double getWindSpeed() {
+        return windSpeed;
+    }
+
+    public void setWindSpeed(double windSpeed) {
+        this.windSpeed = windSpeed;
     }
 
     @Override
@@ -47,7 +70,9 @@ public class HourlyForecast {
         return "HourlyForecast{" +
                 "time=" + time +
                 ", temperature=" + temperature +
-                ", rain=" + rain +
+                ", weatherCode=" + weatherCode +
+                ", precipitationProbability=" + precipitationProbability +
+                ", windSpeed=" + windSpeed +
                 '}';
     }
 }

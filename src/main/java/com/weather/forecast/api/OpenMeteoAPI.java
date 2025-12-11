@@ -48,9 +48,9 @@ public class OpenMeteoAPI {
     public String getWeatherForecast(double lat, double lon) throws IOException, InterruptedException {
         String url = API_BASE_URL + "/forecast?latitude=" + lat + "&longitude=" + lon +
                 "&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,cloud_cover,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m" +
-                "&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,weather_code,visibility,uv_index,is_day" +
+                "&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,weather_code,visibility,uv_index,is_day,wind_speed_10m" +
                 "&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,uv_index_max,precipitation_sum,precipitation_hours,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max,wind_direction_10m_dominant" +
-                "&timezone=auto";
+                "&timezone=auto&forecast_days=8";
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))

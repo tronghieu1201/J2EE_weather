@@ -1,50 +1,3 @@
-(base) PS C:\Users\giapt\OneDrive\Máy tính\DA_J2EE>  mvn clean install
-[INFO] Scanning for projects...
-[INFO] 
-[INFO] -------------< com.weather.forecast:weather-forecast-j2ee >-------------
-[INFO] Building weather-forecast-j2ee 1.0-SNAPSHOT
-[INFO]   from pom.xml
-[INFO] --------------------------------[ jar ]---------------------------------
-[WARNING] 1 problem was encountered while building the effective model for org.javassist:javassist:jar:3.20.0-GA during dependency collection step for project (use -X to see details)
-[INFO] 
-[INFO] --- clean:3.2.0:clean (default-clean) @ weather-forecast-j2ee ---
-[INFO] Deleting C:\Users\giapt\OneDrive\Máy tính\DA_J2EE\target
-[INFO] 
-[INFO] --- resources:3.2.0:resources (default-resources) @ weather-forecast-j2ee ---
-[INFO] Using 'UTF-8' encoding to copy filtered resources.
-[INFO] Using 'UTF-8' encoding to copy filtered properties files.
-[INFO] Copying 1 resource
-[INFO] Copying 9 resources
-[INFO] 
-[INFO] --- compiler:3.10.1:compile (default-compile) @ weather-forecast-j2ee ---
-[INFO] Changes detected - recompiling the module!
-[INFO] Compiling 18 source files to C:\Users\giapt\OneDrive\Máy tính\DA_J2EE\target\classes
-[INFO] 
-[INFO] --- resources:3.2.0:testResources (default-testResources) @ weather-forecast-j2ee ---
-[INFO] Using 'UTF-8' encoding to copy filtered resources.
-[INFO] Using 'UTF-8' encoding to copy filtered properties files.
-[INFO] skip non existing resourceDirectory C:\Users\giapt\OneDrive\Máy tính\DA_J2EE\src\test\resources
-[INFO] 
-[INFO] --- compiler:3.10.1:testCompile (default-testCompile) @ weather-forecast-j2ee ---
-[INFO] Changes detected - recompiling the module!
-[INFO] 
-[INFO] --- surefire:2.22.2:test (default-test) @ weather-forecast-j2ee ---
-[INFO] 
-[INFO] --- jar:3.2.2:jar (default-jar) @ weather-forecast-j2ee ---
-[INFO] Building jar: C:\Users\giapt\OneDrive\Máy tính\DA_J2EE\target\weather-forecast-j2ee-1.0-SNAPSHOT.jar
-[INFO] 
-[INFO] --- spring-boot:2.7.5:repackage (repackage) @ weather-forecast-j2ee ---
-[INFO] Replacing main artifact with repackaged archive
-[INFO]
-[INFO] --- install:2.5.2:install (default-install) @ weather-forecast-j2ee ---
-[INFO] Installing C:\Users\giapt\OneDrive\Máy tính\DA_J2EE\target\weather-forecast-j2ee-1.0-SNAPSHOT.jar to C:\Users\giapt\.m2\repository\com\weather\forecast\weather-forecast-j2ee\1.0-SNAPSHOT\weather-forecast-j2ee-1.0-SNAPSHOT.jar
-[INFO] Installing C:\Users\giapt\OneDrive\Máy tính\DA_J2EE\pom.xml to C:\Users\giapt\.m2\repository\com\weather\forecast\weather-forecast-j2ee\1.0-SNAPSHOT\weather-forecast-j2ee-1.0-SNAPSHOT.pom
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time:  7.606 s
-[INFO] Finished at: 2025-12-11T01:51:04+07:00
-[INFO] ------------------------------------------------------------------------
 (base) PS C:\Users\giapt\OneDrive\Máy tính\DA_J2EE> mvn spring-boot:run
 [INFO] Scanning for projects...
 [INFO] 
@@ -60,7 +13,7 @@
 [INFO] Using 'UTF-8' encoding to copy filtered resources.
 [INFO] Using 'UTF-8' encoding to copy filtered properties files.
 [INFO] Copying 1 resource
-[INFO] Copying 9 resources
+[INFO] Copying 18 resources
 [INFO]
 [INFO] --- compiler:3.10.1:compile (default-compile) @ weather-forecast-j2ee ---
 [INFO] Nothing to compile - all classes are up to date
@@ -87,60 +40,54 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::                (v2.7.5)
 
-2025-12-11 01:51:13.917  INFO 11372 --- [           main] com.weather.forecast.Application         : Starting Application using Java 17.0.17 on DESKTOP-B4U5OFT with PID 11372 (C:\Users\giapt\OneDrive\Mßy tφnh\DA_J2EE\target\classes started by giapt in C:\Users\giapt\OneDrive\Mßy tφnh\DA_J2EE)
-2025-12-11 01:51:13.921  INFO 11372 --- [           main] com.weather.forecast.Application         : No active profile set, falling back to 1 default profile: "default"
-2025-12-11 01:51:14.412  INFO 11372 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-12-11 01:51:14.465  INFO 11372 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 46 ms. Found 2 JPA repository interfaces.
-2025-12-11 01:51:14.987  INFO 11372 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
-2025-12-11 01:51:14.997  INFO 11372 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2025-12-11 01:51:14.997  INFO 11372 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.68]
-2025-12-11 01:51:15.121  INFO 11372 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2025-12-11 01:51:15.122  INFO 11372 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1128 ms
-2025-12-11 01:51:15.352  INFO 11372 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2025-12-11 01:51:15.394  INFO 11372 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.12.Final
-2025-12-11 01:51:15.516  INFO 11372 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2025-12-11 01:51:15.595  INFO 11372 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2025-12-11 01:51:15.784  INFO 11372 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2025-12-11 01:51:15.798  INFO 11372 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2025-12-11 01:51:16.299  INFO 11372 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2025-12-11 01:51:16.313  INFO 11372 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-11 04:37:58.558 [main] INFO  com.weather.forecast.Application - Starting Application using Java 17.0.17 on DESKTOP-B4U5OFT with PID 21304 (C:\Users\giapt\OneDrive\Mßy tφnh\DA_J2EE\target\classes started by giapt in C:\Users\giapt\OneDrive\Mßy tφnh\DA_J2EE)
+2025-12-11 04:37:58.563 [main] INFO  com.weather.forecast.Application - No active profile set, falling back to 1 default profile: "default"
+2025-12-11 04:37:59.160 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-11 04:37:59.209 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 41 ms. Found 2 JPA repository interfaces.
+2025-12-11 04:37:59.686 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2025-12-11 04:37:59.694 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-11 04:37:59.695 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-11 04:37:59.695 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.68]
+2025-12-11 04:37:59.868 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-11 04:37:59.868 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1200 ms
+2025-12-11 04:38:00.036 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-11 04:38:00.073 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.12.Final
+2025-12-11 04:38:00.201 [main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2025-12-11 04:38:00.277 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-11 04:38:00.443 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-11 04:38:00.456 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2025-12-11 04:38:00.933 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2025-12-11 04:38:00.943 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
 Successfully loaded model from classpath: models/daily_model_max_temp.bin
 Warning: Model file not found in classpath at models/daily_min_temp_model.bin
 Prediction will not work until a valid model is placed there.
 Warning: Model file not found in classpath at models/daily_rain_prob_model.bin
 Prediction will not work until a valid model is placed there.
-Warning: Model file not found in classpath at models/hourly_model.bin
-Prediction will not work until a valid model is placed there.
-2025-12-11 01:51:16.892  WARN 11372 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-12-11 01:51:16.975  INFO 11372 --- [           main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
-2025-12-11 01:51:17.142  INFO 11372 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
-2025-12-11 01:51:17.151  INFO 11372 --- [           main] com.weather.forecast.Application         : Started Application in 3.564 seconds (JVM running for 3.869)
-2025-12-11 01:51:23.265  INFO 11372 --- [nio-8080-exec-2] o.apache.tomcat.util.http.parser.Cookie  : A cookie header was received [g_state={"i_l":0,"i_ll":1761962380141,"i_b":"Gfn1EG2nyF/Kf52WhZUhGlDs1MljjBhh1r+jKETh+B4","i_t":1762027889487}] that contained an invalid cookie. That cookie will be ignored.
+Successfully loaded model from classpath: models/hourly_model.bin
+2025-12-11 04:38:01.483 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-11 04:38:01.575 [main] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-12-11 04:38:01.729 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-11 04:38:01.741 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2025-12-11 04:38:01.753 [main] INFO  com.weather.forecast.Application - Started Application in 4.117 seconds (JVM running for 4.814)
+2025-12-11 04:38:01.791 [http-nio-8080-exec-1] INFO  o.a.tomcat.util.http.parser.Cookie - A cookie header was received [g_state={"i_l":0,"i_ll":1761962380141,"i_b":"Gfn1EG2nyF/Kf52WhZUhGlDs1MljjBhh1r+jKETh+B4","i_t":1762027889487}] that contained an invalid cookie. That cookie will be ignored.
  Note: further occurrences of this error will be logged at DEBUG level.
-2025-12-11 01:51:23.274  INFO 11372 --- [nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2025-12-11 01:51:23.274  INFO 11372 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2025-12-11 01:51:23.277  INFO 11372 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
-2025-12-11 01:51:23.336  INFO 11372 --- [nio-8080-exec-2] c.w.f.controller.WeatherController       : Searching for default city: Hα N?i
+2025-12-11 04:38:01.796 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-11 04:38:01.797 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-11 04:38:01.801 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 4 ms
+2025-12-11 04:38:01.828 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - Searching for city: Hα N?i
 Executing 7-day XGBoost forecast logic for Hà N?i
 Executing 7-day XGBoost forecast for coordinates: Lat=20.47366, Lon=106.02292
 MODEL PREDICTION FAILED for day 1: Model is not loaded, cannot perform prediction.
 Falling back to placeholder data for the rest of the forecast.
 Note: AI model logic is not fully implemented or failed. Returning dummy forecast data.
-2025-12-11 01:51:25.783  INFO 11372 --- [nio-8080-exec-2] c.w.f.controller.WeatherController       : Successfully retrieved comprehensive report for Hα N?i. Temperature: 18.0░C
-2025-12-11 01:51:25.784  INFO 11372 --- [nio-8080-exec-2] c.w.f.controller.WeatherController       : Successfully retrieved 7-day forecast for Hα N?i
-2025-12-11 01:51:30.650  INFO 11372 --- [nio-8080-exec-4] c.w.f.controller.WeatherController       : User searching for city: H? Chφ Minh
-Executing 7-day XGBoost forecast logic for H? Chí Minh
-Executing 7-day XGBoost forecast for coordinates: Lat=10.82302, Lon=106.62965
-MODEL PREDICTION FAILED for day 1: Model is not loaded, cannot perform prediction.
-Falling back to placeholder data for the rest of the forecast.
-Note: AI model logic is not fully implemented or failed. Returning dummy forecast data.
-2025-12-11 01:51:31.489  INFO 11372 --- [nio-8080-exec-4] c.w.f.controller.WeatherController       : Successfully retrieved comprehensive report for H? Chφ Minh. Temperature: 24.4░C
-2025-12-11 01:51:31.490  INFO 11372 --- [nio-8080-exec-4] c.w.f.controller.WeatherController       : Successfully retrieved 7-day forecast for H? Chφ Minh
-2025-12-11 01:51:36.339  INFO 11372 --- [io-8080-exec-10] c.w.f.controller.WeatherController       : User searching for city: B∞nh ??nh
-Executing 7-day XGBoost forecast logic for Bình ??nh
-Executing 7-day XGBoost forecast for coordinates: Lat=10.55562, Lon=105.52291
-MODEL PREDICTION FAILED for day 1: Model is not loaded, cannot perform prediction.
-Falling back to placeholder data for the rest of the forecast.
-Note: AI model logic is not fully implemented or failed. Returning dummy forecast data.
-2025-12-11 01:51:37.170  INFO 11372 --- [io-8080-exec-10] c.w.f.controller.WeatherController       : Successfully retrieved comprehensive report for B∞nh ??nh. Temperature: 24.8░C
-2025-12-11 01:51:37.171  INFO 11372 --- [io-8080-exec-10] c.w.f.controller.WeatherController       : Successfully retrieved 7-day forecast for B∞nh ??nh
+2025-12-11 04:38:04.240 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - Successfully retrieved comprehensive report for Hα N?i. Temperature: 17.0░C
+2025-12-11 04:38:04.241 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - Successfully retrieved 7-day forecast for Hα N?i
+2025-12-11 04:38:06.534 [http-nio-8080-exec-3] INFO  c.w.f.controller.WeatherController - Fetching hourly details for city: Hα N?i on date: 2025-12-18
+2025-12-11 04:38:06.956 [http-nio-8080-exec-3] INFO  c.w.f.controller.WeatherController - Hourly data time array size for Hα N?i: 168
+2025-12-11 04:38:06.957 [http-nio-8080-exec-3] INFO  c.w.f.controller.WeatherController - Last hourly timestamp for Hα N?i: 2025-12-17T23:00
+2025-12-11 04:38:07.222 [http-nio-8080-exec-4] INFO  c.w.f.controller.WeatherController - Fetching hourly details for city: Hα N?i on date: 2025-12-18
+2025-12-11 04:38:07.651 [http-nio-8080-exec-4] INFO  c.w.f.controller.WeatherController - Hourly data time array size for Hα N?i: 168
+2025-12-11 04:38:07.652 [http-nio-8080-exec-4] INFO  c.w.f.controller.WeatherController - Last hourly timestamp for Hα N?i: 2025-12-17T23:00
+2025-12-11 04:38:13.488 [http-nio-8080-exec-7] INFO  c.w.f.controller.WeatherController - Fetching hourly details for city: Hα N?i on date: 2025-12-17
+2025-12-11 04:38:13.906 [http-nio-8080-exec-7] INFO  c.w.f.controller.WeatherController - Hourly data time array size for Hα N?i: 168
+2025-12-11 04:38:13.907 [http-nio-8080-exec-7] INFO  c.w.f.controller.WeatherController - Last hourly timestamp for Hα N?i: 2025-12-17T23:00

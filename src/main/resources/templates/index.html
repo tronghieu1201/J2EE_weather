@@ -7,134 +7,39 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <style>
-        body {
-            background-color: #f0f2f5;
-            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-            color: #333;
-        }
-        .header-bar {
-            background-color: #343a40;
-            color: white;
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .header-bar .form-control {
-            max-width: 300px;
-        }
-        .main-content-wrapper {
-            padding: 2rem 0;
-        }
-        .weather-display-grid {
-            display: grid;
-            grid-template-columns: 1fr; /* Single column by default */
-            gap: 2rem;
-        }
-        @media (min-width: 992px) { /* Medium devices and up */
-            .weather-display-grid {
-                grid-template-columns: 1.5fr 1fr; /* Two columns: current weather wide, daily forecast narrower */
+        /* Custom CSS for Bootstrap hover dropdowns */
+        @media (min-width: 992px) {
+            .navbar-expand-lg .navbar-nav .dropdown:hover .dropdown-menu {
+                display: block;
+            }
+
+            /* Specific styling for the megamenu dropdown */
+            .megamenu {
+                padding: 1rem;
+                left: 50%; /* Start at 50% of parent width */
+                transform: translateX(-50%); /* Pull back by 50% of own width to center */
+                width: 100vw; /* Take full viewport width */
+            }
+            .megamenu .dropdown-header {
+                text-transform: uppercase;
+                font-size: 0.8em;
+                color: #6c757d;
+                margin-top: 0.5rem;
+                margin-bottom: 0.5rem;
             }
         }
-
-        .current-weather-card {
-            background-color: #ffffff;
-            padding: 2rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        .current-weather-main-info {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 1.5rem;
-        }
-        .current-weather-main-info .temp {
-            font-size: 4rem;
-            font-weight: 500;
-        }
-        .weather-icon-large { font-size: 4rem; color: #007bff; }
-        .current-weather-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 1rem;
-        }
-        .detail-item {
-            text-align: center;
-            padding: 0.5rem;
-            border-radius: 0.5rem;
-            background-color: #f8f9fa;
-        }
-        .detail-item .label {
-            color: #6c757d;
-            font-size: 0.85rem;
-            margin-bottom: 0.25rem;
-        }
-        .detail-item .value {
-            font-weight: bold;
-        }
-
-        .daily-forecast-container {
-            display: flex;
-            overflow-x: auto;
-            gap: 1rem;
-            padding: 1rem; /* Padding to prevent shadow clipping */
-            border-radius: 0.5rem;
-            background-color: #ffffff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        .daily-forecast-card {
-            flex: 0 0 140px; /* Fixed width for each card */
-            padding: 1.5rem 1rem;
-            border: 1px solid #dee2e6;
-            border-radius: 0.75rem;
-            text-align: center;
-            background-color: #ffffff;
-        }
-        .daily-forecast-card .day-name { font-weight: bold; }
-        .daily-forecast-card .date-small { color: #6c757d; font-size: 0.85rem; margin-bottom: 0.5rem; }
-        .daily-forecast-card .icon { font-size: 2.5rem; margin: 0.5rem 0; color: #007bff;}
-        .daily-forecast-card .temp-range { font-weight: bold; margin-bottom: 0.5rem; }
-        .daily-forecast-card .rain-prob { font-size: 0.85rem; color: #6c757d; }
-
-        /* Custom CSS for Hover Mega Menu */
-        .dropdown:hover .dropdown-menu {
-            display: block;
-            margin-top: 0; /* remove the gap so it doesn't close */
-        }
-        .navbar .dropdown-toggle::after {
-            display: none; /* remove the default caret */
-        }
-        .dropdown-menu.megamenu {
-            width: max-content; /* Make the dropdown wide enough for content */
-            padding: 1rem;
-        }
-        .megamenu .dropdown-header {
-            font-weight: bold;
-            padding: .25rem 1rem;
-            margin-bottom: .5rem;
-            color: #343a40;
-        }
-        .megamenu .dropdown-item {
-            padding: .25rem 1rem;
-        }
     </style>
+
+
 </head>
-<body>
+<body class="bg-light text-dark">
 
-<header class="header-bar">
-    <a href="/" class="navbar-brand text-white">Dự báo thời tiết AI</a>
-    <form th:action="@{/weather-forecast}" method="post" class="d-flex">
-        <input class="form-control me-2" type="search" name="city" placeholder="Nhập tên tỉnh thành phố">
-        <button class="btn btn-primary" type="submit">Tìm</button>
-    </form>
-</header>
-<img src="/img/logo.png" alt="Weather AI Logo" style="display: block; margin: 20px auto; max-width: 150px; height: auto;">
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
     <div class="container-fluid">
+        <a class="navbar-brand fw-bold text-primary" href="/">WeatherAI</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item dropdown">
@@ -147,7 +52,7 @@
                                 <th:block th:each="entry : ${groupedCities}">
                                     <div class="col-md-3">
                                         <h6 class="dropdown-header" th:text="${entry.key}"></h6>
-                                        <a th:each="province : ${entry.value}" th:href="@{/weather-forecast(city=${province})}" class="dropdown-item" th:text="${province}"></a>
+                                        <a th:each="province : ${entry.value}" href="#" th:onclick="fetchWeatherData('[(${province})]');" class="dropdown-item" th:text="${province}"></a>
                                     </div>
                                 </th:block>
                             </div>
@@ -167,15 +72,202 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/perpetual-calendar">Xem lịch vạn niên</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/weather-forecast">Xem dự báo thời tiết</a>
-                </li>
             </ul>
+            <div class="d-flex align-items-center">
+                <form th:action="@{/weather-forecast}" method="post" class="input-group">
+                    <span class="input-group-text border-0 bg-light"><i class="bi bi-search text-muted"></i></span>
+                    <input class="form-control border-0 bg-light" type="search" name="city" placeholder="Nhập tên tỉnh thành phố">
+                    <button class="btn btn-primary d-none" type="submit">Tìm</button>
+                </form>
+                <i class="bi bi-moon fs-5 ms-3 cursor-pointer text-muted"></i>
+            </div>
         </div>
     </div>
 </nav>
 
+<main class="container-fluid py-4" th:fragment="weatherContent">
+    <div class="container-xl mt-4">
+        <!-- Error / No data message -->
+        <div th:if="${comprehensiveReport == null or sevenDayForecast == null or #lists.isEmpty(sevenDayForecast)}" class="alert alert-warning text-center p-4 rounded-3 shadow-sm" role="alert">
+            <p th:if="${city != null}">Không thể tải dữ liệu thời tiết cho <strong><span th:text="${city}"></span></strong>. Vui lòng thử lại với một thành phố khác hoặc đảm bảo kết nối internet.</p>
+            <p th:if="${city == null}">Vui lòng nhập tên thành phố để xem dự báo thời tiết.</p>
+        </div>
+
+        <div class="row" th:if="${comprehensiveReport != null and sevenDayForecast != null and not #lists.isEmpty(sevenDayForecast)}">
+            <!-- Left Column: Current Weather and Weather Tip -->
+            <div class="col-lg-4 col-md-12 mb-4">
+                <div class="card shadow-sm border-0 p-4 mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h2 class="h5 mb-0" th:text="${city}"></h2>
+                            <p class="text-muted mb-0"><small>Hôm nay, <span th:text="${#temporals.format(T(java.time.OffsetDateTime).now(), 'HH:mm')}"></span> PM</small></p>
+                        </div>
+                        <button class="btn btn-outline-primary btn-sm rounded-pill"><i class="bi bi-arrow-clockwise"></i> Cập nhật</button>
+                    </div>
+
+                    <div class="text-center my-4">
+                        <i class="display-1 text-primary mb-3" th:classappend="${T(com.weather.forecast.util.WeatherIconMapper).getIconClass(comprehensiveReport.current.weatherCode)}"></i>
+                        <div class="display-1 fw-bold" th:text="${#numbers.formatDecimal(comprehensiveReport.current.temperature, 0, 0)} + '°C'">18°C</div>
+                        <p class="h6" th:text="${T(com.weather.forecast.util.WeatherCodeMapper).getDescription(comprehensiveReport.current.weatherCode)}">Nhiều mây</p>
+                        <p class="text-muted"><small>Cảm giác như <span th:text="${#numbers.formatDecimal(comprehensiveReport.current.apparentTemperature, 0, 0)}">20</span>°C</small></p>
+                    </div>
+
+                    <div class="row row-cols-2 g-3 mt-4">
+                        <div class="col">
+                            <div class="p-3 bg-light rounded-3 text-center h-100 d-flex flex-column justify-content-between">
+                                <span class="fw-bold" th:text="${comprehensiveReport.current.humidity} + '%'">91%</span>
+                                <small class="text-muted">Độ ẩm</small>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="detail-metric-item card">
+                                <i class="bi bi-speedometer2 text-danger mb-2"></i>
+                                <span class="fw-bold" th:text="${#numbers.formatDecimal(comprehensiveReport.current.surfacePressure, 0, 0)} + ' hPa'">1017 hPa</span>
+                                <small class="text-muted">Áp suất</small>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="detail-metric-item card">
+                                <i class="bi bi-wind text-primary mb-2"></i>
+                                <span class="fw-bold" th:text="${#numbers.formatDecimal(comprehensiveReport.current.windSpeed, 1, 1)} + ' km/h'">2,3 km/h</span>
+                                <small class="text-muted">Tốc độ gió</small>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="detail-metric-item card">
+                                <i class="bi bi-eye-fill text-success mb-2"></i>
+                                <span class="fw-bold" th:text="${#numbers.formatDecimal(comprehensiveReport.hourly.visibility[0] / 1000, 1, 1)} + ' km'">24,1 km</span>
+                                <small class="text-muted">Tầm nhìn</small>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="detail-metric-item card">
+                                <i class="bi bi-sun-fill text-warning mb-2"></i>
+                                <span class="fw-bold" th:text="${#numbers.formatDecimal(comprehensiveReport.hourly.uvIndex[0], 0, 0)} + ' (Thấp)'">0 (Thấp)</span>
+                                <small class="text-muted">Chỉ số UV</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weather Tip Card -->
+                <div class="card bg-primary text-white mt-4 p-4 rounded-3 shadow-sm">
+                    <h5 class="mb-2">Mẹo thời tiết</h5>
+                    <p class="mb-0">Trời hôm nay nhiều mây, thích hợp cho các hoạt động nhẹ nhàng ngoài trời.</p>
+                </div>
+            </div>
+
+            <!-- Right Column: Forecasts and Additional Info -->
+            <div class="col-lg-8 col-md-12">
+                <div class="card shadow-sm border-0 p-4 mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="h5 mb-0">Dự báo 7 ngày tiếp theo</h3>
+                        <a href="#" class="text-decoration-none text-primary">Xem chi tiết <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                    <div class="d-flex flex-nowrap overflow-auto py-2 mb-3 gap-3">
+                        <a th:each="forecastDay, stat : ${sevenDayForecast}" th:href="@{/hourly-details(city=${city}, date=${#temporals.format(forecastDay.date, 'yyyy-MM-dd')})}" class="flex-shrink-0 text-center p-3 border rounded-3 shadow-sm bg-light">
+                            <div class="day-name" th:text="${stat.index == 0 ? 'Hôm nay' : 'T' + #temporals.format(forecastDay.date, 'E')}"></div>
+                            <div class="date-small" th:text="${#temporals.format(forecastDay.date, 'dd/MM')}"></div>
+                            <i class="fs-4 text-primary my-2" th:classappend="${T(com.weather.forecast.util.WeatherIconMapper).getIconClass(T(com.weather.forecast.util.WeatherCodeMapper).mapRainProbToWeatherCode(forecastDay.rainProbability))}"></i>
+                            <div class="temp-range" th:text="${#numbers.formatDecimal(forecastDay.tempMax, 0, 0)} + '°C / ' + ${#numbers.formatDecimal(forecastDay.tempMin, 0, 0)} + '°C'"></div>
+                            <div class="rain-prob">
+                                <i class="bi bi-umbrella-fill"></i>
+                                <span th:text="${#numbers.formatDecimal(forecastDay.rainProbability * 100, 0, 0)} + '%'"></span>
+                            </div>
+                            <div class="detail-overlay">
+                                <span>Xem chi tiết</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Sunrise & Sunset Card -->
+                <div class="card shadow-sm border-0 p-4 mb-4">
+                    <h5 class="mb-3"><i class="bi bi-brightness-high me-2"></i>Mặt trời mọc & lặn</h5>
+                    <div class="d-flex justify-content-around text-center">
+                        <div>
+                            <i class="bi bi-sunrise display-4 text-warning"></i>
+                            <p class="mb-0">Mọc</p>
+                            <p class="fw-bold">06:15 AM</p> <!-- Placeholder, need actual data -->
+                        </div>
+                        <div>
+                            <i class="bi bi-sunset display-4 text-warning"></i>
+                            <p class="mb-0">Lặn</p>
+                            <p class="fw-bold">05:45 PM</p> <!-- Placeholder, need actual data -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Air Quality Card -->
+                <div class="card shadow-sm border-0 p-4">
+                    <h5 class="mb-3"><i class="bi bi-wind me-2"></i>Chất lượng không khí</h5>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="display-3 fw-bold me-3">32</div> <!-- Placeholder, need actual data -->
+                        <div>
+                            <span class="badge rounded-pill bg-success me-1">Tốt</span>
+                            <div class="progress air-quality-progress mt-1">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 32%;" aria-valuenow="32" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-cols-3 text-center">
+                        <div class="col">
+                            <div class="d-flex align-items-center justify-content-center p-2">
+                                <i class="bi bi-mask fs-5 me-2 text-muted"></i>
+                                <div>
+                                    <small class="text-muted">PM2.5:</small>
+                                    <p class="fw-bold mb-0">12</p> <!-- Placeholder, need actual data -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="d-flex align-items-center justify-content-center p-2">
+                                <i class="bi bi-mask fs-5 me-2 text-muted"></i>
+                                <div>
+                                    <small class="text-muted">PM10:</small>
+                                    <p class="fw-bold mb-0">18</p> <!-- Placeholder, need actual data -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="d-flex align-items-center justify-content-center p-2">
+                                <i class="bi bi-cloud-sun fs-5 me-2 text-muted"></i>
+                                <div>
+                                    <small class="text-muted">O3:</small>
+                                    <p class="fw-bold mb-0">24</p> <!-- Placeholder, need actual data -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    async function fetchWeatherData(city) {
+        const weatherDisplayArea = document.getElementById('weatherDisplayArea');
+        if (weatherDisplayArea) {
+            weatherDisplayArea.innerHTML = '<div class="text-center p-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Đang tải...</span></div><p class="mt-3">Đang tải dữ liệu thời tiết cho ' + city + '...</p></div>';
+            try {
+                const response = await fetch(`/get-weather-fragment?city=${encodeURIComponent(city)}`);
+                if (response.ok) {
+                    const htmlFragment = await response.text();
+                    weatherDisplayArea.innerHTML = htmlFragment;
+                } else {
+                    weatherDisplayArea.innerHTML = '<div class="alert alert-danger text-center" role="alert">Không thể tải dữ liệu thời tiết cho ' + city + '. Vui lòng thử lại.</div>';
+                    console.error('Failed to fetch weather fragment:', response.statusText);
+                }
+            } catch (error) {
+                weatherDisplayArea.innerHTML = '<div class="alert alert-danger text-center" role="alert">Có lỗi xảy ra khi tải dữ liệu thời tiết.</div>';
+                console.error('Error fetching weather data:', error);
+            }
+        }
+    }
+</script>
 
 </body>
 </html>

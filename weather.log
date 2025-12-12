@@ -6839,6 +6839,7 @@ Identify and stop the process that's listening on port 8080 or configure this ap
 2025-12-12 16:02:24.282 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
 2025-12-12 16:02:24.284 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
 2025-12-12 16:02:24.328 [http-nio-8080-exec-2] INFO  c.w.f.controller.WeatherController - Searching for city: Hà N?i
+<<<<<<< HEAD
 2025-12-12 17:27:06.371 [main] INFO  com.weather.forecast.Application - Starting Application using Java 17.0.17 on DESKTOP-B4U5OFT with PID 1984 (C:\Users\giapt\OneDrive\Máy tính\J2EE_weather\target\classes started by giapt in C:\Users\giapt\OneDrive\Máy tính\J2EE_weather)
 2025-12-12 17:27:06.374 [main] INFO  com.weather.forecast.Application - No active profile set, falling back to 1 default profile: "default"
 2025-12-12 17:27:06.985 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
@@ -7241,3 +7242,5 @@ Identify and stop the process that's listening on port 8080 or configure this ap
 2025-12-12 18:17:44.126 [http-nio-8080-exec-9] INFO  c.w.f.controller.WeatherController - Searching for city: Hà N?i
 2025-12-12 18:17:46.921 [http-nio-8080-exec-10] INFO  c.w.f.controller.WeatherController - Fetching weather fragment for city: Lâm ??ng
 2025-12-12 18:17:50.375 [http-nio-8080-exec-3] INFO  c.w.f.controller.WeatherController - API request for chart data for city: Hà N?i
+=======
+>>>>>>> 63938eea63f2f6f8a8d071078335d61d97881aba

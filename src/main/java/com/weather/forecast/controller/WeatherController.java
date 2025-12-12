@@ -87,7 +87,6 @@ public class WeatherController {
         return "provinces";
     }
 
-<<<<<<< HEAD
     @GetMapping("/chart")
     public String showChart(@RequestParam(name = "city", required = false) String city, Model model) {
         if (city == null || city.isEmpty()) {
@@ -110,9 +109,6 @@ public class WeatherController {
         
         return response;
     }
-
-=======
->>>>>>> 63938eea63f2f6f8a8d071078335d61d97881aba
     @GetMapping("/perpetual-calendar")
     public String showPerpetualCalendar() {
         return "perpetual_calendar";

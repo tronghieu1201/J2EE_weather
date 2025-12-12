@@ -147,14 +147,36 @@
             background: #f0f7fa;
             color: #5eb3d6;
         }
+
+        @media (min-width: 992px) {
+            .navbar-expand-lg .navbar-nav .dropdown:hover .dropdown-menu {
+                display: block;
+            }
+            .megamenu {
+                padding: 1rem;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 900px;
+                max-width: 95vw; /* Add max-width to prevent overflow on small screens */
+                border-radius: 8px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+            .megamenu .dropdown-header {
+                text-transform: uppercase;
+                font-size: 0.8em;
+                color: #5a6c7d;
+                margin-top: 0.5rem;
+                margin-bottom: 0.5rem;
+            }
+        }
     </style>
 </head>
 <body>
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light">
-    <div class="container-fluid" style="max-width: 1320px;">
-        <a class="navbar-brand" href="/">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="/">
             <i class="bi bi-cloud-sun me-2"></i>WeatherAI
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -163,87 +185,46 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown">
                         Tỉnh/Thành phố
                     </a>
-                    <div class="dropdown-menu province-dropdown">
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Hà Nội'); return false;">Hà Nội</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Hồ Chí Minh'); return false;">Hồ Chí Minh</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Đà Nẵng'); return false;">Đà Nẵng</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Hải Phòng'); return false;">Hải Phòng</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Cần Thơ'); return false;">Cần Thơ</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('An Giang'); return false;">An Giang</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Bà Rịa - Vũng Tàu'); return false;">Bà Rịa - Vũng Tàu</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Bắc Giang'); return false;">Bắc Giang</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Bắc Kạn'); return false;">Bắc Kạn</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Bạc Liêu'); return false;">Bạc Liêu</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Bắc Ninh'); return false;">Bắc Ninh</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Bến Tre'); return false;">Bến Tre</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Bình Định'); return false;">Bình Định</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Bình Dương'); return false;">Bình Dương</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Bình Phước'); return false;">Bình Phước</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Bình Thuận'); return false;">Bình Thuận</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Cà Mau'); return false;">Cà Mau</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Cao Bằng'); return false;">Cao Bằng</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Đắk Lắk'); return false;">Đắk Lắk</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Đắk Nông'); return false;">Đắk Nông</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Điện Biên'); return false;">Điện Biên</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Đồng Nai'); return false;">Đồng Nai</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Đồng Tháp'); return false;">Đồng Tháp</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Gia Lai'); return false;">Gia Lai</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Hà Giang'); return false;">Hà Giang</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Hà Nam'); return false;">Hà Nam</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Hà Tĩnh'); return false;">Hà Tĩnh</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Hải Dương'); return false;">Hải Dương</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Hậu Giang'); return false;">Hậu Giang</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Hòa Bình'); return false;">Hòa Bình</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Hưng Yên'); return false;">Hưng Yên</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Khánh Hòa'); return false;">Khánh Hòa</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Kiên Giang'); return false;">Kiên Giang</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Kon Tum'); return false;">Kon Tum</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Lai Châu'); return false;">Lai Châu</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Lâm Đồng'); return false;">Lâm Đồng</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Lạng Sơn'); return false;">Lạng Sơn</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Lào Cai'); return false;">Lào Cai</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Long An'); return false;">Long An</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Nam Định'); return false;">Nam Định</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Nghệ An'); return false;">Nghệ An</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Ninh Bình'); return false;">Ninh Bình</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Ninh Thuận'); return false;">Ninh Thuận</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Phú Thọ'); return false;">Phú Thọ</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Phú Yên'); return false;">Phú Yên</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Quảng Bình'); return false;">Quảng Bình</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Quảng Nam'); return false;">Quảng Nam</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Quảng Ngãi'); return false;">Quảng Ngãi</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Quảng Ninh'); return false;">Quảng Ninh</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Quảng Trị'); return false;">Quảng Trị</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Sóc Trăng'); return false;">Sóc Trăng</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Sơn La'); return false;">Sơn La</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Tây Ninh'); return false;">Tây Ninh</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Thái Bình'); return false;">Thái Bình</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Thái Nguyên'); return false;">Thái Nguyên</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Thanh Hóa'); return false;">Thanh Hóa</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Thừa Thiên Huế'); return false;">Thừa Thiên Huế</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Tiền Giang'); return false;">Tiền Giang</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Trà Vinh'); return false;">Trà Vinh</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Tuyên Quang'); return false;">Tuyên Quang</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Vĩnh Long'); return false;">Vĩnh Long</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Vĩnh Phúc'); return false;">Vĩnh Phúc</a>
-                        <a class="dropdown-item" href="#" onclick="loadChartData('Yên Bái'); return false;">Yên Bái</a>
+                    <div class="dropdown-menu megamenu" aria-labelledby="navbarDropdownMenuLink">
+                        <div class="container">
+                            <div class="row">
+                                <th:block th:each="entry : ${groupedCities}">
+                                    <div class="col-md-3">
+                                        <h6 class="dropdown-header" th:text="${entry.key}"></h6>
+                                        <a th:each="province : ${entry.value}" href="javascript:void(0)" th:onclick="loadChartData('[(${province})]');" class="dropdown-item" th:text="${province}"></a>
+                                    </div>
+                                </th:block>
+                            </div>
+                        </div>
                     </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="/chart">Biểu đồ</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/">Trang chủ</a>
+                    <a class="nav-link" href="/perpetual-calendar">Xem lịch vạn niên</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="weatherNewsDropdown" role="button" data-bs-toggle="dropdown">
+                        Tin thời tiết
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="weatherNewsDropdown">
+                        <li><a class="dropdown-item" href="/weather-news/daily">Tin tức hằng ngày</a></li>
+                        <li><a class="dropdown-item" href="/weather-news/travel">Thời tiết du lịch</a></li>
+                        <li><a class="dropdown-item" href="/weather-news/nature">Thiên nhiên</a></li>
+                    </ul>
                 </li>
             </ul>
             <div class="d-flex align-items-center">
-                <form class="input-group" style="max-width: 300px;" onsubmit="handleSearch(event)">
-                    <input id="cityInput" class="form-control" type="search" placeholder="Nhập tên thành phố...">
+                <form id="searchForm" class="input-group" style="max-width: 300px;" onsubmit="handleSearch(event)">
+                    <span class="input-group-text border-0 bg-light"><i class="bi bi-search text-muted"></i></span>
+                    <input id="cityInput" class="form-control border-0 bg-light" type="search" name="city" placeholder="Nhập tên thành phố...">
                     <button class="btn btn-primary" type="submit">Tìm kiếm</button>
                 </form>
+                <i class="bi bi-moon fs-5 ms-3 cursor-pointer text-muted"></i>
             </div>
         </div>
     </div>

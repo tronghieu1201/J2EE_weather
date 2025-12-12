@@ -10,12 +10,14 @@ public class DailyForecast {
     private double tempMax;
     private double tempMin;
     private double rainProbability;
+    private int weatherCode;
 
-    public DailyForecast(LocalDate date, double tempMax, double tempMin, double rainProbability) {
+    public DailyForecast(LocalDate date, double tempMax, double tempMin, double rainProbability, int weatherCode) {
         this.date = date;
         this.tempMax = tempMax;
         this.tempMin = tempMin;
         this.rainProbability = rainProbability;
+        this.weatherCode = weatherCode;
     }
 
     // Getters and Setters
@@ -51,6 +53,14 @@ public class DailyForecast {
         this.rainProbability = rainProbability;
     }
 
+    public int getWeatherCode() {
+        return weatherCode;
+    }
+
+    public void setWeatherCode(int weatherCode) {
+        this.weatherCode = weatherCode;
+    }
+
     @Override
     public String toString() {
         return "DailyForecast{" +
@@ -58,6 +68,7 @@ public class DailyForecast {
                 ", tempMax=" + tempMax +
                 ", tempMin=" + tempMin +
                 ", rainProbability=" + rainProbability +
+                ", weatherCode=" + weatherCode +
                 '}';
     }
 }

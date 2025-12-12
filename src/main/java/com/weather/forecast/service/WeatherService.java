@@ -89,98 +89,70 @@ public class WeatherService {
 
 
     /**
-     * Gets the 7-day weather forecast for a given province using XGBoost models.
-     * This method fetches historical data, prepares features, and calls the prediction model.
-     * It falls back to placeholder data if prediction fails.
-     * @param province The name of the province.
+     * Extracts the 7-day weather forecast directly from the comprehensive API report.
+     * This method no longer uses XGBoost models.
+     * @param comprehensiveReport The full weather report containing the daily forecast data.
      * @return A list of DailyForecast objects.
      */
-    public List<DailyForecast> get7DayXGBoostForecast(String province) {
-        System.out.println("Executing 7-day XGBoost forecast logic for " + province);
+    public List<DailyForecast> get7DayForecastFromReport(ComprehensiveWeatherReport comprehensiveReport) {
+        // If the report is null or doesn't have the necessary data, return an empty list.
+        if (comprehensiveReport == null || comprehensiveReport.getDaily() == null || comprehensiveReport.getDaily().getTime().isEmpty()) {
+            System.err.println("Comprehensive report is missing daily data. Cannot extract 7-day forecast.");
+            return Collections.emptyList();
+        }
+
+        System.out.println("Extracting 7-day forecast directly from API report.");
+        List<DailyForecast> forecastResults = new ArrayList<>();
+        
         try {
-            // 1. Get coordinates for the province
-            String geoJson = openMeteoAPI.getCoordinatesForCity(province);
-            double[] coords = parseCoordinates(geoJson);
-            if (coords == null) {
-                System.err.println("Could not find coordinates for " + province);
-                return Collections.emptyList(); // Return empty list on geocoding failure
+            ComprehensiveWeatherReport.DailyData dailyData = comprehensiveReport.getDaily();
+            List<String> dates = dailyData.getTime();
+            List<Double> maxTemps = dailyData.getTemperatureMax();
+            List<Double> minTemps = dailyData.getTemperatureMin();
+            List<Integer> rainProbs = dailyData.getPrecipitationProbabilityMax();
+            List<Integer> weatherCodes = dailyData.getWeatherCode();
+
+            // Ensure all lists have the same size to avoid IndexOutOfBoundsException
+            int forecastDays = dates.size();
+            if (maxTemps.size() != forecastDays || minTemps.size() != forecastDays || rainProbs.size() != forecastDays || weatherCodes.size() != forecastDays) {
+                System.err.println("Inconsistent daily data sizes in API report. Cannot proceed.");
+                return Collections.emptyList();
             }
-            // 2. Call the coordinate-based forecast method
-            return get7DayXGBoostForecast(coords[0], coords[1]);
+
+            for (int i = 0; i < forecastDays; i++) {
+                LocalDate date = LocalDate.parse(dates.get(i));
+                double maxTemp = maxTemps.get(i);
+                double minTemp = minTemps.get(i);
+                // Convert precipitation probability from percentage to a 0-1 float value
+                double rainProb = rainProbs.get(i) / 100.0;
+                int weatherCode = weatherCodes.get(i);
+
+                DailyForecast day = new DailyForecast(date, maxTemp, minTemp, rainProb, weatherCode);
+                forecastResults.add(day);
+            }
+            return forecastResults;
+
         } catch (Exception e) {
-            System.err.println("Error getting 7-day XGBoost forecast for province '" + province + "': " + e.getMessage());
+            System.err.println("Error extracting 7-day forecast from report: " + e.getMessage());
             e.printStackTrace();
-            return getPlaceholderForecast(); // Fallback on geocoding/other errors
+            return Collections.emptyList(); // Return empty list on any parsing or processing error
         }
     }
 
+
     /**
-     * Gets the 7-day weather forecast for a given latitude and longitude using XGBoost models.
-     * This is the core prediction logic.
+     * This method is now effectively deprecated and kept for reference or internal use if needed.
+     * The main logic is in get7DayXGBoostForecast(ComprehensiveWeatherReport).
      * @param lat The latitude.
      * @param lon The longitude.
      * @return A list of DailyForecast objects.
      */
-    public List<DailyForecast> get7DayXGBoostForecast(double lat, double lon) {
-        System.out.println("Executing 7-day XGBoost forecast for coordinates: Lat=" + lat + ", Lon=" + lon);
-        final int PAST_DAYS_FOR_FEATURES = 3;
-
+    private List<DailyForecast> get7DayXGBoostForecast(double lat, double lon) {
+        System.out.println("Executing coordinate-based 7-day forecast. Consider using the report-based method for efficiency.");
         try {
-            // 1. Fetch historical data for features
-            // This now uses the comprehensive API, extracting daily data
             String weatherJson = openMeteoAPI.getWeatherForecast(lat, lon);
             ComprehensiveWeatherReport comprehensiveReport = objectMapper.readValue(weatherJson, ComprehensiveWeatherReport.class);
-            List<DailyForecast> historicalData = extractHistoricalDailyData(comprehensiveReport, PAST_DAYS_FOR_FEATURES);
-
-
-            if (historicalData.size() < PAST_DAYS_FOR_FEATURES) {
-                System.err.println("Not enough historical data to create features. Need " + PAST_DAYS_FOR_FEATURES + " days.");
-                return getPlaceholderForecast(); // Fallback if insufficient historical data
-            }
-
-            // 2. Prepare features and predict for the next 7 days
-            List<DailyForecast> forecastResults = new ArrayList<>();
-            List<DailyForecast> currentFeatures = new ArrayList<>(historicalData);
-
-            for (int i = 1; i <= 7; i++) {
-                LocalDate predictionDate = LocalDate.now().plusDays(i);
-
-                float[] features = new float[2 + 1 + (PAST_DAYS_FOR_FEATURES * 3)];
-                features[0] = (float) lat;
-                features[1] = (float) lon;
-                features[2] = predictionDate.getDayOfYear();
-                int featureIndex = 3;
-                for(DailyForecast day : currentFeatures) {
-                    features[featureIndex++] = (float) day.getTempMax();
-                    features[featureIndex++] = (float) day.getTempMin();
-                    features[featureIndex++] = (float) day.getRainProbability();
-                }
-
-                try {
-                    // 3. Call each model separately
-                    float predictedMaxTemp = dailyMaxTempForecastModel.predict(features);
-                    float predictedMinTemp = dailyMinTempForecastModel.predict(features);
-                    float predictedRainProb = dailyRainProbForecastModel.predict(features);
-
-                    DailyForecast predictedDay = new DailyForecast(
-                        predictionDate,
-                        predictedMaxTemp,
-                        predictedMinTemp,
-                        predictedRainProb
-                    );
-                    forecastResults.add(predictedDay);
-
-                    currentFeatures.remove(0);
-                    currentFeatures.add(predictedDay);
-
-                } catch (Exception modelException) {
-                    System.err.println("MODEL PREDICTION FAILED for day " + i + ": " + modelException.getMessage());
-                    System.err.println("Falling back to placeholder data for the rest of the forecast.");
-                    return getPlaceholderForecast(); // Return placeholder if any prediction fails
-                }
-            }
-            return forecastResults;
-
+            return get7DayForecastFromReport(comprehensiveReport);
         } catch (Exception e) {
             System.err.println("Error getting 7-day XGBoost forecast by coords: " + e.getMessage());
             e.printStackTrace();

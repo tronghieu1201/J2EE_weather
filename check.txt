@@ -1,0 +1,83 @@
+(base) PS C:\Users\giapt\OneDrive\Máy tính\J2EE_weather> mvn spring-boot:run
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------< com.weather.forecast:weather-forecast-j2ee >-------------
+[INFO] Building weather-forecast-j2ee 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:2.7.5:run (default-cli) > test-compile @ weather-forecast-j2ee >>>
+[WARNING] 1 problem was encountered while building the effective model for org.javassist:javassist:jar:3.20.0-GA during dependency collection step for project (use -X to see details)
+[INFO] 
+[INFO] --- resources:3.2.0:resources (default-resources) @ weather-forecast-j2ee ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] Copying 1 resource
+[INFO] Copying 18 resources
+[INFO] 
+[INFO] --- compiler:3.10.1:compile (default-compile) @ weather-forecast-j2ee ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.2.0:testResources (default-testResources) @ weather-forecast-j2ee ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] skip non existing resourceDirectory C:\Users\giapt\OneDrive\Máy tính\J2EE_weather\src\test\resources
+[INFO]
+[INFO] --- compiler:3.10.1:testCompile (default-testCompile) @ weather-forecast-j2ee ---
+[INFO] No sources to compile
+[INFO]
+[INFO] <<< spring-boot:2.7.5:run (default-cli) < test-compile @ weather-forecast-j2ee <<<
+[INFO]
+[INFO] 
+[INFO] --- spring-boot:2.7.5:run (default-cli) @ weather-forecast-j2ee ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.7.5)
+
+2025-12-12 18:13:19.175 [main] INFO  com.weather.forecast.Application - Starting Application using Java 17.0.17 on DESKTOP-B4U5OFT with PID 7216 (C:\Users\giapt\OneDrive\Mßy tφnh\J2EE_weather\target\classes started by giapt in C:\Users\giapt\OneDrive\Mßy tφnh\J2EE_weather)
+2025-12-12 18:13:19.182 [main] INFO  com.weather.forecast.Application - No active profile set, falling back to 1 default profile: "default"
+2025-12-12 18:13:20.360 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-12 18:13:20.479 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 98 ms. Found 2 JPA repository interfaces.
+2025-12-12 18:13:21.707 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2025-12-12 18:13:21.730 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-12 18:13:21.732 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-12 18:13:21.732 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.68]
+2025-12-12 18:13:22.016 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-12 18:13:22.016 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2726 ms
+2025-12-12 18:13:22.323 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-12 18:13:22.422 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.12.Final
+2025-12-12 18:13:22.659 [main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2025-12-12 18:13:22.882 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-12 18:13:23.215 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-12 18:13:23.256 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2025-12-12 18:13:24.105 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2025-12-12 18:13:24.115 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+Successfully loaded model from classpath: models/daily_model_max_temp.bin
+Successfully loaded model from classpath: models/daily_model_min_temp.bin
+Successfully loaded model from classpath: models/daily_model_rain_prob.bin
+Successfully loaded model from classpath: models/hourly_model.bin
+2025-12-12 18:13:25.012 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-12 18:13:25.150 [main] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-12-12 18:13:25.464 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-12 18:13:25.485 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2025-12-12 18:13:25.498 [main] INFO  com.weather.forecast.Application - Started Application in 7.096 seconds (JVM running for 7.771)
+2025-12-12 18:13:25.590 [http-nio-8080-exec-1] INFO  o.a.tomcat.util.http.parser.Cookie - A cookie header was received [g_state={"i_l":0,"i_ll":1761962380141,"i_b":"Gfn1EG2nyF/Kf52WhZUhGlDs1MljjBhh1r+jKETh+B4","i_t":1762027889487}] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2025-12-12 18:13:25.603 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-12 18:13:25.604 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-12 18:13:25.606 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2025-12-12 18:13:25.683 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - Searching for city: Hα N?i
+Extracting 7-day forecast directly from API report.
+2025-12-12 18:13:37.536 [http-nio-8080-exec-5] INFO  c.w.f.controller.WeatherController - Fetching weather fragment for city: H? Chφ Minh
+Extracting 7-day forecast directly from API report.
+2025-12-12 18:13:39.411 [http-nio-8080-exec-4] INFO  c.w.f.controller.WeatherController - API request for chart data for city: Hα N?i
+2025-12-12 18:13:48.169 [http-nio-8080-exec-2] INFO  c.w.f.controller.WeatherController - API request for chart data for city: B∞nh ??nh
+2025-12-12 18:13:51.507 [http-nio-8080-exec-3] INFO  c.w.f.controller.WeatherController - API request for chart data for city: B∞nh ??nh
+2025-12-12 18:13:53.158 [http-nio-8080-exec-7] INFO  c.w.f.controller.WeatherController - Searching for city: Hα N?i
+Extracting 7-day forecast directly from API report.

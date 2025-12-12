@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biểu đồ Thời tiết - AI Weather</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <style>
+        body {
+            background: linear-gradient(180deg, #e8f4f8 0%, #f0f8ff 100%);
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            color: #5eb3d6;
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        .navbar-brand:hover {
+            color: #4a9ec4;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #5eb3d6 0%, #4a9ec4 100%);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #4a9ec4 0%, #3d8bb0 100%);
+        }
+
+        .chart-container {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .chart-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 0;
+        }
+
+        .city-badge {
+            background: linear-gradient(135deg, #5eb3d6 0%, #4a9ec4 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 400px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #f8fafb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid #e8eef2;
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+            color: #5eb3d6;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #718096;
+        }
+
+        .loading-spinner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+        }
+
+        .spinner-border {
+            color: #5eb3d6;
+        }
+
+        .alert {
+            border-radius: 12px;
+            border: 1px solid #e8eef2;
+        }
+
+        .province-dropdown {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1rem;
+            transition: all 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: #f0f7fa;
+            color: #5eb3d6;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid" style="max-width: 1320px;">
+        <a class="navbar-brand" href="/">
+            <i class="bi bi-cloud-sun me-2"></i>WeatherAI
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        Tỉnh/Thành phố
+                    </a>
+                    <div class="dropdown-menu province-dropdown">
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Hà Nội'); return false;">Hà Nội</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Hồ Chí Minh'); return false;">Hồ Chí Minh</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Đà Nẵng'); return false;">Đà Nẵng</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Hải Phòng'); return false;">Hải Phòng</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Cần Thơ'); return false;">Cần Thơ</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('An Giang'); return false;">An Giang</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Bà Rịa - Vũng Tàu'); return false;">Bà Rịa - Vũng Tàu</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Bắc Giang'); return false;">Bắc Giang</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Bắc Kạn'); return false;">Bắc Kạn</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Bạc Liêu'); return false;">Bạc Liêu</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Bắc Ninh'); return false;">Bắc Ninh</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Bến Tre'); return false;">Bến Tre</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Bình Định'); return false;">Bình Định</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Bình Dương'); return false;">Bình Dương</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Bình Phước'); return false;">Bình Phước</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Bình Thuận'); return false;">Bình Thuận</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Cà Mau'); return false;">Cà Mau</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Cao Bằng'); return false;">Cao Bằng</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Đắk Lắk'); return false;">Đắk Lắk</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Đắk Nông'); return false;">Đắk Nông</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Điện Biên'); return false;">Điện Biên</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Đồng Nai'); return false;">Đồng Nai</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Đồng Tháp'); return false;">Đồng Tháp</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Gia Lai'); return false;">Gia Lai</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Hà Giang'); return false;">Hà Giang</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Hà Nam'); return false;">Hà Nam</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Hà Tĩnh'); return false;">Hà Tĩnh</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Hải Dương'); return false;">Hải Dương</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Hậu Giang'); return false;">Hậu Giang</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Hòa Bình'); return false;">Hòa Bình</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Hưng Yên'); return false;">Hưng Yên</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Khánh Hòa'); return false;">Khánh Hòa</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Kiên Giang'); return false;">Kiên Giang</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Kon Tum'); return false;">Kon Tum</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Lai Châu'); return false;">Lai Châu</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Lâm Đồng'); return false;">Lâm Đồng</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Lạng Sơn'); return false;">Lạng Sơn</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Lào Cai'); return false;">Lào Cai</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Long An'); return false;">Long An</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Nam Định'); return false;">Nam Định</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Nghệ An'); return false;">Nghệ An</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Ninh Bình'); return false;">Ninh Bình</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Ninh Thuận'); return false;">Ninh Thuận</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Phú Thọ'); return false;">Phú Thọ</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Phú Yên'); return false;">Phú Yên</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Quảng Bình'); return false;">Quảng Bình</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Quảng Nam'); return false;">Quảng Nam</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Quảng Ngãi'); return false;">Quảng Ngãi</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Quảng Ninh'); return false;">Quảng Ninh</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Quảng Trị'); return false;">Quảng Trị</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Sóc Trăng'); return false;">Sóc Trăng</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Sơn La'); return false;">Sơn La</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Tây Ninh'); return false;">Tây Ninh</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Thái Bình'); return false;">Thái Bình</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Thái Nguyên'); return false;">Thái Nguyên</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Thanh Hóa'); return false;">Thanh Hóa</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Thừa Thiên Huế'); return false;">Thừa Thiên Huế</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Tiền Giang'); return false;">Tiền Giang</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Trà Vinh'); return false;">Trà Vinh</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Tuyên Quang'); return false;">Tuyên Quang</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Vĩnh Long'); return false;">Vĩnh Long</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Vĩnh Phúc'); return false;">Vĩnh Phúc</a>
+                        <a class="dropdown-item" href="#" onclick="loadChartData('Yên Bái'); return false;">Yên Bái</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/chart">Biểu đồ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Trang chủ</a>
+                </li>
+            </ul>
+            <div class="d-flex align-items-center">
+                <form class="input-group" style="max-width: 300px;" onsubmit="handleSearch(event)">
+                    <input id="cityInput" class="form-control" type="search" placeholder="Nhập tên thành phố...">
+                    <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<main id="chartArea">
+    <div class="chart-container">
+        <div id="loadingArea" class="chart-card loading-spinner">
+            <div class="spinner-border mb-3" role="status">
+                <span class="visually-hidden">Đang tải...</span>
+            </div>
+            <p class="text-muted">Đang tải dữ liệu biểu đồ...</p>
+        </div>
+
+        <div id="errorArea" class="alert alert-warning text-center" style="display: none;" role="alert">
+            <i class="bi bi-exclamation-triangle fs-3 mb-2"></i>
+            <p class="mb-0">Không thể tải dữ liệu biểu đồ. Vui lòng thử lại.</p>
+        </div>
+
+        <div id="chartContent" style="display: none;">
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="bi bi-thermometer-half"></i>
+                    <div class="stat-value" id="avgTemp">--°C</div>
+                    <div class="stat-label">Nhiệt độ trung bình</div>
+                </div>
+                <div class="stat-card">
+                    <i class="bi bi-thermometer-sun"></i>
+                    <div class="stat-value" id="maxTemp">--°C</div>
+                    <div class="stat-label">Nhiệt độ cao nhất</div>
+                </div>
+                <div class="stat-card">
+                    <i class="bi bi-thermometer-snow"></i>
+                    <div class="stat-value" id="minTemp">--°C</div>
+                    <div class="stat-label">Nhiệt độ thấp nhất</div>
+                </div>
+                <div class="stat-card">
+                    <i class="bi bi-droplet-fill"></i>
+                    <div class="stat-value" id="avgRain">--%</div>
+                    <div class="stat-label">Xác suất mưa TB</div>
+                </div>
+            </div>
+
+            <!-- Temperature Chart -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h2 class="chart-title">
+                        <i class="bi bi-graph-up me-2"></i>Biểu đồ Nhiệt độ 7 ngày
+                    </h2>
+                    <span class="city-badge" id="currentCity">Hà Nội</span>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="temperatureChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Rain Probability Chart -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h2 class="chart-title">
+                        <i class="bi bi-cloud-rain me-2"></i>Xác suất mưa 7 ngày
+                    </h2>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="rainChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let temperatureChart = null;
+    let rainChart = null;
+    let currentCityName = 'Hà Nội';
+
+    function getCityFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('city') || 'Hà Nội';
+    }
+
+    async function loadChartData(city) {
+        currentCityName = city;
+        document.getElementById('currentCity').textContent = city;
+        
+        document.getElementById('loadingArea').style.display = 'flex';
+        document.getElementById('errorArea').style.display = 'none';
+        document.getElementById('chartContent').style.display = 'none';
+
+        try {
+            const response = await fetch(`/api/weather-forecast?city=${encodeURIComponent(city)}`);
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
+            }
+
+            const data = await response.json();
+            
+            document.getElementById('loadingArea').style.display = 'none';
+            document.getElementById('chartContent').style.display = 'block';
+
+            displayChartData(data);
+            
+        } catch (error) {
+            console.error('Error loading chart data:', error);
+            document.getElementById('loadingArea').style.display = 'none';
+            document.getElementById('errorArea').style.display = 'block';
+        }
+    }
+
+    function displayChartData(data) {
+        if (!data.sevenDayForecast || data.sevenDayForecast.length === 0) {
+            document.getElementById('errorArea').style.display = 'block';
+            document.getElementById('chartContent').style.display = 'none';
+            return;
+        }
+
+        const forecast = data.sevenDayForecast;
+        
+        const labels = forecast.map((day, index) => {
+            if (index === 0) return 'Hôm nay';
+            const date = new Date(day.date);
+            return date.toLocaleDateString('vi-VN', { weekday: 'short', day: '2-digit', month: '2-digit' });
+        });
+        
+        const tempMax = forecast.map(day => Math.round(day.tempMax));
+        const tempMin = forecast.map(day => Math.round(day.tempMin));
+        const rainProb = forecast.map(day => Math.round(day.rainProbability * 100));
+
+        const avgTemp = Math.round((tempMax.reduce((a, b) => a + b, 0) + tempMin.reduce((a, b) => a + b, 0)) / (tempMax.length + tempMin.length));
+        const maxTempValue = Math.max(...tempMax);
+        const minTempValue = Math.min(...tempMin);
+        const avgRainValue = Math.round(rainProb.reduce((a, b) => a + b, 0) / rainProb.length);
+
+        document.getElementById('avgTemp').textContent = avgTemp + '°C';
+        document.getElementById('maxTemp').textContent = maxTempValue + '°C';
+        document.getElementById('minTemp').textContent = minTempValue + '°C';
+        document.getElementById('avgRain').textContent = avgRainValue + '%';
+
+        const tempCtx = document.getElementById('temperatureChart').getContext('2d');
+        if (temperatureChart) {
+            temperatureChart.destroy();
+        }
+        
+        temperatureChart = new Chart(tempCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Nhiệt độ cao nhất',
+                        data: tempMax,
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Nhiệt độ thấp nhất',
+                        data: tempMin,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.y + '°C';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '°C';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        const rainCtx = document.getElementById('rainChart').getContext('2d');
+        if (rainChart) {
+            rainChart.destroy();
+        }
+        
+        rainChart = new Chart(rainCtx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Xác suất mưa',
+                    data: rainProb,
+                    backgroundColor: 'rgba(94, 179, 214, 0.8)',
+                    borderColor: '#5eb3d6',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'Xác suất mưa: ' + context.parsed.y + '%';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function handleSearch(event) {
+        event.preventDefault();
+        const city = document.getElementById('cityInput').value.trim();
+        if (city) {
+            loadChartData(city);
+            const newUrl = window.location.pathname + '?city=' + encodeURIComponent(city);
+            window.history.pushState({city: city}, '', newUrl);
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+        const initialCity = getCityFromUrl();
+        loadChartData(initialCity);
+    });
+
+    window.addEventListener('popstate', function(event) {
+        if (event.state && event.state.city) {
+            loadChartData(event.state.city);
+        }
+    });
+</script>
+
+</body>
+</html>

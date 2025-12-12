@@ -609,45 +609,48 @@
                         </span>
                     </div>
 
-                    <div class="weather-main">
-                        <i class="weather-icon-large bi bi-cloud-sun"></i>
-                        <div class="temp-display">22°C</div>
-                        <p class="weather-desc">Mưa rào nhẹ</p>
-                        <p class="feels-like">Cảm giác như 20°C</p>
-                    </div>
+                    <div th:with="current=${comprehensiveReport.current}, hourly=${comprehensiveReport.hourly}">
+                        <div class="weather-main">
+                            <i class="weather-icon-large bi"
+                               th:classappend="${T(com.weather.forecast.util.WeatherIconMapper).getIconClass(current.weatherCode)}"></i>
+                            <div class="temp-display" th:text="${#numbers.formatDecimal(current.temperature, 0, 0)} + '°C'">22°C</div>
+                            <p class="weather-desc" th:text="${T(com.weather.forecast.util.WeatherCodeMapper).getDescription(current.weatherCode)}">Mưa rào nhẹ</p>
+                            <p class="feels-like" th:text="'Cảm giác như ' + ${#numbers.formatDecimal(current.apparentTemperature, 0, 0)} + '°C'">Cảm giác như 20°C</p>
+                        </div>
 
-                    <div class="metrics-grid">
-                        <div class="metric-item">
-                            <i class="bi bi-droplet-fill"></i>
-                            <span class="metric-value">84%</span>
-                            <span class="metric-label">ĐỘ ẨM</span>
-                        </div>
-                        <div class="metric-item">
-                            <i class="bi bi-speedometer2"></i>
-                            <span class="metric-value">1014 hPa</span>
-                            <span class="metric-label">ÁP SUẤT</span>
-                        </div>
-                        <div class="metric-item">
-                            <i class="bi bi-wind"></i>
-                            <span class="metric-value">2,4 km/h</span>
-                            <span class="metric-label">TỐC ĐỘ GIÓ</span>
-                        </div>
-                        <div class="metric-item">
-                            <i class="bi bi-eye-fill"></i>
-                            <span class="metric-value">24,1 km</span>
-                            <span class="metric-label">TẦM NHÌN</span>
-                        </div>
-                        <div class="metric-item" style="grid-column: span 2;">
-                            <i class="bi bi-sun-fill"></i>
-                            <span class="metric-value">0 (Thấp)</span>
-                            <span class="metric-label">CHỈ SỐ UV</span>
+                        <div class="metrics-grid">
+                            <div class="metric-item">
+                                <i class="bi bi-droplet-fill"></i>
+                                <span class="metric-value" th:text="${current.humidity} + '%'">84%</span>
+                                <span class="metric-label">ĐỘ ẨM</span>
+                            </div>
+                            <div class="metric-item">
+                                <i class="bi bi-speedometer2"></i>
+                                <span class="metric-value" th:text="${#numbers.formatDecimal(current.surfacePressure, 0, 0)} + ' hPa'">1014 hPa</span>
+                                <span class="metric-label">ÁP SUẤT</span>
+                            </div>
+                            <div class="metric-item">
+                                <i class="bi bi-wind"></i>
+                                <span class="metric-value" th:text="${#numbers.formatDecimal(current.windSpeed, 1, 1)} + ' km/h'">2,4 km/h</span>
+                                <span class="metric-label">TỐC ĐỘ GIÓ</span>
+                            </div>
+                            <!-- Assuming visibility is available in hourly data and taking the first value -->
+                            <div class="metric-item" th:if="${hourly != null and not #lists.isEmpty(hourly.visibility)}">
+                                <i class="bi bi-eye-fill"></i>
+                                <span class="metric-value" th:text="${#numbers.formatDecimal(hourly.visibility.get(0) / 1000, 1, 1)} + ' km'">24,1 km</span>
+                                <span class="metric-label">TẦM NHÌN</span>
+                            </div>
+                             <!-- This was the UV Index metric item. It has been removed as requested. -->
                         </div>
                     </div>
                 </div>
 
-                <div class="weather-tip">
+                <div class="weather-tip" th:with="code=${comprehensiveReport.current.weatherCode}">
                     <h5><i class="bi bi-lightbulb me-2"></i>Mẹo thời tiết</h5>
-                    <p>Trời hôm nay có mưa rào nhẹ, nên mang theo ô khi ra ngoài.</p>
+                    <p th:if="${code >= 51 and code <= 67 or code >= 80 and code <= 82}">Trời có mưa, bạn nhớ mang theo ô hoặc áo mưa khi ra ngoài.</p>
+                    <p th:if="${code >= 45 and code <= 48}">Có sương mù, hãy cẩn thận khi lái xe.</p>
+                    <p th:if="${code >= 71 and code <= 77 or code >= 85 and code <= 86}">Trời có tuyết! Giữ ấm và tận hưởng nhé.</p>
+                    <p th:if="${code <= 3}">Thời tiết đẹp, một ngày tuyệt vời cho các hoạt động ngoài trời.</p>
                 </div>
             </div>
 

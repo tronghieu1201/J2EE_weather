@@ -1,25 +1,33 @@
 package com.weather.forecast.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.weather.forecast.model.DailyForecast;
+import com.weather.forecast.model.HourlyForecast;
+import com.weather.forecast.model.dto.ComprehensiveWeatherReport;
+import com.weather.forecast.service.WeatherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.weather.forecast.model.DailyForecast;
-import com.weather.forecast.model.dto.ComprehensiveWeatherReport;
-import com.weather.forecast.model.HourlyForecast; // Import HourlyForecast
-import com.weather.forecast.service.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.format.annotation.DateTimeFormat; // Import DateTimeFormat
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.time.LocalDate; // Import LocalDate
-import java.time.OffsetDateTime; // Import OffsetDateTime
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList; // Added for collecting all cities
 
 @Controller
 public class WeatherController {
@@ -28,90 +36,110 @@ public class WeatherController {
 
     private final WeatherService weatherService;
     private final Map<String, List<String>> groupedCities;
-    private final List<String> allProvinces; // Added to hold all provinces as a flat list
+    private final List<String> allProvinces;
+    private final ObjectMapper objectMapper;
+    private final HttpClient httpClient;
 
     @Autowired
-    public WeatherController(WeatherService weatherService) {
+    public WeatherController(WeatherService weatherService, ObjectMapper objectMapper) {
         this.weatherService = weatherService;
+        this.objectMapper = objectMapper;
+        this.httpClient = HttpClient.newHttpClient();
         this.groupedCities = initGroupedCities();
-        this.allProvinces = new ArrayList<>(); // Initialize allProvinces
-        this.groupedCities.values().forEach(allProvinces::addAll); // Populate allProvinces from groupedCities
+        this.allProvinces = new ArrayList<>();
+        this.groupedCities.values().forEach(allProvinces::addAll);
     }
 
-    // New mapping for the root, now displaying weather forecast
     @GetMapping("/")
     public String index(@RequestParam(name = "city", required = false) String city, Model model) {
-        model.addAttribute("groupedCities", groupedCities); // Pass groupedCities for mega menu
-
-        // If no city is specified, use a default
+        model.addAttribute("groupedCities", groupedCities);
         if (city == null || city.isEmpty()) {
-            city = "Hà Nội"; // Default city
+            city = "Hà Nội";
         }
         logger.info("Searching for city: {}", city);
 
         ComprehensiveWeatherReport comprehensiveReport = weatherService.getWeatherReport(city);
-        List<DailyForecast> sevenDayForecast = weatherService.get7DayXGBoostForecast(city);
+        List<DailyForecast> sevenDayForecast = weatherService.get7DayForecastFromReport(comprehensiveReport);
 
-        if (comprehensiveReport != null) {
-            logger.info("Successfully retrieved comprehensive report for {}. Temperature: {}°C", city, comprehensiveReport.getCurrent().getTemperature());
-        } else {
-            logger.warn("Failed to retrieve comprehensive report for {}", city);
-        }
-        if (sevenDayForecast != null && !sevenDayForecast.isEmpty()) {
-            logger.info("Successfully retrieved 7-day forecast for {}", city);
-        } else {
-            logger.warn("Failed to retrieve 7-day forecast for {}", city);
-        }
-
-        model.addAttribute("comprehensiveReport", comprehensiveReport); // For current weather details
-        model.addAttribute("sevenDayForecast", sevenDayForecast);       // For 7-day XGBoost prediction
-        model.addAttribute("city", city); // Use the searched city name
-        return "index"; // Return index template
+        model.addAttribute("comprehensiveReport", comprehensiveReport);
+        model.addAttribute("sevenDayForecast", sevenDayForecast);
+        model.addAttribute("city", city);
+        return "index";
     }
 
-    // Handle POST request from the search bar on index.html (or other pages)
-    @PostMapping("/") // Change to root POST mapping
+    @PostMapping("/")
     public String postWeatherForecast(@RequestParam("city") String city, Model model) {
-        // This will now directly populate the index page, not redirect
-        model.addAttribute("groupedCities", groupedCities); // Pass groupedCities for mega menu
-
+        model.addAttribute("groupedCities", groupedCities);
         logger.info("User searching for city (POST): {}", city);
 
         ComprehensiveWeatherReport comprehensiveReport = weatherService.getWeatherReport(city);
-        List<DailyForecast> sevenDayForecast = weatherService.get7DayXGBoostForecast(city);
+        List<DailyForecast> sevenDayForecast = weatherService.get7DayForecastFromReport(comprehensiveReport);
 
-        if (comprehensiveReport != null) {
-            logger.info("Successfully retrieved comprehensive report for {}. Temperature: {}°C", city, comprehensiveReport.getCurrent().getTemperature());
-        } else {
-            logger.warn("Failed to retrieve comprehensive report for {}", city);
-        }
-        if (sevenDayForecast != null && !sevenDayForecast.isEmpty()) {
-            logger.info("Successfully retrieved 7-day forecast for {}", city);
-        } else {
-            logger.warn("Failed to retrieve 7-day forecast for {}", city);
-        }
-
-        model.addAttribute("comprehensiveReport", comprehensiveReport); // For current weather details
-        model.addAttribute("sevenDayForecast", sevenDayForecast);       // For 7-day XGBoost prediction
-        model.addAttribute("city", city); // Use the searched city name
-        return "index"; // Return index template
+        model.addAttribute("comprehensiveReport", comprehensiveReport);
+        model.addAttribute("sevenDayForecast", sevenDayForecast);
+        model.addAttribute("city", city);
+        return "index";
     }
 
-
-    // New mapping for Tỉnh/Thành phố page
     @GetMapping("/provinces")
     public String showProvinces(Model model) {
-        model.addAttribute("provinces", allProvinces); // Pass the flat list of all provinces
+        model.addAttribute("provinces", allProvinces);
         return "provinces";
     }
 
-    // New mapping for Lịch Vạn Niên page
     @GetMapping("/perpetual-calendar")
     public String showPerpetualCalendar() {
         return "perpetual_calendar";
     }
 
-    // New mapping for Tin Thời Tiết page
+    @PostMapping("/api/lunar-month-dates")
+    @ResponseBody
+    public List<Map<String, Object>> getLunarMonthDates(@RequestBody Map<String, Integer> payload) {
+        int month = payload.get("month");
+        int year = payload.get("year");
+        logger.info("Fetching lunar dates for month: {}/{}", month, year);
+        List<Map<String, Object>> lunarDates = new ArrayList<>();
+        YearMonth yearMonth = YearMonth.of(year, month);
+
+        for (int day = 1; day <= yearMonth.lengthOfMonth(); day++) {
+            try {
+                // Add a delay to avoid rate limiting
+                Thread.sleep(200); 
+
+                Map<String, Integer> dateMap = Map.of("day", day, "month", month, "year", year);
+                String requestBody = objectMapper.writeValueAsString(dateMap);
+
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create("https://open.oapi.vn/date/convert-to-lunar"))
+                        .header("Content-Type", "application/json")
+                        .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                        .build();
+
+                HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+                if (response.statusCode() == 200) {
+                    Map<String, Object> apiResponse = objectMapper.readValue(response.body(), Map.class);
+                    Map<String, Object> lunarData = (Map<String, Object>) apiResponse.get("data");
+                    if (lunarData != null) {
+                        lunarDates.add(lunarData);
+                    } else {
+                        lunarDates.add(Collections.singletonMap("error", "No data for day " + day));
+                    }
+                } else {
+                    logger.error("Lunar API request for {}/{}/{} failed with status: {}", day, month, year, response.statusCode());
+                    lunarDates.add(Collections.singletonMap("error", "API failed for day " + day + " status: " + response.statusCode()));
+                }
+            } catch (Exception e) {
+                logger.error("Error calling lunar API for {}/{}/{}: {}", day, month, year, e.getMessage());
+                // If the loop is interrupted (e.g., by Thread.sleep), handle it.
+                if (e instanceof InterruptedException) {
+                    Thread.currentThread().interrupt();
+                }
+                lunarDates.add(Collections.singletonMap("error", "Exception for day " + day + ": " + e.getMessage()));
+            }
+        }
+        return lunarDates;
+    }
+
     @GetMapping("/weather-news")
     public String showWeatherNews() {
         return "weather_news";
@@ -120,18 +148,18 @@ public class WeatherController {
     @GetMapping("/get-weather-fragment")
     public String getWeatherFragment(@RequestParam(name = "city", required = false) String city, Model model) {
         if (city == null || city.isEmpty()) {
-            city = "Hà Nội"; // Default city
+            city = "Hà Nội";
         }
         logger.info("Fetching weather fragment for city: {}", city);
 
         ComprehensiveWeatherReport comprehensiveReport = weatherService.getWeatherReport(city);
-        List<DailyForecast> sevenDayForecast = weatherService.get7DayXGBoostForecast(city);
+        List<DailyForecast> sevenDayForecast = weatherService.get7DayForecastFromReport(comprehensiveReport);
 
         model.addAttribute("comprehensiveReport", comprehensiveReport);
         model.addAttribute("sevenDayForecast", sevenDayForecast);
         model.addAttribute("city", city);
 
-        return "index :: weatherContent"; // Return the weatherContent fragment from index.html
+        return "index :: weatherContent";
     }
 
     @GetMapping("/hourly-details")
@@ -142,25 +170,19 @@ public class WeatherController {
         logger.info("Fetching hourly details for city: {} on date: {}", city, date);
 
         ComprehensiveWeatherReport comprehensiveReport = weatherService.getWeatherReport(city);
-        List<HourlyForecast> hourlyForecastForDay = new ArrayList<>(); // Declare and initialize here
+        List<HourlyForecast> hourlyForecastForDay = new ArrayList<>();
 
         if (comprehensiveReport != null && comprehensiveReport.getHourly() != null) {
-            List<String> hourlyTimes = comprehensiveReport.getHourly().getTime();
-            logger.debug("Hourly data time array size for {}: {}", city, hourlyTimes != null ? hourlyTimes.size() : 0);
-            if (hourlyTimes != null && !hourlyTimes.isEmpty()) {
-                logger.debug("Last hourly timestamp for {}: {}", city, hourlyTimes.get(hourlyTimes.size() - 1));
-            }
             hourlyForecastForDay = filterHourlyForecastByDate(comprehensiveReport.getHourly(), date);
         }
 
         model.addAttribute("city", city);
         model.addAttribute("date", date);
-        model.addAttribute("hourlyForecast", hourlyForecastForDay); // hourlyForecast is now a List
+        model.addAttribute("hourlyForecast", hourlyForecastForDay);
 
         return "daily_hourly_detail";
     }
 
-    // Helper method to filter hourly data for a specific date and convert to List<HourlyForecast>
     private List<HourlyForecast> filterHourlyForecastByDate(ComprehensiveWeatherReport.HourlyData fullHourlyData, LocalDate targetDate) {
         List<HourlyForecast> filteredForecasts = new ArrayList<>();
 
@@ -170,17 +192,11 @@ public class WeatherController {
 
         for (int i = 0; i < fullHourlyData.getTime().size(); i++) {
             String timestampString = fullHourlyData.getTime().get(i);
-            // Log the timestamp string for easier debugging
-            // Parsing timestamp: " + timestampString); // Removed for less verbose logging
-
-            // Define the formatter to handle the expected format "yyyy-MM-dd'T'HH:mm"
             java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-
-            // Parse as LocalDateTime
             java.time.LocalDateTime localDateTime = java.time.LocalDateTime.parse(timestampString, formatter);
             LocalDate entryDate = localDateTime.toLocalDate();
+
             if (entryDate.isEqual(targetDate)) {
-                // Ensure indices are valid before accessing
                 if (i < fullHourlyData.getTemperature2m().size() &&
                     i < fullHourlyData.getWeatherCode().size() &&
                     i < fullHourlyData.getPrecipitationProbability().size() &&
@@ -194,10 +210,7 @@ public class WeatherController {
                     hourlyForecast.setWindSpeed(fullHourlyData.getWindSpeed10m().get(i));
                     filteredForecasts.add(hourlyForecast);
                 } else {
-                    logger.warn("Inconsistent hourly data at index {} for date {}. Sizes: time={}, temp={}, code={}, precip={}, wind={}",
-                            i, targetDate, fullHourlyData.getTime().size(), fullHourlyData.getTemperature2m().size(),
-                            fullHourlyData.getWeatherCode().size(), fullHourlyData.getPrecipitationProbability().size(),
-                            fullHourlyData.getWindSpeed10m().size());
+                    logger.warn("Inconsistent hourly data at index {}", i);
                 }
             }
         }

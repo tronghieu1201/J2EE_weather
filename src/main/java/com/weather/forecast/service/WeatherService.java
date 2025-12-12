@@ -193,18 +193,33 @@ public class WeatherService {
             return historicalData;
         }
 
+        ComprehensiveWeatherReport.DailyData dailyData = report.getDaily();
+        List<String> dates = dailyData.getTime();
+        List<Double> maxTemps = dailyData.getTemperatureMax();
+        List<Double> minTemps = dailyData.getTemperatureMin();
+        List<Integer> rainProbs = dailyData.getPrecipitationProbabilityMax();
+        List<Integer> weatherCodes = dailyData.getWeatherCode();
+
+        // Ensure all lists have the same size to avoid IndexOutOfBoundsException
+        int dataSize = dates.size();
+        if (maxTemps.size() != dataSize || minTemps.size() != dataSize || rainProbs.size() != dataSize || weatherCodes.size() != dataSize) {
+            System.err.println("Inconsistent daily data sizes in API report for historical data. Cannot proceed.");
+            return Collections.emptyList();
+        }
+
         // The API returns daily forecast from today onwards.
         // We need 'past' data for XGBoost features.
         // For simplicity, we'll use the *first N days* of the returned daily forecast
         // as our "historical" features for predicting the next 7 days.
         // In a real application, this historical data would come from a separate source (e.g., database, archive API).
-        for (int i = 0; i < Math.min(numDays, report.getDaily().getTime().size()); i++) {
-            LocalDate date = LocalDate.parse(report.getDaily().getTime().get(i));
-            double max = report.getDaily().getTemperatureMax().get(i);
-            double min = report.getDaily().getTemperatureMin().get(i);
-            double rainProb = report.getDaily().getPrecipitationProbabilityMax().get(i) / 100.0; // Convert to probability [0,1]
+        for (int i = 0; i < Math.min(numDays, dataSize); i++) {
+            LocalDate date = LocalDate.parse(dates.get(i));
+            double max = maxTemps.get(i);
+            double min = minTemps.get(i);
+            double rainProb = rainProbs.get(i) / 100.0; // Convert to probability [0,1]
+            int weatherCode = weatherCodes.get(i); // Get the weather code
 
-            historicalData.add(new DailyForecast(date, max, min, rainProb));
+            historicalData.add(new DailyForecast(date, max, min, rainProb, weatherCode));
         }
         return historicalData;
     }
@@ -216,14 +231,15 @@ public class WeatherService {
      */
     private List<DailyForecast> getPlaceholderForecast() {
         System.out.println("Note: AI model logic is not fully implemented or failed. Returning dummy forecast data.");
+        // Provide a default weather code (e.g., 0 for clear sky) for placeholder data
         return List.of(
-            new DailyForecast(LocalDate.now().plusDays(1), 25.0, 15.0, 0.2),
-            new DailyForecast(LocalDate.now().plusDays(2), 26.0, 16.0, 0.3),
-            new DailyForecast(LocalDate.now().plusDays(3), 27.0, 17.0, 0.1),
-            new DailyForecast(LocalDate.now().plusDays(4), 28.0, 18.0, 0.4),
-            new DailyForecast(LocalDate.now().plusDays(5), 29.0, 19.0, 0.25),
-            new DailyForecast(LocalDate.now().plusDays(6), 30.0, 20.0, 0.15),
-            new DailyForecast(LocalDate.now().plusDays(7), 31.0, 21.0, 0.05)
+            new DailyForecast(LocalDate.now().plusDays(1), 25.0, 15.0, 0.2, 0),
+            new DailyForecast(LocalDate.now().plusDays(2), 26.0, 16.0, 0.3, 1),
+            new DailyForecast(LocalDate.now().plusDays(3), 27.0, 17.0, 0.1, 2),
+            new DailyForecast(LocalDate.now().plusDays(4), 28.0, 18.0, 0.4, 3),
+            new DailyForecast(LocalDate.now().plusDays(5), 29.0, 19.0, 0.25, 45),
+            new DailyForecast(LocalDate.now().plusDays(6), 30.0, 20.0, 0.15, 51),
+            new DailyForecast(LocalDate.now().plusDays(7), 31.0, 21.0, 0.05, 61)
         );
     }
 

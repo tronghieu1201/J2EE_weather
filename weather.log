@@ -7410,3 +7410,165 @@ Identify and stop the process that's listening on port 8080 or configure this ap
 2025-12-12 18:54:52.134 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
 2025-12-12 18:54:52.189 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - Searching for city: Hà N?i
 2025-12-12 18:55:03.619 [http-nio-8080-exec-3] INFO  c.w.f.controller.WeatherController - API request for chart data for city: Hà N?i
+2025-12-12 18:57:34.957 [main] INFO  com.weather.forecast.Application - Starting Application using Java 17.0.17 on DESKTOP-B4U5OFT with PID 3368 (C:\Users\giapt\OneDrive\Máy tính\J2EE_weather\target\classes started by giapt in C:\Users\giapt\OneDrive\Máy tính\J2EE_weather)
+2025-12-12 18:57:34.962 [main] INFO  com.weather.forecast.Application - No active profile set, falling back to 1 default profile: "default"
+2025-12-12 18:57:36.184 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-12 18:57:36.291 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 92 ms. Found 2 JPA repository interfaces.
+2025-12-12 18:57:37.380 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2025-12-12 18:57:37.407 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-12 18:57:37.408 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-12 18:57:37.410 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.68]
+2025-12-12 18:57:37.665 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-12 18:57:37.666 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2609 ms
+2025-12-12 18:57:38.080 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-12 18:57:38.176 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.12.Final
+2025-12-12 18:57:38.398 [main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2025-12-12 18:57:38.590 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-12 18:57:38.944 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-12 18:57:38.985 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2025-12-12 18:57:39.966 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2025-12-12 18:57:39.984 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-12 18:57:41.131 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-12 18:57:41.253 [main] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-12-12 18:57:41.680 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-12 18:57:41.698 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2025-12-12 18:57:41.717 [main] INFO  com.weather.forecast.Application - Started Application in 7.719 seconds (JVM running for 8.436)
+2025-12-12 18:57:42.881 [http-nio-8080-exec-1] INFO  o.a.tomcat.util.http.parser.Cookie - A cookie header was received [g_state={"i_l":0,"i_ll":1761962380141,"i_b":"Gfn1EG2nyF/Kf52WhZUhGlDs1MljjBhh1r+jKETh+B4","i_t":1762027889487}] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2025-12-12 18:57:42.888 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-12 18:57:42.889 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-12 18:57:42.890 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-12-12 18:57:42.928 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - Searching for city: Hà N?i
+2025-12-12 18:57:53.296 [http-nio-8080-exec-3] INFO  c.w.f.controller.WeatherController - Fetching hourly details for city: Hà N?i on date: 2025-12-13
+2025-12-12 18:57:55.472 [http-nio-8080-exec-7] INFO  c.w.f.controller.WeatherController - API request for chart data for city: Hà N?i
+2025-12-12 18:57:57.912 [http-nio-8080-exec-8] INFO  c.w.f.controller.WeatherController - API request for chart data for city: V?nh Long
+2025-12-12 19:36:00.143 [main] INFO  com.weather.forecast.Application - Starting Application using Java 17.0.17 on DESKTOP-B4U5OFT with PID 1564 (C:\Users\giapt\OneDrive\Máy tính\J2EE_weather\target\classes started by giapt in C:\Users\giapt\OneDrive\Máy tính\J2EE_weather)
+2025-12-12 19:36:00.147 [main] INFO  com.weather.forecast.Application - No active profile set, falling back to 1 default profile: "default"
+2025-12-12 19:36:01.316 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-12 19:36:01.609 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 279 ms. Found 2 JPA repository interfaces.
+2025-12-12 19:36:02.606 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2025-12-12 19:36:02.619 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-12 19:36:02.620 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-12 19:36:02.621 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.68]
+2025-12-12 19:36:02.825 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-12 19:36:02.825 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2613 ms
+2025-12-12 19:36:03.102 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-12 19:36:03.191 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.12.Final
+2025-12-12 19:36:03.442 [main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2025-12-12 19:36:03.675 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-12 19:36:04.098 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-12 19:36:04.146 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2025-12-12 19:36:05.294 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2025-12-12 19:36:05.327 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-12 19:36:06.696 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-12 19:36:06.851 [main] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-12-12 19:36:07.189 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-12 19:36:07.207 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2025-12-12 19:36:07.221 [main] INFO  com.weather.forecast.Application - Started Application in 8.11 seconds (JVM running for 8.827)
+2025-12-12 19:36:12.044 [http-nio-8080-exec-1] INFO  o.a.tomcat.util.http.parser.Cookie - A cookie header was received [g_state={"i_l":0,"i_ll":1761962380141,"i_b":"Gfn1EG2nyF/Kf52WhZUhGlDs1MljjBhh1r+jKETh+B4","i_t":1762027889487}] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2025-12-12 19:36:12.054 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-12 19:36:12.054 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-12 19:36:12.055 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-12-12 19:36:12.098 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - Searching for city: Hà N?i
+2025-12-12 19:36:12.729 [http-nio-8080-exec-2] INFO  c.w.f.controller.WeatherController - Searching for city: Hà N?i
+2025-12-12 19:36:17.324 [http-nio-8080-exec-4] INFO  c.w.f.controller.WeatherController - API request for chart data for city: Hà N?i
+2025-12-12 19:36:23.638 [http-nio-8080-exec-8] INFO  c.w.f.controller.WeatherController - API request for chart data for city: Bình ??nh
+2025-12-12 19:36:26.630 [http-nio-8080-exec-9] INFO  c.w.f.controller.WeatherController - API request for chart data for city: Hà Giang
+2025-12-12 19:36:28.957 [http-nio-8080-exec-7] INFO  c.w.f.controller.WeatherController - Searching for city: Hà N?i
+2025-12-12 22:15:43.336 [main] INFO  com.weather.forecast.Application - Starting Application using Java 17.0.17 on DESKTOP-B4U5OFT with PID 1324 (C:\Users\giapt\OneDrive\Máy tính\J2EE_weather\target\classes started by giapt in C:\Users\giapt\OneDrive\Máy tính\J2EE_weather)
+2025-12-12 22:15:43.346 [main] INFO  com.weather.forecast.Application - No active profile set, falling back to 1 default profile: "default"
+2025-12-12 22:15:45.377 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-12 22:15:45.596 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 187 ms. Found 2 JPA repository interfaces.
+2025-12-12 22:15:47.768 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2025-12-12 22:15:47.806 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-12 22:15:47.807 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-12 22:15:47.808 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.68]
+2025-12-12 22:15:48.293 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-12 22:15:48.294 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 4753 ms
+2025-12-12 22:15:48.912 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-12 22:15:49.110 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.12.Final
+2025-12-12 22:15:49.795 [main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2025-12-12 22:15:50.152 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-12 22:15:50.846 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-12 22:15:50.937 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2025-12-12 22:15:53.128 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2025-12-12 22:15:53.151 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-12 22:15:55.555 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-12 22:15:55.898 [main] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-12-12 22:15:56.581 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-12 22:15:56.627 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2025-12-12 22:15:56.664 [main] INFO  com.weather.forecast.Application - Started Application in 14.93 seconds (JVM running for 16.331)
+2025-12-12 22:17:02.634 [http-nio-8080-exec-1] INFO  o.a.tomcat.util.http.parser.Cookie - A cookie header was received [g_state={"i_l":0,"i_ll":1761962380141,"i_b":"Gfn1EG2nyF/Kf52WhZUhGlDs1MljjBhh1r+jKETh+B4","i_t":1762027889487}] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2025-12-12 22:17:02.652 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-12 22:17:02.652 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-12 22:17:02.657 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2025-12-12 22:17:02.792 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - Searching for city: Hà N?i
+2025-12-12 22:17:40.772 [http-nio-8080-exec-5] INFO  c.w.f.controller.WeatherController - Fetching weather fragment for city: Bình ??nh
+2025-12-12 22:26:23.966 [http-nio-8080-exec-8] INFO  c.w.f.controller.WeatherController - Searching for city: Hà N?i
+2025-12-12 22:26:30.983 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - API request for chart data for city: Hà N?i
+2025-12-12 22:26:39.139 [http-nio-8080-exec-4] INFO  c.w.f.controller.WeatherController - API request for chart data for city: H? Chí Minh
+2025-12-12 22:33:13.882 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-12 22:33:13.886 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-12-12 22:33:13.899 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-12-12 22:34:57.525 [main] INFO  com.weather.forecast.Application - Starting Application using Java 17.0.17 on DESKTOP-B4U5OFT with PID 14536 (C:\Users\giapt\OneDrive\Máy tính\J2EE_weather\target\classes started by giapt in C:\Users\giapt\OneDrive\Máy tính\J2EE_weather)
+2025-12-12 22:34:57.539 [main] INFO  com.weather.forecast.Application - No active profile set, falling back to 1 default profile: "default"
+2025-12-12 22:34:59.963 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-12 22:35:00.221 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 180 ms. Found 2 JPA repository interfaces.
+2025-12-12 22:35:02.476 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2025-12-12 22:35:02.516 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-12 22:35:02.518 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-12 22:35:02.519 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.68]
+2025-12-12 22:35:02.940 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-12 22:35:02.942 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 5195 ms
+2025-12-12 22:35:03.652 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-12 22:35:03.865 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.12.Final
+2025-12-12 22:35:04.438 [main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2025-12-12 22:35:04.787 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-12 22:35:05.445 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-12 22:35:05.514 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2025-12-12 22:35:07.791 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2025-12-12 22:35:07.817 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-12 22:35:09.588 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-12 22:35:10.015 [main] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-12-12 22:35:10.950 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-12 22:35:10.995 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2025-12-12 22:35:11.029 [main] INFO  com.weather.forecast.Application - Started Application in 15.509 seconds (JVM running for 16.963)
+2025-12-12 22:35:15.249 [http-nio-8080-exec-1] INFO  o.a.tomcat.util.http.parser.Cookie - A cookie header was received [g_state={"i_l":0,"i_ll":1761962380141,"i_b":"Gfn1EG2nyF/Kf52WhZUhGlDs1MljjBhh1r+jKETh+B4","i_t":1762027889487};] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2025-12-12 22:35:15.273 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-12 22:35:15.275 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-12 22:35:15.279 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 3 ms
+2025-12-12 22:35:15.401 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - Searching for city: Hà N?i
+2025-12-12 22:35:22.429 [http-nio-8080-exec-4] INFO  c.w.f.controller.WeatherController - API request for chart data for city: Hà N?i
+2025-12-12 22:36:24.082 [http-nio-8080-exec-8] WARN  o.a.c.util.SessionIdGeneratorBase - Creation of SecureRandom instance for session ID generation using [SHA1PRNG] took [278] milliseconds.
+2025-12-12 22:43:19.381 [main] INFO  com.weather.forecast.Application - Starting Application using Java 17.0.17 on DESKTOP-B4U5OFT with PID 5704 (C:\Users\giapt\OneDrive\Máy tính\J2EE_weather\target\classes started by giapt in C:\Users\giapt\OneDrive\Máy tính\J2EE_weather)
+2025-12-12 22:43:19.390 [main] INFO  com.weather.forecast.Application - No active profile set, falling back to 1 default profile: "default"
+2025-12-12 22:43:21.640 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-12 22:43:21.866 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 177 ms. Found 2 JPA repository interfaces.
+2025-12-12 22:43:24.224 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2025-12-12 22:43:24.274 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-12 22:43:24.276 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-12 22:43:24.278 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.68]
+2025-12-12 22:43:24.762 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-12 22:43:24.763 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 5185 ms
+2025-12-12 22:43:25.531 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-12 22:43:25.745 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.12.Final
+2025-12-12 22:43:26.363 [main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2025-12-12 22:43:26.820 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-12 22:43:27.492 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-12 22:43:27.616 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2025-12-12 22:43:31.246 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2025-12-12 22:43:31.276 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-12 22:43:33.605 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-12 22:43:33.913 [main] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-12-12 22:43:34.627 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-12 22:43:34.673 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2025-12-12 22:43:34.711 [main] INFO  com.weather.forecast.Application - Started Application in 16.558 seconds (JVM running for 17.834)
+2025-12-12 22:43:36.085 [http-nio-8080-exec-1] INFO  o.a.tomcat.util.http.parser.Cookie - A cookie header was received [g_state={"i_l":0,"i_ll":1761962380141,"i_b":"Gfn1EG2nyF/Kf52WhZUhGlDs1MljjBhh1r+jKETh+B4","i_t":1762027889487};] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2025-12-12 22:43:36.105 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-12 22:43:36.106 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-12 22:43:36.109 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2025-12-12 22:43:38.138 [http-nio-8080-exec-2] INFO  c.w.f.controller.WeatherController - Searching for city: Hà N?i

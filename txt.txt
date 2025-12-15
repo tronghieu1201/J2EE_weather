@@ -1,0 +1,113 @@
+tôi có xem thì ở file WeatherController.java báo 
+có nghĩa là: Trong dự án của bạn hoàn toàn không có file code hoặc thư viện nào tên là com.ngohung cả.
+
+Có vẻ bạn đã copy code từ một hướng dẫn trên mạng sử dụng code của tác giả "Ngo Hung", nhưng bạn lại chưa tải file thư viện của tác giả đó về.
+
+Giải pháp tốt nhất: Vì bạn đã đồng ý dùng thư viện lunar-java (như mình hướng dẫn ở bước trước), hãy sửa lại code trong Controller để dùng lunar-java thay vì dùng cái com.ngohung bị lỗi kia.
+
+
+và tôi được hướng dẫn Dưới đây là cách sửa file WeatherController.java:
+1. Thêm Import cần thiết
+Mở file WeatherController.java, xóa các dòng import bị lỗi liên quan đến ngohung và thêm các dòng này lên đầu file:
+
+// Thêm các dòng này vào phần import
+import com.nlf.calendar.Lunar;
+import com.nlf.calendar.Solar;
+import com.weather.forecast.model.LunarDayInfo; // Đảm bảo import đúng model của bạn
+
+
+2. Sửa hàm showPerpetualCalendar
+Thay thế toàn bộ hàm showPerpetualCalendar cũ bằng đoạn code mới dưới đây. Code này sử dụng thư viện lunar-java chuẩn xác:
+
+@GetMapping("/perpetual-calendar")
+    public String showPerpetualCalendar(@RequestParam(name = "month", required = false) Integer month,
+                                      @RequestParam(name = "year", required = false) Integer year,
+                                      Model model) {
+
+        LocalDate today = LocalDate.now();
+        int currentMonth = (month != null) ? month : today.getMonthValue();
+        int currentYear = (year != null) ? year : today.getYear();
+
+        List<LunarDayInfo> calendarDays = new ArrayList<>();
+        YearMonth yearMonth = YearMonth.of(currentYear, currentMonth);
+        int daysInMonth = yearMonth.lengthOfMonth();
+        
+        // Tính ngày đầu tháng là thứ mấy (để vẽ lịch)
+        int firstDayOfMonth = yearMonth.atDay(1).getDayOfWeek().getValue() % 7; 
+        // Lưu ý: Java trả về 7 là CN, nếu bạn muốn CN là 0 thì dùng logic % 7 như trên là đúng
+
+        for (int day = 1; day <= daysInMonth; day++) {
+            // --- SỬA ĐOẠN NÀY: Dùng thư viện Lunar-Java ---
+            Solar solar = new Solar(currentYear, currentMonth, day);
+            Lunar lunar = solar.getLunar();
+
+            LunarDayInfo dayInfo = new LunarDayInfo();
+            
+            // Set thông tin Dương lịch
+            dayInfo.setSolarDay(day);
+            dayInfo.setSolarMonth(currentMonth);
+            dayInfo.setSolarYear(currentYear);
+
+            // Set thông tin Âm lịch (Dùng thư viện mới)
+            dayInfo.setLunarDay(lunar.getDay());
+            dayInfo.setLunarMonth(lunar.getMonth());
+            dayInfo.setLunarYear(lunar.getYear());
+            
+            // Set tên chữ (Ví dụ: Mùng Một, Tháng Giêng...)
+            dayInfo.setLunarDayName("Ngày " + lunar.getDayInChinese()); 
+            dayInfo.setLunarMonthName("Tháng " + lunar.getMonthInChinese());
+            dayInfo.setLunarYearName("Năm " + lunar.getYearInGanZhi()); // Ví dụ: Năm Ất Tỵ
+
+            // Set Giờ Hoàng Đạo
+            // Thư viện này trả về danh sách giờ hoàng đạo dạng object, ta cần lấy tên chi giờ ra
+            List<String> hoangDaoList = new ArrayList<>();
+            // Lấy danh sách giờ hoàng đạo trong ngày
+            for (com.nlf.calendar.LunarTime time : lunar.getTimes()) {
+                // Logic: Nếu là giờ cát (hoàng đạo) thì thêm vào list
+                if ("吉".equals(time.getTianShenLuck())) { // Chữ Hán "Cát"
+                     // time.getGanZhi() trả về Can Chi giờ (ví dụ Giáp Tý)
+                     // Chúng ta chỉ cần lấy Chi (Tý, Sửu...)
+                     hoangDaoList.add(time.getZhi()); 
+                }
+            }
+            // Nếu bạn muốn hiển thị tiếng Việt rõ ràng, cần 1 hàm map từ Hán -> Việt
+            // Nhưng tạm thời để code chạy được, ta lưu list này:
+            dayInfo.setHoangdao(hoangDaoList); 
+            
+            calendarDays.add(dayInfo);
+        }
+
+        LocalDate prevMonthDate = yearMonth.minusMonths(1).atDay(1);
+        LocalDate nextMonthDate = yearMonth.plusMonths(1).atDay(1);
+
+        model.addAttribute("groupedCities", groupedCities);
+        model.addAttribute("calendarDays", calendarDays);
+        model.addAttribute("year", currentYear);
+        model.addAttribute("month", currentMonth);
+        model.addAttribute("firstDayOfMonth", firstDayOfMonth);
+        model.addAttribute("prevYear", prevMonthDate.getYear());
+        model.addAttribute("prevMonth", prevMonthDate.getMonthValue());
+        model.addAttribute("nextYear", nextMonthDate.getYear());
+        model.addAttribute("nextMonth", nextMonthDate.getMonthValue());
+
+        return "perpetual_calendar";
+    }
+
+
+        3. Lưu ý quan trọng
+Để đoạn code trên chạy được, bạn phải chắc chắn đã thêm thư viện vào file pom.xml (nếu dùng Maven) và nhấn nút Reload Project:
+
+<dependency>
+  <groupId>cn.6tail</groupId>
+  <artifactId>lunar-java</artifactId>
+  <version>1.3.11</version>
+</dependency>
+
+
+và hiện tại trang Thanh điều hướng lỗi ấn vào ra trang với nội dung
+
+Whitelabel Error Page
+This application has no explicit mapping for /error, so you are seeing this as a fallback.
+
+Mon Dec 15 22:10:27 ICT 2025
+There was an unexpected error (type=Internal Server Error, status=500).

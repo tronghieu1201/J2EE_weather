@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dự báo thời tiết</title>
+    <!-- Preconnect for faster loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
@@ -131,7 +135,7 @@
                 </div>
                 <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 ml-2 border-l pl-4 border-gray-200 dark:border-gray-700">
                     <span class="material-icons-round text-base">schedule</span>
-                    <span id="local-time">02:39:52</span>
+                    <span id="local-time" style="font-variant-numeric: tabular-nums;">02:39:52</span>
                 </div>
                 <button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
                     <span class="material-icons-round text-slate-500 dark:text-yellow-400">dark_mode</span>
@@ -407,7 +411,7 @@
 
 </div>
 
-<script th:src="@{/js/index.js}"></script>
-<script th:src="@{/js/footer.js}"></script>
+<script th:src="@{/js/index.js(v=${cacheBuster})}" defer></script>
+<script th:src="@{/js/footer.js(v=${cacheBuster})}" defer></script>
 
 </body>

@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Biểu đồ Thời tiết - Weather</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+    <!-- Preconnect for faster loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <script>
         tailwind.config = {
@@ -37,29 +44,38 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
     <link rel="stylesheet" th:href="@{/css/chart.css}">
-    <style>::-webkit-scrollbar {
+    <style>
+        ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
         }
+
         ::-webkit-scrollbar-track {
             background: transparent;
         }
+
         ::-webkit-scrollbar-thumb {
             background: #cbd5e1;
             border-radius: 4px;
         }
+
         .dark ::-webkit-scrollbar-thumb {
             background: #475569;
         }
+
         .dark ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
-        }.glass {
+        }
+
+        .glass {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
         }
+
         .dark .glass {
             background: rgba(30, 41, 59, 0.7);
         }
+
         #page-wrapper {
             transform: scale(0.65);
             transform-origin: top left;
@@ -70,17 +86,21 @@
             top: 0;
             left: 0;
         }
+
         body {
             min-height: calc(100vh / 0.65);
             overflow-y: auto;
         }
     </style>
 </head>
-<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans transition-colors duration-300">
-<div id="page-wrapper">
 
-<!-- Navbar -->
-<nav class="sticky top-0 z-50 bg-surface-light/90 dark:bg-surface-dark/90 backdrop-blur-md shadow-sm border-b border-gray-200 dark:border-gray-700">
+<body
+    class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans transition-colors duration-300">
+    <div id="page-wrapper">
+
+        <!-- Navbar -->
+        <nav
+    class="sticky top-0 z-50 bg-surface-light/90 dark:bg-surface-dark/90 backdrop-blur-md shadow-sm border-b border-gray-200 dark:border-gray-700">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
             <div class="flex-shrink-0 flex items-center gap-2">
@@ -91,55 +111,74 @@
             </div>
             <div class="hidden md:flex space-x-8 text-sm font-medium">
                 <div class="relative group">
-                    <a class="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition-colors cursor-pointer" id="navbarDropdownMenuLink">
+                    <a class="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition-colors cursor-pointer"
+                        id="navbarDropdownMenuLink">
                         Tỉnh/Thành phố
                     </a>
-                    <div class="absolute hidden group-hover:block bg-surface-light dark:bg-surface-dark shadow-lg rounded-md mt-2 p-4 min-w-max z-50">
-                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-6 gap-y-2 max-h-96 overflow-y-auto">
+                    <div
+                        class="absolute hidden group-hover:block bg-surface-light dark:bg-surface-dark shadow-lg rounded-md mt-2 p-4 min-w-max z-50">
+                        <div
+                            class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-6 gap-y-2 max-h-96 overflow-y-auto">
                             <th:block th:each="entry : ${groupedCities}">
                                 <div>
-                                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2" th:text="${entry.key}"></p>
+                                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2"
+                                        th:text="${entry.key}"></p>
                                     <div class="space-y-1">
-                                        <a th:each="province : ${entry.value}" href="javascript:void(0)" th:onclick="loadChartData('[(${province})]');" class="block px-3 py-1 text-sm text-slate-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md transition-colors whitespace-nowrap" th:text="${province}"></a>
+                                        <a th:each="province : ${entry.value}" href="javascript:void(0)"
+                                            th:onclick="loadChartData('[(${province})]');"
+                                            class="block px-3 py-1 text-sm text-slate-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md transition-colors whitespace-nowrap"
+                                            th:text="${province}"></a>
                                     </div>
                                 </div>
                             </th:block>
                         </div>
                     </div>
                 </div>
-                <a class="text-primary font-semibold dark:text-blue-400 transition-colors" href="/chart">Biểu đồ</a>
-                <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors" href="/perpetual-calendar">Xem lịch vạn niên</a>
+                <a class="text-primary font-semibold dark:text-blue-400 transition-colors" th:href="@{/chart}">Biểu
+                    đồ</a>
+                <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
+                    th:href="@{/perpetual-calendar}">Xem lịch vạn niên</a>
                 <div class="relative group">
-                    <a class="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition-colors cursor-pointer" id="weatherNewsDropdown">
+                    <a class="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition-colors cursor-pointer"
+                        id="weatherNewsDropdown">
                         Tin thời tiết
                     </a>
-                    <div class="absolute hidden group-hover:block bg-surface-light dark:bg-surface-dark shadow-lg rounded-md mt-2 p-2 w-48 z-50">
-                        <a href="/weather-news/daily" class="block px-3 py-1 text-sm text-slate-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md transition-colors">Tin tức hằng ngày</a>
-                        <a href="/weather-news/travel" class="block px-3 py-1 text-sm text-slate-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md transition-colors">Thời tiết du lịch</a>
-                        <a href="/weather-news/nature" class="block px-3 py-1 text-sm text-slate-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md transition-colors">Thiên nhiên</a>
+                    <div
+                        class="absolute hidden group-hover:block bg-surface-light dark:bg-surface-dark shadow-lg rounded-md mt-2 p-2 w-48 z-50">
+                        <a th:href="@{/weather-news/daily}"
+                            class="block px-3 py-1 text-sm text-slate-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md transition-colors">Tin
+                            tức hằng ngày</a>
+                        <a th:href="@{/weather-news/travel}"
+                            class="block px-3 py-1 text-sm text-slate-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md transition-colors">Thời
+                            tiết du lịch</a>
+                        <a th:href="@{/weather-news/nature}"
+                            class="block px-3 py-1 text-sm text-slate-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md transition-colors">Thiên
+                            nhiên</a>
                     </div>
                 </div>
-            </ul>
+            </div>
             <div class="hidden md:flex items-center gap-4">
-                <form id="searchForm" class="flex items-center" onsubmit="handleSearch(event)">
-                    <div class="relative">
-                        <input id="cityInput" class="pl-10 pr-4 py-2 rounded-full border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-slate-700 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none w-64 transition-all" placeholder="Tìm kiếm..." type="text" name="city">
-                        <span class="material-icons-round absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">search</span>
-                    </div>
-                     <button class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg shadow-blue-500/30 transition-all transform hover:scale-105 ml-2" type="submit">
-                        Tìm kiếm
-                    </button>
-                </form>
+                <div class="relative">
+                    <form id="searchForm" onsubmit="handleSearch(event)" class="flex items-center ml-4">
+                        <input id="cityInput" class="pl-10 pr-4 py-2 rounded-full border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-slate-700 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none w-64 transition-all" placeholder="Tìm kiếm..." type="text" name="city" />
+                        <span class="material-icons-round absolute left-7 top-1/2 -translate-y-1/2 text-gray-400 text-lg">search</span>
+                        <button class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg shadow-blue-500/30 transition-all transform hover:scale-105" type="submit">
+                            Tìm kiếm
+                        </button>
+                    </form>
+                </div>
                 <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 ml-2 border-l pl-4 border-gray-200 dark:border-gray-700">
                     <span class="material-icons-round text-base">schedule</span>
-                    <span id="local-time">00:00:00</span>
+                    <span id="local-time" style="font-variant-numeric: tabular-nums;">00:00:00</span>
                 </div>
-                <button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+                <button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+                    onclick="document.documentElement.classList.toggle('dark')">
                     <span class="material-icons-round text-slate-500 dark:text-yellow-400">dark_mode</span>
                 </button>
             </div>
             <div class="md:hidden flex items-center">
-                <button class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white focus:outline-none">
+                <button
+                    class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white focus:outline-none">
                     <span class="material-icons-round">menu</span>
                 </button>
             </div>
@@ -147,124 +186,152 @@
     </div>
 </nav>
 
-<!-- Main Content -->
-<main id="chartArea" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-    <div class="chart-container space-y-6">
-        <div id="loadingArea" class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 flex flex-col items-center justify-center h-96">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-            <p class="mt-4 text-slate-500 dark:text-slate-400">Đang tải dữ liệu biểu đồ...</p>
-        </div>
-
-        <div id="errorArea" class="hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md" role="alert">
-            <div class="flex">
-                <div class="py-1"><span class="material-icons-round text-red-500 mr-2">error</span></div>
-                <div>
-                    <p class="font-bold">Lỗi</p>
-                    <p>Không thể tải dữ liệu biểu đồ. Vui lòng thử lại.</p>
+        <!-- Main Content -->
+        <main id="chartArea" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+            <div class="chart-container space-y-6">
+                <div id="loadingArea"
+                    class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 flex flex-col items-center justify-center h-96">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                    <p class="mt-4 text-slate-500 dark:text-slate-400">Đang tải dữ liệu biểu đồ...</p>
                 </div>
-            </div>
-        </div>
 
-        <div id="chartContent" class="hidden">
-            <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 flex items-center gap-4 transition-all hover:shadow-lg hover:scale-105">
-                    <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-900/50"><span class="material-icons-round text-blue-500 text-2xl">thermostat</span></div>
-                    <div>
-                        <div class="text-2xl font-bold text-slate-800 dark:text-white" id="avgTemp">--°C</div>
-                        <div class="text-sm text-slate-500 dark:text-slate-400">Nhiệt độ TB</div>
+                <div id="errorArea" class="hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md"
+                    role="alert">
+                    <div class="flex">
+                        <div class="py-1"><span class="material-icons-round text-red-500 mr-2">error</span></div>
+                        <div>
+                            <p class="font-bold">Lỗi</p>
+                            <p>Không thể tải dữ liệu biểu đồ. Vui lòng thử lại.</p>
+                        </div>
                     </div>
                 </div>
-                 <div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 flex items-center gap-4 transition-all hover:shadow-lg hover:scale-105">
-                    <div class="p-3 rounded-full bg-red-100 dark:bg-red-900/50"><span class="material-icons-round text-red-500 text-2xl">wb_sunny</span></div>
-                    <div>
-                        <div class="text-2xl font-bold text-slate-800 dark:text-white" id="maxTemp">--°C</div>
-                        <div class="text-sm text-slate-500 dark:text-slate-400">Nhiệt độ cao nhất</div>
-                    </div>
-                </div>
-                <div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 flex items-center gap-4 transition-all hover:shadow-lg hover:scale-105">
-                    <div class="p-3 rounded-full bg-sky-100 dark:bg-sky-900/50"><span class="material-icons-round text-sky-500 text-2xl">ac_unit</span></div>
-                    <div>
-                        <div class="text-2xl font-bold text-slate-800 dark:text-white" id="minTemp">--°C</div>
-                        <div class="text-sm text-slate-500 dark:text-slate-400">Nhiệt độ thấp nhất</div>
-                    </div>
-                </div>
-                <div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 flex items-center gap-4 transition-all hover:shadow-lg hover:scale-105">
-                    <div class="p-3 rounded-full bg-green-100 dark:bg-green-900/50"><span class="material-icons-round text-green-500 text-2xl">water_drop</span></div>
-                    <div>
-                        <div class="text-2xl font-bold text-slate-800 dark:text-white" id="avgRain">--%</div>
-                        <div class="text-sm text-slate-500 dark:text-slate-400">Xác suất mưa TB</div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Temperature Chart -->
-            <div class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mt-6">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                        <span class="material-icons-round text-slate-500">show_chart</span>
-                        Biểu đồ Nhiệt độ 7 ngày
-                    </h2>
-                    <span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300" id="currentCity">Hà Nội</span>
-                </div>
-                <div class="h-80">
-                    <canvas id="temperatureChart"></canvas>
-                </div>
-            </div>
+                <div id="chartContent" class="hidden">
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div
+                            class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 flex items-center gap-4 transition-all hover:shadow-lg hover:scale-105">
+                            <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-900/50"><span
+                                    class="material-icons-round text-blue-500 text-2xl">thermostat</span></div>
+                            <div>
+                                <div class="text-2xl font-bold text-slate-800 dark:text-white" id="avgTemp">--°C</div>
+                                <div class="text-sm text-slate-500 dark:text-slate-400">Nhiệt độ TB</div>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 flex items-center gap-4 transition-all hover:shadow-lg hover:scale-105">
+                            <div class="p-3 rounded-full bg-red-100 dark:bg-red-900/50"><span
+                                    class="material-icons-round text-red-500 text-2xl">wb_sunny</span></div>
+                            <div>
+                                <div class="text-2xl font-bold text-slate-800 dark:text-white" id="maxTemp">--°C</div>
+                                <div class="text-sm text-slate-500 dark:text-slate-400">Nhiệt độ cao nhất</div>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 flex items-center gap-4 transition-all hover:shadow-lg hover:scale-105">
+                            <div class="p-3 rounded-full bg-sky-100 dark:bg-sky-900/50"><span
+                                    class="material-icons-round text-sky-500 text-2xl">ac_unit</span></div>
+                            <div>
+                                <div class="text-2xl font-bold text-slate-800 dark:text-white" id="minTemp">--°C</div>
+                                <div class="text-sm text-slate-500 dark:text-slate-400">Nhiệt độ thấp nhất</div>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 flex items-center gap-4 transition-all hover:shadow-lg hover:scale-105">
+                            <div class="p-3 rounded-full bg-green-100 dark:bg-green-900/50"><span
+                                    class="material-icons-round text-green-500 text-2xl">water_drop</span></div>
+                            <div>
+                                <div class="text-2xl font-bold text-slate-800 dark:text-white" id="avgRain">--%</div>
+                                <div class="text-sm text-slate-500 dark:text-slate-400">Xác suất mưa TB</div>
+                            </div>
+                        </div>
+                    </div>
 
-            <!-- Rain Probability Chart -->
-            <div class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mt-6">
-                 <div class="flex items-center justify-between mb-4">
-                    <h2 class="font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                        <span class="material-icons-round text-slate-500">umbrella</span>
-                        Xác suất mưa 7 ngày
-                    </h2>
-                </div>
-                <div class="h-80">
-                    <canvas id="rainChart"></canvas>
+                    <!-- Temperature Chart -->
+                    <div
+                        class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mt-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                                <span class="material-icons-round text-slate-500">show_chart</span>
+                                Biểu đồ Nhiệt độ 7 ngày
+                            </h2>
+                            <span
+                                class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300"
+                                id="currentCity">Hà Nội</span>
+                        </div>
+                        <div class="h-80">
+                            <canvas id="temperatureChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Rain Probability Chart -->
+                    <div
+                        class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mt-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                                <span class="material-icons-round text-slate-500">umbrella</span>
+                                Xác suất mưa 7 ngày
+                            </h2>
+                        </div>
+                        <div class="h-80">
+                            <canvas id="rainChart"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </main>
+
+        <footer class="bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-700 mt-8 py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                    <div>
+                        <div class="flex items-center gap-2 mb-4">
+                            <img th:src="@{/img/z.png}" alt="Weather Logo" class="w-8 h-8">
+                            <span class="font-bold text-xl tracking-tight text-slate-800 dark:text-white">Weather</span>
+                        </div>
+                        <div class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+                            <div class="flex items-center gap-2"><span
+                                    class="material-icons-round text-base">email</span><span>lgbbq9999@gmail.com</span>
+                            </div>
+                            <div class="flex items-center gap-2"><span
+                                    class="material-icons-round text-base">phone</span><span>0342157199</span></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 dark:text-white mb-4 uppercase text-sm tracking-wider">Nhà
+                            Xúc Tác</h4>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Chưa phát triển</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 dark:text-white mb-4 uppercase text-sm tracking-wider">Góp Ý
+                        </h4>
+                        <form id="feedbackForm" class="space-y-3">
+                            <input type="text"
+                                class="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow"
+                                id="feedbackName" placeholder="Họ tên" required>
+                            <input type="email"
+                                class="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow"
+                                id="feedbackEmail" placeholder="Email" required>
+                            <textarea
+                                class="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow resize-none"
+                                id="feedbackContent" rows="3" placeholder="Nội dung" required></textarea>
+                            <button type="submit"
+                                class="w-full bg-primary hover:bg-primary-dark text-white py-2 rounded-lg text-sm font-medium shadow-md transition-colors">Gửi</button>
+                        </form>
+                    </div>
+                </div>
+                <div
+                    class="border-t border-gray-100 dark:border-gray-800 mt-12 pt-8 text-center text-xs text-slate-400">
+                    © 2025 EM CỦA NGÀY HÔM NAY
+                </div>
+            </div>
+        </footer>
+
     </div>
-</main>
 
-<footer class="bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-700 mt-8 py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div>
-                <div class="flex items-center gap-2 mb-4">
-                    <img th:src="@{/img/z.png}" alt="Weather Logo" class="w-8 h-8">
-                    <span class="font-bold text-xl tracking-tight text-slate-800 dark:text-white">Weather</span>
-                </div>
-                <div class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
-                    <div class="flex items-center gap-2"><span class="material-icons-round text-base">email</span><span>lgbbq9999@gmail.com</span></div>
-                    <div class="flex items-center gap-2"><span class="material-icons-round text-base">phone</span><span>0342157199</span></div>
-                </div>
-            </div>
-            <div>
-                <h4 class="font-bold text-slate-800 dark:text-white mb-4 uppercase text-sm tracking-wider">Nhà Xúc Tác</h4>
-                <p class="text-sm text-slate-500 dark:text-slate-400">Chưa phát triển</p>
-            </div>
-            <div>
-                <h4 class="font-bold text-slate-800 dark:text-white mb-4 uppercase text-sm tracking-wider">Góp Ý</h4>
-                <form id="feedbackForm" class="space-y-3">
-                    <input type="text" class="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow" id="feedbackName" placeholder="Họ tên" required>
-                    <input type="email" class="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow" id="feedbackEmail" placeholder="Email" required>
-                    <textarea class="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow resize-none" id="feedbackContent" rows="3" placeholder="Nội dung" required></textarea>
-                    <button type="submit" class="w-full bg-primary hover:bg-primary-dark text-white py-2 rounded-lg text-sm font-medium shadow-md transition-colors">Gửi</button>
-                </form>
-            </div>
-        </div>
-        <div class="border-t border-gray-100 dark:border-gray-800 mt-12 pt-8 text-center text-xs text-slate-400">
-            © 2025 EM CỦA NGÀY HÔM NAY
-        </div>
-    </div>
-</footer>
-
-</div>
-
-<script th:src="@{/js/chart.js}"></script>
-<script th:src="@{/js/footer.js}"></script>
+    <script th:src="@{/js/chart.js(v=${cacheBuster})}" defer></script>
+    <script th:src="@{/js/footer.js(v=${cacheBuster})}" defer></script>
 
 </body>
+
 </html>

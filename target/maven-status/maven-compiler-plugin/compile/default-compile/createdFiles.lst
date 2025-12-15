@@ -2,6 +2,7 @@ com\weather\forecast\service\DataUpdateService.class
 com\weather\forecast\repository\WeatherRepository.class
 com\weather\forecast\model\dto\ProvinceCurrentWeather.class
 com\weather\forecast\model\WeatherRecord.class
+com\weather\forecast\model\LunarDayInfo.class
 com\weather\forecast\repository\WeatherLogRepository.class
 com\weather\forecast\config\AppConfig.class
 com\weather\forecast\ai\ForecastModel.class
@@ -16,6 +17,7 @@ com\weather\forecast\util\WeatherCodeMapper.class
 com\weather\forecast\model\dto\ComprehensiveWeatherReport.class
 com\weather\forecast\model\dto\ComprehensiveWeatherReport$DailyData.class
 com\weather\forecast\model\dto\ComprehensiveWeatherReport$HourlyData.class
+com\weather\forecast\controller\GlobalControllerAdvice.class
 com\weather\forecast\api\OpenMeteoAPI.class
 com\weather\forecast\model\DailyForecast.class
 com\weather\forecast\model\HourlyForecast.class

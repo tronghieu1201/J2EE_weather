@@ -1,11 +1,14 @@
 package com.weather.forecast.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.weather.forecast.model.DailyForecast;
 import com.weather.forecast.model.HourlyForecast;
+import com.weather.forecast.model.LunarDayInfo;
 import com.weather.forecast.model.dto.ComprehensiveWeatherReport;
 import com.weather.forecast.model.dto.ProvinceCurrentWeather; // Import the new DTO
 import com.weather.forecast.service.WeatherService;
+import com.weather.forecast.util.LunarConverterUtil;
+import com.nlf.calendar.Lunar;
+import com.nlf.calendar.Solar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,18 +17,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,14 +37,11 @@ public class WeatherController {
     private final Map<String, List<String>> groupedCities;
     private final List<String> allProvinces;
     private final List<String> prominentProvinces; // Declare prominentProvinces
-    private final ObjectMapper objectMapper;
-    private final HttpClient httpClient;
+
 
     @Autowired
-    public WeatherController(WeatherService weatherService, ObjectMapper objectMapper) {
+    public WeatherController(WeatherService weatherService) {
         this.weatherService = weatherService;
-        this.objectMapper = objectMapper;
-        this.httpClient = HttpClient.newHttpClient();
         this.groupedCities = initGroupedCities();
         this.allProvinces = new ArrayList<>();
         this.groupedCities.values().forEach(allProvinces::addAll);
@@ -118,56 +113,113 @@ public class WeatherController {
         return response;
     }
     @GetMapping("/perpetual-calendar")
-    public String showPerpetualCalendar() {
+    public String showPerpetualCalendar(@RequestParam(name = "month", required = false) Integer month,
+                                      @RequestParam(name = "year", required = false) Integer year,
+                                      Model model) {
+
+        LocalDate today = LocalDate.now();
+        int currentMonth = (month != null) ? month : today.getMonthValue();
+        int currentYear = (year != null) ? year : today.getYear();
+
+        List<LunarDayInfo> calendarDays = new ArrayList<>();
+        YearMonth yearMonth = YearMonth.of(currentYear, currentMonth);
+        int daysInMonth = yearMonth.lengthOfMonth();
+        
+        // Tính ngày đầu tháng là thứ mấy (để vẽ lịch)
+        int firstDayOfMonth = yearMonth.atDay(1).getDayOfWeek().getValue() % 7; 
+        // Lưu ý: Java trả về 7 là CN, nếu bạn muốn CN là 0 thì dùng logic % 7 như trên là đúng
+
+        for (int day = 1; day <= daysInMonth; day++) {
+            // --- SỬA ĐOẠN NÀY: Dùng thư viện Lunar-Java ---
+            Solar solar = new Solar(currentYear, currentMonth, day);
+            Lunar lunar = solar.getLunar();
+
+            LunarDayInfo dayInfo = new LunarDayInfo();
+            
+            // Set thông tin Dương lịch
+            dayInfo.setSolarDay(day);
+            dayInfo.setSolarMonth(currentMonth);
+            dayInfo.setSolarYear(currentYear);
+
+            // Set thông tin Âm lịch (Dùng thư viện mới)
+            dayInfo.setLunarDay(lunar.getDay());
+            dayInfo.setLunarMonth(lunar.getMonth());
+            dayInfo.setLunarYear(lunar.getYear());
+            
+            // Set tên chữ (Ví dụ: Mùng Một, Tháng Giêng...)
+            dayInfo.setLunarDayName(LunarConverterUtil.getVietnameseLunarDay(lunar.getDayInChinese()));
+            dayInfo.setLunarMonthName(LunarConverterUtil.getVietnameseLunarMonth(lunar.getMonthInChinese()));
+            dayInfo.setLunarYearName(LunarConverterUtil.getVietnameseYearName(lunar.getYearGan(), lunar.getYearZhi())); // Ví dụ: Năm Giáp Tý
+
+            // Set Giờ Hoàng Đạo
+            // Thư viện này trả về danh sách giờ hoàng đạo dạng object, ta cần lấy tên chi giờ ra
+            List<String> hoangDaoList = new ArrayList<>();
+            // Lấy danh sách giờ hoàng đạo trong ngày
+            for (com.nlf.calendar.LunarTime time : lunar.getTimes()) {
+                // Logic: Nếu là giờ cát (hoàng đạo) thì thêm vào list
+                if ("吉".equals(time.getTianShenLuck())) { // Chữ Hán "Cát"
+                     // time.getGanZhi() trả về Can Chi giờ (ví dụ Giáp Tý)
+                     // Chúng ta chỉ cần lấy Chi (Tý, Sửu...)
+                     hoangDaoList.add(time.getZhi());
+                }
+            }
+            // Nếu bạn muốn hiển thị tiếng Việt rõ ràng, cần 1 hàm map từ Hán -> Việt
+            // Nhưng tạm thời để code chạy được, ta lưu list này:
+            dayInfo.setHoangdao(LunarConverterUtil.getVietnameseHoangDao(hoangDaoList)); 
+            
+            calendarDays.add(dayInfo);
+        }
+
+        LocalDate prevMonthDate = yearMonth.minusMonths(1).atDay(1);
+        LocalDate nextMonthDate = yearMonth.plusMonths(1).atDay(1);
+
+        model.addAttribute("groupedCities", groupedCities);
+        model.addAttribute("calendarDays", calendarDays);
+        model.addAttribute("year", currentYear);
+        model.addAttribute("month", currentMonth);
+        model.addAttribute("firstDayOfMonth", firstDayOfMonth);
+        model.addAttribute("prevYear", prevMonthDate.getYear());
+        model.addAttribute("prevMonth", prevMonthDate.getMonthValue());
+        model.addAttribute("nextYear", nextMonthDate.getYear());
+        model.addAttribute("nextMonth", nextMonthDate.getMonthValue());
+
         return "perpetual_calendar";
     }
 
-    @PostMapping("/api/lunar-month-dates")
-    @ResponseBody
-    public List<Map<String, Object>> getLunarMonthDates(@RequestBody Map<String, Integer> payload) {
-        int month = payload.get("month");
-        int year = payload.get("year");
-        logger.info("Fetching lunar dates for month: {}/{}", month, year);
-        List<Map<String, Object>> lunarDates = new ArrayList<>();
-        YearMonth yearMonth = YearMonth.of(year, month);
-
-        for (int day = 1; day <= yearMonth.lengthOfMonth(); day++) {
-            try {
-                // Add a delay to avoid rate limiting
-                Thread.sleep(200); 
-
-                Map<String, Integer> dateMap = Map.of("day", day, "month", month, "year", year);
-                String requestBody = objectMapper.writeValueAsString(dateMap);
-
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create("https://open.oapi.vn/date/convert-to-lunar"))
-                        .header("Content-Type", "application/json")
-                        .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                        .build();
-
-                HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-                if (response.statusCode() == 200) {
-                    Map<String, Object> apiResponse = objectMapper.readValue(response.body(), Map.class);
-                    Map<String, Object> lunarData = (Map<String, Object>) apiResponse.get("data");
-                    if (lunarData != null) {
-                        lunarDates.add(lunarData);
-                    } else {
-                        lunarDates.add(Collections.singletonMap("error", "No data for day " + day));
-                    }
-                } else {
-                    logger.error("Lunar API request for {}/{}/{} failed with status: {}", day, month, year, response.statusCode());
-                    lunarDates.add(Collections.singletonMap("error", "API failed for day " + day + " status: " + response.statusCode()));
-                }
-            } catch (Exception e) {
-                logger.error("Error calling lunar API for {}/{}/{}: {}", day, month, year, e.getMessage());
-                // If the loop is interrupted (e.g., by Thread.sleep), handle it.
-                if (e instanceof InterruptedException) {
-                    Thread.currentThread().interrupt();
-                }
-                lunarDates.add(Collections.singletonMap("error", "Exception for day " + day + ": " + e.getMessage()));
-            }
+    @PostMapping("/perpetual-calendar/convert-solar-to-lunar")
+    public String convertSolarToLunar(@RequestParam("solar_day") int day,
+                                      @RequestParam("solar_month") int month,
+                                      @RequestParam("solar_year") int year,
+                                      RedirectAttributes redirectAttributes) {
+        try {
+            Solar solar = new Solar(year, month, day);
+            Lunar lunar = solar.getLunar();
+            String result = String.format("Ngày %d/%d/%d Dương lịch là ngày %d/%d/%d Âm lịch (%s)",
+                    day, month, year, lunar.getDay(), lunar.getMonth(), lunar.getYear(), LunarConverterUtil.getVietnameseYearName(lunar.getYearGan(), lunar.getYearZhi()));
+            redirectAttributes.addFlashAttribute("solarToLunarResult", result);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("solarToLunarResult", "Ngày không hợp lệ.");
         }
-        return lunarDates;
+        return "redirect:/perpetual-calendar";
+    }
+
+    @PostMapping("/perpetual-calendar/convert-lunar-to-solar")
+    public String convertLunarToSolar(@RequestParam("lunar_day") int day,
+                                      @RequestParam("lunar_month") int month,
+                                      @RequestParam("lunar_year") int year,
+                                      RedirectAttributes redirectAttributes) {
+        try {
+            // Note: The lunar-java library might expect a boolean for isLeapMonth if handling leap months is needed.
+            // For simplicity, we are not handling leap months here.
+            Lunar lunar = new Lunar(year, month, day);
+            Solar solar = lunar.getSolar();
+            String result = String.format("Ngày %d/%d/%d Âm lịch là ngày %d/%d/%d Dương lịch",
+                    day, month, year, solar.getDay(), solar.getMonth(), solar.getYear());
+            redirectAttributes.addFlashAttribute("lunarToSolarResult", result);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("lunarToSolarResult", "Ngày không hợp lệ.");
+        }
+        return "redirect:/perpetual-calendar";
     }
 
     @GetMapping("/weather-news")

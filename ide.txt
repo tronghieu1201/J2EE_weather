@@ -1,0 +1,24 @@
+tôi có xem được được nội dung của 1 cấu trúc ở 1 dự án khác về lịch vạn niên tôi có hỏi cách hoạt động 
+Tôi đã tìm thấy đoạn mã xử lý yêu cầu này trong WeatherController.java.
+
+  Đây là cách nó hoạt động:
+
+   1. Frontend gửi yêu cầu: Khi bạn xem trang Lịch vạn niên, mã JavaScript (perpetual_calendar.js) sẽ gửi một yêu cầu đến máy chủ của ứng dụng tại địa chỉ
+      /api/lunar-month-dates. Yêu cầu này chứa thông tin về tháng và năm bạn đang xem.
+
+   2. Backend xử lý: Máy chủ nhận yêu cầu này tại phương thức getLunarMonthDates trong WeatherController.
+
+   3. Gọi API bên ngoài cho từng ngày: Điểm mấu chốt nằm ở đây. Thay vì có sẵn dữ liệu, backend sẽ chạy một vòng lặp cho từng ngày trong tháng đó. Với mỗi ngày,
+      nó lại thực hiện một lệnh gọi API riêng biệt đến một dịch vụ bên ngoài là https://open.oapi.vn/date/convert-to-lunar để đổi ngày dương lịch đó sang ngày  
+      âm lịch.
+
+   4. Gây chậm: Giữa mỗi lần gọi API bên ngoài, có một độ trễ 200 mili giây (Thread.sleep(200)). Điều này có nghĩa là để lấy dữ liệu cho một tháng 30 ngày, sẽ
+      mất ít nhất 30 * 200ms = 6 giây, chưa kể thời gian xử lý và mạng. Đây là một cách triển khai rất không hiệu quả và làm cho việc tải lịch rất chậm.
+
+   5. Tổng hợp và trả về: Sau khi gọi API bên ngoài cho tất cả các ngày và nhận về đủ dữ liệu âm lịch, backend sẽ tổng hợp chúng lại thành một danh sách và trả
+      về cho trình duyệt của bạn.
+
+   6. Hiển thị: JavaScript ở trình duyệt nhận danh sách này và điền thông tin ngày âm lịch vào các ô trên lịch.
+
+  Tóm lại: Trang Lịch vạn niên không trực tiếp dùng API để lấy toàn bộ dữ liệu một lần. Thay vào đó, nó yêu cầu backend, và backend lại phải gọi đi rất nhiều   
+  API nhỏ lẻ khác cho từng ngày, dẫn đến tốc độ tải rất chậm.

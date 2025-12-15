@@ -1,0 +1,487 @@
+Dưới đây là toàn bộ mã nguồn và hướng dẫn để tạo trang Lịch Vạn Niên như trong dự án của bạn.
+
+======================================================================
+### HƯỚNG DẪN TỔNG QUAN
+======================================================================
+
+Trang Lịch Vạn Niên hoạt động dựa trên sự kết hợp của 3 thành phần chính: Frontend (HTML, CSS, JavaScript), Backend (Java Spring Boot) và một API của bên thứ ba.
+
+**Luồng hoạt động:**
+1.  **Người dùng:** Mở trang Lịch Vạn Niên.
+2.  **Frontend (JavaScript):** Tệp `perpetual_calendar.js` được thực thi. Nó lấy tháng và năm hiện tại, sau đó gửi một yêu cầu (request) đến backend của bạn tại địa chỉ `/api/lunar-month-dates`.
+3.  **Backend (Java):** `WeatherController` nhận yêu cầu này. Nó sẽ lặp qua TỪNG NGÀY trong tháng, và với mỗi ngày, nó lại gọi đến một API bên ngoài (`https://open.oapi.vn/date/convert-to-lunar`) để lấy thông tin ngày âm lịch tương ứng.
+4.  **API bên ngoài:** Dịch vụ `open.oapi.vn` trả về dữ liệu ngày âm.
+5.  **Backend (Java):** Sau khi thu thập đủ dữ liệu cho cả tháng, backend tổng hợp lại thành một danh sách (JSON array) và trả về cho frontend.
+6.  **Frontend (JavaScript):** Nhận được danh sách ngày âm, JavaScript sẽ cập nhật giao diện lịch để hiển thị chúng.
+
+**Lưu ý quan trọng:** Cách làm hiện tại (gọi API cho từng ngày) rất chậm và không hiệu quả.
+
+======================================================================
+### CẤU TRÚC THƯ MỤC
+======================================================================
+
+Để trang hoạt động, bạn cần đặt các tệp sau vào đúng vị trí trong một dự án Spring Boot:
+
+1.  **HTML:** `src/main/resources/templates/perpetual_calendar.html`
+2.  **CSS:** `src/main/resources/static/css/perpetual_calendar.css`
+3.  **JavaScript:** `src/main/resources/static/js/perpetual_calendar.js`
+4.  **Java:** Các phương thức (method) trong file này cần được đặt trong một lớp Controller, ví dụ `WeatherController.java` tại `src/main/java/com/weather/forecast/controller/`.
+
+======================================================================
+### PHẦN 1: MÃ NGUỒN HTML (perpetual_calendar.html)
+======================================================================
+
+```html
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Vạn Niên</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Giả sử bạn có file CSS này, nếu không có thể bỏ qua -->
+    <link rel="stylesheet" th:href="@{/css/perpetual_calendar.css}">
+</head>
+<body class="py-4">
+<div class="container calendar-container p-0">
+    <div class="calendar-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <button id="prevMonthBtn" class="nav-btn">&lt; Tháng trước</button>
+            <h2 id="currentMonthYear" class="m-0"></h2>
+            <button id="nextMonthBtn" class="nav-btn">Tháng sau &gt;</button>
+        </div>
+    </div>
+
+    <div class="p-4">
+        <div class="row row-cols-7 g-2 mb-2" id="dayHeaders">
+            <div class="col text-center day-header sunday">CN</div>
+            <div class="col text-center day-header">T2</div>
+            <div class="col text-center day-header">T3</div>
+            <div class="col text-center day-header">T4</div>
+            <div class="col text-center day-header">T5</div>
+            <div class="col text-center day-header">T6</div>
+            <div class="col text-center day-header">T7</div>
+        </div>
+        
+        <div class="row row-cols-7 g-2" id="calendarGrid">
+            <!-- Các ngày trong lịch sẽ được tạo tự động ở đây -->
+        </div>
+
+        <div class="text-center mt-4 text-muted">
+            <small>Nhấn vào ngày để xem chi tiết ngày âm lịch, giờ hoàng đạo, hắc đạo</small>
+        </div>
+    </div>
+</div>
+
+<!-- Modal để hiển thị chi tiết ngày -->
+<div class="modal fade" id="dayDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Chi tiết ngày</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Chi tiết sẽ được tải vào đây -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/perpetual_calendar.js}"></script>
+</body>
+</html>
+```
+
+======================================================================
+### PHẦN 2: MÃ NGUỒN CSS (perpetual_calendar.css)
+======================================================================
+
+```css
+body {
+    background: linear-gradient(180deg, #e8f4f8 0%, #f0f8ff 100%);
+    min-height: 100vh;
+}
+.calendar-container {
+    max-width: 1200px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+.calendar-header {
+    background: linear-gradient(135deg, #5eb3d6 0%, #4a9ec4 100%);
+    color: white;
+    padding: 1.5rem 2rem;
+    border-radius: 16px 16px 0 0;
+}
+.day-header {
+    font-weight: 600;
+    padding: 0.75rem 0.5rem;
+    background: #f8fafb;
+    border-radius: 6px;
+    color: #5a6c7d;
+    font-size: 0.9rem;
+}
+.day-header.sunday {
+    color: #f56565;
+}
+.day-cell {
+    min-height: 90px;
+    padding: 0.75rem;
+    border: 1px solid #e8eef2;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #fafcfd;
+}
+.day-cell:hover {
+    background: #f0f7fa;
+    border-color: #5eb3d6;
+    box-shadow: 0 2px 8px rgba(94, 179, 214, 0.15);
+}
+.day-cell.empty {
+    background: #f8fafb;
+    cursor: default;
+    border-color: #f0f4f7;
+}
+.day-cell.empty:hover {
+    background: #f8fafb;
+    border-color: #f0f4f7;
+    box-shadow: none;
+}
+.day-cell.today {
+    background: linear-gradient(135deg, #5eb3d6 0%, #4a9ec4 100%);
+    color: white;
+    border-color: #4a9ec4;
+    box-shadow: 0 4px 12px rgba(94, 179, 214, 0.3);
+}
+.day-cell.today:hover {
+    background: linear-gradient(135deg, #4a9ec4 0%, #3d8bb0 100%);
+    box-shadow: 0 6px 16px rgba(94, 179, 214, 0.4);
+}
+.day-number {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: #2d3748;
+}
+.day-cell.today .day-number {
+    color: white;
+}
+.lunar-date {
+    font-size: 0.7rem;
+    color: #718096;
+}
+.day-cell.today .lunar-date {
+    color: rgba(255,255,255,0.95);
+}
+.loading {
+    color: #a0aec0;
+    font-style: italic;
+}
+.nav-btn {
+    background: white;
+    color: #5eb3d6;
+    border: 1px solid #d4e8f0;
+    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+.nav-btn:hover {
+    background: #5eb3d6;
+    color: white;
+    border-color: #5eb3d6;
+    box-shadow: 0 2px 8px rgba(94, 179, 214, 0.25);
+}
+.modal-header {
+    background: linear-gradient(135deg, #5eb3d6 0%, #4a9ec4 100%);
+    color: white;
+    border-bottom: none;
+}
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+}
+```
+
+======================================================================
+### PHẦN 3: MÃ NGUỒN JAVASCRIPT (perpetual_calendar.js)
+======================================================================
+
+```javascript
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
+
+const calendarGrid = document.getElementById('calendarGrid');
+const currentMonthYearHeader = document.getElementById('currentMonthYear');
+const prevMonthBtn = document.getElementById('prevMonthBtn');
+const nextMonthBtn = document.getElementById('nextMonthBtn');
+
+const monthNames = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+                    "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
+
+function renderCalendar(year, month) {
+    // Xóa lưới lịch cũ
+    calendarGrid.innerHTML = '';
+    
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const numDays = lastDay.getDate();
+    const startDayOfWeek = firstDay.getDay();
+
+    currentMonthYearHeader.textContent = `${monthNames[month]}, ${year}`;
+
+    const today = new Date();
+    const isCurrentMonth = month === today.getMonth() && year === today.getFullYear();
+    const todayDate = today.getDate();
+
+    const dayElements = [];
+
+    // Thêm các ô trống cho đầu tháng
+    for (let i = 0; i < startDayOfWeek; i++) {
+        const emptyDiv = document.createElement('div');
+        emptyDiv.classList.add('col', 'day-cell', 'empty');
+        calendarGrid.appendChild(emptyDiv);
+    }
+
+    // Thêm các ngày trong tháng
+    for (let day = 1; day <= numDays; day++) {
+        const dayDiv = document.createElement('div');
+        dayDiv.classList.add('col', 'day-cell');
+        
+        if (isCurrentMonth && day === todayDate) {
+            dayDiv.classList.add('today');
+        }
+
+        const dayNumber = document.createElement('div');
+        dayNumber.classList.add('day-number');
+        dayNumber.textContent = day;
+        dayDiv.appendChild(dayNumber);
+
+        const lunarDate = document.createElement('div');
+        lunarDate.classList.add('lunar-date', 'loading');
+        lunarDate.textContent = 'Đang tải...';
+        dayDiv.appendChild(lunarDate);
+
+        dayElements.push({ element: lunarDate, day: day });
+
+        // Thêm sự kiện click
+        dayDiv.addEventListener('click', () => showDayDetails(day, month, year));
+
+        calendarGrid.appendChild(dayDiv);
+    }
+    
+    // Gọi API để lấy ngày âm cho cả tháng
+    fetch('/api/lunar-month-dates', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ month: month + 1, year: year })
+    })
+    .then(response => response.json())
+    .then(lunarDates => {
+        dayElements.forEach((item, index) => {
+            if (index < lunarDates.length) {
+                const lunarData = lunarDates[index];
+                const element = item.element;
+                
+                element.classList.remove('loading');
+                
+                if (lunarData && lunarData.day && lunarData.month) {
+                    element.textContent = `${lunarData.day}/${lunarData.month} AL`;
+                    if (lunarData.day === 1) {
+                        element.style.fontWeight = 'bold';
+                        element.style.color = '#dc3545';
+                    }
+                } else {
+                    element.textContent = 'N/A';
+                    element.style.color = '#999';
+                }
+            }
+        });
+    })
+    .catch(error => {
+        console.error('Lỗi khi tải ngày âm:', error);
+        dayElements.forEach(item => {
+            item.element.classList.remove('loading');
+            item.element.textContent = 'Lỗi';
+            item.element.style.color = '#dc3545';
+        });
+    });
+}
+
+function showDayDetails(day, month, year) {
+    const modal = new bootstrap.Modal(document.getElementById('dayDetailModal'));
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    
+    modalTitle.textContent = `Ngày ${day}/${month + 1}/${year}`;
+    modalBody.innerHTML = `
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Đang tải...</span>
+            </div>
+            <p class="mt-2">Đang tải thông tin chi tiết...</p>
+        </div>
+    `;
+    
+    modal.show();
+
+    // Đây là dữ liệu giả, bạn cần gọi API thật để lấy thông tin chi tiết
+    // (giờ hoàng đạo, hắc đạo,...)
+    setTimeout(() => {
+        modalBody.innerHTML = `
+            <div class="row">
+                <div class="col-6">
+                    <h6>Dương lịch</h6>
+                    <p class="fw-bold">${day}/${month + 1}/${year}</p>
+                </div>
+                <div class="col-6">
+                    <h6>Âm lịch</h6>
+                    <p class="fw-bold">15/10 (Ví dụ)</p>
+                </div>
+            </div>
+            <hr>
+            <h6>Giờ Hoàng Đạo</h6>
+            <p class="text-success">Tý (23-01h), Mão (05-07h), Ngọ (11-13h), Dậu (17-19h)</p>
+            
+            <h6 class="mt-3">Giờ Hắc Đạo</h6>
+            <p class="text-danger">Sửu (01-03h), Thìn (07-09h), Mùi (13-15h), Tuất (19-21h)</p>
+            
+            <div class="alert alert-info mt-3">
+                <small><strong>Lưu ý:</strong> Đây là dữ liệu mẫu. Cần kết nối API thực tế để hiển thị thông tin chính xác.</small>
+            </div>
+        `;
+    }, 800);
+}
+
+function changeMonth(delta) {
+    currentMonth += delta;
+    if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+    } else if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+    }
+    renderCalendar(currentYear, currentMonth);
+}
+
+// Gán sự kiện cho các nút
+prevMonthBtn.addEventListener('click', () => changeMonth(-1));
+nextMonthBtn.addEventListener('click', () => changeMonth(1));
+
+// Hiển thị lịch lần đầu
+renderCalendar(currentYear, currentMonth);
+```
+
+======================================================================
+### PHẦN 4: MÃ NGUỒN BACKEND JAVA (WeatherController.java)
+======================================================================
+
+Bạn chỉ cần thêm 2 phương thức này vào lớp `WeatherController` của bạn.
+
+```java
+// ... (Các import cần thiết)
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+// Đảm bảo lớp Controller của bạn có các dependency này được inject
+// @Autowired
+// private final ObjectMapper objectMapper;
+// private final HttpClient httpClient;
+
+
+// 1. Phương thức để hiển thị trang HTML
+@GetMapping("/perpetual-calendar")
+public String showPerpetualCalendar() {
+    return "perpetual_calendar";
+}
+
+// 2. Phương thức API để cung cấp dữ liệu ngày âm
+@PostMapping("/api/lunar-month-dates")
+@ResponseBody
+public List<Map<String, Object>> getLunarMonthDates(@RequestBody Map<String, Integer> payload) {
+    int month = payload.get("month");
+    int year = payload.get("year");
+    // logger.info("Đang tải dữ liệu âm lịch cho tháng: {}/{}", month, year);
+    List<Map<String, Object>> lunarDates = new ArrayList<>();
+    YearMonth yearMonth = YearMonth.of(year, month);
+    
+    // Khởi tạo HttpClient và ObjectMapper nếu chưa có
+    HttpClient httpClient = HttpClient.newHttpClient();
+    ObjectMapper objectMapper = new ObjectMapper();
+
+    for (int day = 1; day <= yearMonth.lengthOfMonth(); day++) {
+        try {
+            // Thêm độ trễ để tránh bị block IP
+            Thread.sleep(200); 
+
+            Map<String, Integer> dateMap = Map.of("day", day, "month", month, "year", year);
+            String requestBody = objectMapper.writeValueAsString(dateMap);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://open.oapi.vn/date/convert-to-lunar"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                Map<String, Object> apiResponse = objectMapper.readValue(response.body(), Map.class);
+                Map<String, Object> lunarData = (Map<String, Object>) apiResponse.get("data");
+                if (lunarData != null) {
+                    lunarDates.add(lunarData);
+                } else {
+                    lunarDates.add(Collections.singletonMap("error", "No data for day " + day));
+                }
+            } else {
+                // logger.error("API âm lịch thất bại cho ngày {}/{}/{} với status: {}", day, month, year, response.statusCode());
+                lunarDates.add(Collections.singletonMap("error", "API failed for day " + day + " status: " + response.statusCode()));
+            }
+        } catch (Exception e) {
+            // logger.error("Lỗi khi gọi API âm lịch cho ngày {}/{}/{}: {}", day, month, year, e.getMessage());
+            if (e instanceof InterruptedException) {
+                Thread.currentThread().interrupt();
+            }
+            lunarDates.add(Collections.singletonMap("error", "Exception for day " + day + ": " + e.getMessage()));
+        }
+    }
+    return lunarDates;
+}
+```
+======================================================================
+### CÁC THƯ VIỆN/CÔNG NGHỆ SỬ DỤNG
+======================================================================
+
+-   **Backend:** Java, Spring Boot, Spring MVC.
+-   **Frontend:** HTML, CSS, JavaScript.
+-   **Template Engine:** Thymeleaf (dùng để render file HTML từ phía server).
+-   **Styling:** Bootstrap 5 (để có giao diện nhanh và responsive).
+-   **JSON Processing:** Jackson (thư viện Java để xử lý JSON, thường đi kèm Spring Boot).
+-   **HTTP Client:** `java.net.http.HttpClient` (để gọi API từ Java).
+-   **API ngoài:** `open.oapi.vn` để chuyển đổi ngày.
+
+Chúc bạn thành công!

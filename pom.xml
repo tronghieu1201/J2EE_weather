@@ -64,6 +64,20 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- Lombok for automatic code generation -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Lunar Calendar Library -->
+        <dependency>
+            <groupId>cn.6tail</groupId>
+            <artifactId>lunar</artifactId>
+            <version>1.7.7</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -80,7 +94,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <jvmArguments>-Djava.awt.headless=true</jvmArguments>
+                    <jvmArguments>-Dhttps.protocols=TLSv1.2 -Dfile.encoding=UTF-8 -Djava.awt.headless=true</jvmArguments>
                     <environmentVariables>
                         <JAVA_HOME>${java.home}</JAVA_HOME>
                     </environmentVariables>
@@ -88,4 +102,58 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
+    <!-- Profile for production build with CSS/JS bundling -->
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>net.alchim31.maven</groupId>
+                        <artifactId>yuicompressor-maven-plugin</artifactId>
+                        <version>1.5.1</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>compress</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <nosuffix>true</nosuffix>
+                            <webappDirectory>${project.build.directory}/classes/static</webappDirectory>
+                            <includes>
+                                <include>css/*.css</include>
+                                <include>js/*.js</include>
+                            </includes>
+                            <aggregations>
+                                <aggregation>
+                                    <inputDir>${project.basedir}/src/main/resources/static/css</inputDir>
+                                    <output>${project.build.directory}/classes/static/css/bundle.css</output>
+                                    <includes>
+                                        <include>**/*.css</include>
+                                    </includes>
+                                </aggregation>
+                                <aggregation>
+                                    <inputDir>${project.basedir}/src/main/resources/static/js</inputDir>
+                                    <output>${project.build.directory}/classes/static/js/bundle.js</output>
+                                    <includes>
+                                        <include>**/*.js</include>
+                                    </includes>
+                                </aggregation>
+                            </aggregations>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

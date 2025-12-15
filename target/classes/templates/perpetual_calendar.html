@@ -1,105 +1,244 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lịch Vạn Niên</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/perpetual_calendar.css}">
-    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <!-- Preconnect for faster loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#3B82F6", // Blue-500 equivalent, vibrant and weather-appropriate
+                        "primary-dark": "#2563EB",
+                        "background-light": "#F0F9FF", // Very light blue
+                        "background-dark": "#0F172A", // Slate-900
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#1E293B", // Slate-800
+                        "text-light": "#334155", // Slate-700
+                        "text-dark": "#E2E8F0", // Slate-200
+                        "accent-blue": "#0EA5E9", // Sky-500
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.75rem", // 12px
+                        "xl": "1rem", // 16px
+                        "2xl": "1.5rem", // 24px
+                    },
+                },
+            },
+        };
+    </script>
+    <style>::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }.glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+        }
+        .dark .glass {
+            background: rgba(30, 41, 59, 0.7);
+        }
+        #page-wrapper {
+            transform: scale(0.65);
+            transform-origin: top left;
+            width: calc(100% / 0.65);
+            min-height: calc(100vh / 0.65); /* Use min-height to allow content to extend */
+            overflow-x: hidden; /* Hide horizontal scrollbar that might appear */
+            position: absolute; /* Needed for transform-origin to work correctly in some contexts */
+            top: 0;
+            left: 0;
+        }
+        body {
+            min-height: calc(100vh / 0.65); /* Ensure body itself is large enough to contain scaled content */
+            overflow-y: auto; /* Allow vertical scrolling when content overflows */
+        }
+    </style>
 </head>
-<body class="py-4">
-<div class="container calendar-container p-0">
-    <div class="calendar-header">
-        <div class="d-flex justify-content-between align-items-center">
-            <button id="prevMonthBtn" class="nav-btn">&lt; Tháng trước</button>
-            <h2 id="currentMonthYear" class="m-0"></h2>
-            <button id="nextMonthBtn" class="nav-btn">Tháng sau &gt;</button>
-        </div>
-    </div>
-
-    <div class="p-4">
-        <div class="row row-cols-7 g-2 mb-2" id="dayHeaders">
-            <div class="col text-center day-header sunday">CN</div>
-            <div class="col text-center day-header">T2</div>
-            <div class="col text-center day-header">T3</div>
-            <div class="col text-center day-header">T4</div>
-            <div class="col text-center day-header">T5</div>
-            <div class="col text-center day-header">T6</div>
-            <div class="col text-center day-header">T7</div>
-        </div>
-        
-        <div class="row row-cols-7 g-2" id="calendarGrid">
-            <!-- Calendar days will be dynamically generated here -->
-        </div>
-
-        <div class="text-center mt-4 text-muted">
-            <small>Nhấn vào ngày để xem chi tiết ngày âm lịch, giờ hoàng đạo, hắc đạo</small>
-        </div>
-    </div>
-</div>
-
-<!-- Modal for day details -->
-<div class="modal fade" id="dayDetailModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalTitle">Chi tiết ngày</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body" id="modalBody">
-                <!-- Details will be loaded here -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script th:src="@{/js/perpetual_calendar.js}"></script>
-<footer class="footer">
-    <div class="container">
-        <div class="row">
-            <!-- Left Section -->
-            <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
-                <div class="footer-brand">
-                    <img th:src="@{/img/z.png}" alt="Weather Logo">
-                    <span>Weather</span>
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans transition-colors duration-300 min-h-screen flex flex-col">
+<div id="page-wrapper">
+    <nav class="sticky top-0 z-50 bg-surface-light/90 dark:bg-surface-dark/90 backdrop-blur-md shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0 flex items-center gap-2">
+                    <a th:href="@{/}" class="flex items-center gap-2">
+                        <span class="material-icons-round text-primary text-3xl">cloud</span>
+                        <span class="font-bold text-xl tracking-tight text-slate-800 dark:text-white">Weather</span>
+                    </a>
                 </div>
-                <div class="footer-contact">
-                    <p><i class="bi bi-envelope-fill"></i> lgbbq9999@gmail.com</p>
-                    <p><i class="bi bi-telephone-fill"></i> 0342157199</p>
+                <div class="hidden md:flex space-x-8 text-sm font-medium">
+                     <div class="relative group">
+                        <a class="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition-colors cursor-pointer" id="navbarDropdownMenuLink">
+                            Tỉnh/Thành phố
+                        </a>
+                        <div class="absolute hidden group-hover:block bg-surface-light dark:bg-surface-dark shadow-lg rounded-md mt-2 p-4 min-w-max z-50">
+                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-6 gap-y-2 max-h-96 overflow-y-auto">
+                                <th:block th:each="entry : ${groupedCities}">
+                                    <div>
+                                        <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2" th:text="${entry.key}"></p>
+                                        <div class="space-y-1">
+                                            <a th:each="province : ${entry.value}" th:href="@{/(city=${province})}" class="block px-3 py-1 text-sm text-slate-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md transition-colors whitespace-nowrap" th:text="${province}"></a>
+                                        </div>
+                                    </div>
+                                </th:block>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors" th:href="@{/chart}">Biểu đồ</a>
+                    <a class="text-primary font-semibold dark:text-blue-400 transition-colors" th:href="@{/perpetual-calendar}">Xem lịch vạn niên</a>
+                </div>
+                <div class="hidden md:flex items-center gap-4">
+                     <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 ml-2 border-l pl-4 border-gray-200 dark:border-gray-700">
+                        <span class="material-icons-round text-base">schedule</span>
+                        <span id="local-time" style="font-variant-numeric: tabular-nums;">00:00:00</span>
+                    </div>
+                    <button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+                        <span class="material-icons-round text-slate-500 dark:text-yellow-400">dark_mode</span>
+                    </button>
                 </div>
             </div>
+        </div>
+    </nav>
 
-            <!-- Center Section -->
-            <div class="col-lg-4 col-md-6 mb-4 mb-lg-0 text-center">
-                <h5>Nhà xúc tác</h5>
-                <p>chưa phát triển</p>
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Calendar Display -->
+        <div class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <a th:href="@{/perpetual-calendar(year=${prevYear}, month=${prevMonth})}" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg">&lt; Tháng trước</a>
+                <h2 id="currentMonthYear" class="text-2xl font-bold text-slate-800 dark:text-white" th:text="'Tháng ' + ${month} + ', ' + ${year}"></h2>
+                <a th:href="@{/perpetual-calendar(year=${nextYear}, month=${nextMonth})}" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg">Tháng sau &gt;</a>
             </div>
+            <div id="calendarGrid" class="grid grid-cols-7 gap-2">
+                <!-- Day headers -->
+                <div class="text-center font-bold text-red-500">CN</div>
+                <div class="text-center font-bold">T2</div>
+                <div class="text-center font-bold">T3</div>
+                <div class="text-center font-bold">T4</div>
+                <div class="text-center font-bold">T5</div>
+                <div class="text-center font-bold">T6</div>
+                <div class="text-center font-bold">T7</div>
 
-            <!-- Right Section -->
-            <div class="col-lg-4">
-                <h5>Góp ý</h5>
-                <form id="feedbackForm">
-                    <div class="mb-2">
-                        <input type="text" class="form-control" id="feedbackName" placeholder="Họ tên" required>
+                <!-- Empty cells for padding -->
+                <th:block th:if="${firstDayOfMonth > 0}" th:each="i : ${#numbers.sequence(1, firstDayOfMonth)}">
+                    <div></div>
+                </th:block>
+
+                <!-- Calendar Days -->
+                <th:block th:each="dayInfo : ${calendarDays}">
+                     <div class="calendar-day text-center p-2 border rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+                          th:attr="data-solardate=${dayInfo.solarDay + '/' + dayInfo.solarMonth + '/' + dayInfo.solarYear},
+                                   data-lunardate=${dayInfo.lunarDay + '/' + dayInfo.lunarMonth + '/' + dayInfo.lunarYear},
+                                   data-lunaryearname=${dayInfo.lunarYearName},
+                                   data-lunarmonthname=${dayInfo.lunarMonthName},
+                                   data-lunardayname=${dayInfo.lunarDayName},
+                                   data-hoangdao=${#strings.listJoin(dayInfo.hoangdao, ', ')}">
+                        <p class="font-bold text-lg" th:text="${dayInfo.solarDay}"></p>
+                        <p class="text-xs text-gray-500" th:text="${dayInfo.lunarDay + '/' + dayInfo.lunarMonth}"></p>
                     </div>
-                    <div class="mb-2">
-                        <input type="email" class="form-control" id="feedbackEmail" placeholder="Email" required>
+                </th:block>
+            </div>
+        </div>
+
+        <!-- Date Converters -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Solar to Lunar Converter -->
+            <div class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+                <h3 class="text-xl font-semibold mb-4 text-slate-800 dark:text-white">Chuyển đổi Dương sang Âm</h3>
+                <form th:action="@{/perpetual-calendar/convert-solar-to-lunar}" method="post" class="space-y-4">
+                    <div class="grid grid-cols-3 gap-4">
+                        <div>
+                            <label for="solar_day" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ngày</label>
+                            <input type="number" name="solar_day" id="solar_day" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:bg-slate-800 dark:border-slate-600">
+                        </div>
+                        <div>
+                            <label for="solar_month" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tháng</label>
+                            <input type="number" name="solar_month" id="solar_month" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:bg-slate-800 dark:border-slate-600">
+                        </div>
+                        <div>
+                            <label for="solar_year" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Năm</label>
+                            <input type="number" name="solar_year" id="solar_year" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:bg-slate-800 dark:border-slate-600">
+                        </div>
                     </div>
-                    <div class="mb-2">
-                        <textarea class="form-control" id="feedbackContent" rows="3" placeholder="Nội dung" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Gửi</button>
+                    <button type="submit" class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg">Chuyển đổi</button>
                 </form>
+                <div th:if="${solarToLunarResult}" class="mt-4 p-4 bg-blue-100 dark:bg-blue-900/50 rounded-lg text-center">
+                    <p class="font-semibold text-blue-800 dark:text-blue-200" th:text="${solarToLunarResult}"></p>
+                </div>
+            </div>
+
+            <!-- Lunar to Solar Converter -->
+            <div class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+                <h3 class="text-xl font-semibold mb-4 text-slate-800 dark:text-white">Chuyển đổi Âm sang Dương</h3>
+                <form th:action="@{/perpetual-calendar/convert-lunar-to-solar}" method="post" class="space-y-4">
+                    <div class="grid grid-cols-3 gap-4">
+                        <div>
+                            <label for="lunar_day" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ngày</label>
+                            <input type="number" name="lunar_day" id="lunar_day" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:bg-slate-800 dark:border-slate-600">
+                        </div>
+                        <div>
+                            <label for="lunar_month" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tháng</label>
+                            <input type="number" name="lunar_month" id="lunar_month" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:bg-slate-800 dark:border-slate-600">
+                        </div>
+                        <div>
+                            <label for="lunar_year" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Năm</label>
+                            <input type="number" name="lunar_year" id="lunar_year" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:bg-slate-800 dark:border-slate-600">
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg">Chuyển đổi</button>
+                </form>
+                 <div th:if="${lunarToSolarResult}" class="mt-4 p-4 bg-green-100 dark:bg-green-900/50 rounded-lg text-center">
+                    <p class="font-semibold text-green-800 dark:text-green-200" th:text="${lunarToSolarResult}"></p>
+                </div>
             </div>
         </div>
-    </div>
-</footer>
+    </main>
 
-<script th:src="@{/js/footer.js}"></script>
+    <!-- Day Detail Modal -->
+    <div id="dayDetailModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+      <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-surface-light dark:bg-surface-dark">
+        <div class="mt-3 text-center">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white" id="modalTitle"></h3>
+            <div class="mt-2 px-7 py-3 text-left" id="modalBody">
+            </div>
+            <div class="items-center px-4 py-3">
+                <button id="closeModalBtn" class="px-4 py-2 bg-primary text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary">
+                    Đóng
+                </button>
+            </div>
+        </div>
+      </div>
+    </div>
+
+   <footer class="bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-700 mt-8 py-12">
+        <!-- Footer content from index.html -->
+    </footer>
+</div>
+
+<script th:src="@{/js/perpetual_calendar.js(v=${cacheBuster})}" defer></script>
+<script th:src="@{/js/footer.js(v=${cacheBuster})}" defer></script>
+
 </body>
 </html>

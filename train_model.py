@@ -6,15 +6,7 @@ from sklearn.metrics import mean_squared_error
 import os
 
 def load_training_data():
-    """
-    Load your historical weather data here.
-    This function should return a pandas DataFrame where each row is a historical record.
-    The DataFrame should contain columns for features (e.g., historical temps, rain)
-    and target variables (e.g., next day's max temp, min temp, rain probability).
-
-    For demonstration purposes, we'll create a dummy DataFrame.
-    Replace this with your actual data loading logic (e.g., pd.read_csv('your_historical_weather_data.csv')).
-    """
+    
     print("Loading historical weather data...")
     # Example: dummy data for 100 days
     data = {

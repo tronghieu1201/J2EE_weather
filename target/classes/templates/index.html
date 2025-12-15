@@ -3,769 +3,411 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dự báo thời tiết AI</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
-    <style>
-        @media (min-width: 992px) {
-            .navbar-expand-lg .navbar-nav .dropdown:hover .dropdown-menu {
-                display: block;
-            }
-            .megamenu {
-                padding: 1rem;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 900px;
-                max-width: 95vw; /* Add max-width to prevent overflow on small screens */
-                border-radius: 8px;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            }
-            .megamenu .dropdown-header {
-                text-transform: uppercase;
-                font-size: 0.8em;
-                color: #5a6c7d;
-                margin-top: 0.5rem;
-                margin-bottom: 0.5rem;
-            }
-        }
-
-        body {
-            background: linear-gradient(180deg, #e8f4f8 0%, #f0f8ff 100%) !important;
-            min-height: 100vh;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-
-        /* Navbar */
-        .navbar {
-            background: white !important;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            padding: 1rem 0;
-        }
-
-        .navbar .container-fluid {
-            max-width: 1320px;
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
-        }
-
-        .navbar-brand {
-            color: #5eb3d6 !important;
-        }
-
-        .navbar-brand:hover {
-            color: #4a9ec4 !important;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #5eb3d6 0%, #4a9ec4 100%);
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #4a9ec4 0%, #3d8bb0 100%);
-        }
-
-        @media (max-width: 1399px) {
-            .navbar .container-fluid {
-                max-width: 1140px;
-            }
-        }
-
-        @media (max-width: 1199px) {
-            .navbar .container-fluid {
-                max-width: 960px;
-            }
-        }
-
-        @media (max-width: 991px) {
-            .navbar .container-fluid {
-                max-width: 720px;
-            }
-        }
-
-        @media (max-width: 767px) {
-            .navbar .container-fluid {
-                max-width: 540px;
-                padding-left: 1rem;
-                padding-right: 1rem;
-            }
-        }
-
-        /* Main container */
-        .weather-container {
-            max-width: 1320px;
-            margin: 0 auto;
-            padding: 2.5rem 1.5rem;
-        }
-
-        @media (max-width: 1399px) {
-            .weather-container {
-                max-width: 1140px;
-            }
-        }
-
-        @media (max-width: 1199px) {
-            .weather-container {
-                max-width: 960px;
-            }
-        }
-
-        @media (max-width: 991px) {
-            .weather-container {
-                max-width: 720px;
-            }
-        }
-
-        @media (max-width: 767px) {
-            .weather-container {
-                max-width: 540px;
-                padding: 1.5rem 1rem;
-            }
-        }
-
-        /* Left card - Current weather */
-        .current-weather-card {
-            background: white;
-            border-radius: 16px;
-            padding: 2.5rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            height: fit-content;
-            position: sticky;
-            top: 20px;
-        }
-
-        @media (max-width: 991px) {
-            .current-weather-card {
-                position: relative;
-                top: 0;
-                margin-bottom: 2rem;
-            }
-        }
-
-        .city-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 2rem;
-        }
-
-        .city-name {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #2d3748;
-            margin: 0;
-        }
-
-        .city-time {
-            font-size: 0.875rem;
-            color: #718096;
-            margin-top: 0.25rem;
-        }
-
-        .status-badge {
-            background: linear-gradient(135deg, #5eb3d6 0%, #4a9ec4 100%);
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-
-        .weather-main {
-            text-align: center;
-            padding: 2rem 0;
-        }
-
-        .weather-icon-large {
-            font-size: 120px;
-            color: #5eb3d6;
-            margin-bottom: 1rem;
-        }
-
-        .temp-display {
-            font-size: 4.5rem;
-            font-weight: 700;
-            color: #2d3748;
-            line-height: 1;
-            margin-bottom: 0.5rem;
-        }
-
-        .weather-desc {
-            font-size: 1.125rem;
-            color: #4a5568;
-            margin-bottom: 0.25rem;
-        }
-
-        .feels-like {
-            font-size: 0.875rem;
-            color: #a0aec0;
-        }
-
-        /* Metrics grid */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        @media (max-width: 575px) {
-            .metrics-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .metric-item {
-            background: #f8fafb;
-            border-radius: 12px;
-            padding: 1.25rem;
-            text-align: center;
-            border: 1px solid #e8eef2;
-        }
-
-        .metric-item i {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: #5eb3d6;
-        }
-
-        .metric-value {
-            display: block;
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 0.25rem;
-        }
-
-        .metric-label {
-            font-size: 0.75rem;
-            color: #718096;
-        }
-
-        /* Weather tip */
-        .weather-tip {
-            background: linear-gradient(135deg, #5eb3d6 0%, #4a9ec4 100%);
-            border-radius: 16px;
-            padding: 1.5rem;
-            color: white;
-            margin-top: 1.5rem;
-        }
-
-        .weather-tip h5 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .weather-tip p {
-            font-size: 0.875rem;
-            margin: 0;
-            opacity: 0.95;
-        }
-
-        /* Right section */
-        .forecast-section {
-            background: white;
-            border-radius: 16px;
-            padding: 2.5rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            margin-bottom: 2rem;
-        }
-
-        @media (max-width: 767px) {
-            .forecast-section {
-                padding: 1.5rem;
-            }
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .section-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: #2d3748;
-            margin: 0;
-        }
-
-        .view-details {
-            color: #5eb3d6;
-            font-size: 0.875rem;
-            text-decoration: none;
-        }
-
-        .view-details:hover {
-            color: #4a9ec4;
-        }
-
-        /* 7-day forecast */
-        .forecast-scroll {
-            display: flex;
-            gap: 1rem;
-            overflow-x: auto;
-            padding: 0.5rem 0 1rem 0;
-            scrollbar-width: thin;
-            scrollbar-color: #cbd5e1 #f1f5f9;
-            margin: 0 -0.5rem;
-            padding-left: 0.5rem;
-            padding-right: 0.5rem;
-        }
-
-        .forecast-scroll::-webkit-scrollbar {
+    <title>Dự báo thời tiết</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#3B82F6", // Blue-500 equivalent, vibrant and weather-appropriate
+                        "primary-dark": "#2563EB",
+                        "background-light": "#F0F9FF", // Very light blue
+                        "background-dark": "#0F172A", // Slate-900
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#1E293B", // Slate-800
+                        "text-light": "#334155", // Slate-700
+                        "text-dark": "#E2E8F0", // Slate-200
+                        "accent-blue": "#0EA5E9", // Sky-500
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.75rem", // 12px
+                        "xl": "1rem", // 16px
+                        "2xl": "1.5rem", // 24px
+                    },
+                },
+            },
+        };
+    </script>
+    <style>::-webkit-scrollbar {
+            width: 8px;
             height: 8px;
         }
-
-        .forecast-scroll::-webkit-scrollbar-track {
-            background: #f1f5f9;
-            border-radius: 10px;
+        ::-webkit-scrollbar-track {
+            background: transparent;
         }
-
-        .forecast-scroll::-webkit-scrollbar-thumb {
+        ::-webkit-scrollbar-thumb {
             background: #cbd5e1;
-            border-radius: 10px;
+            border-radius: 4px;
         }
-
-        .forecast-scroll::-webkit-scrollbar-thumb:hover {
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
+        }.glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
         }
-
-        .forecast-day {
-            background: #fafcfd;
-            border: 1px solid #e8eef2;
-            border-radius: 16px;
-            padding: 1.5rem 1.25rem;
-            min-width: 130px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            flex-shrink: 0;
+        .dark .glass {
+            background: rgba(30, 41, 59, 0.7);
         }
-
-        @media (max-width: 575px) {
-            .forecast-day {
-                min-width: 110px;
-                padding: 1.25rem 1rem;
-            }
+        #page-wrapper {
+            transform: scale(0.65);
+            transform-origin: top left;
+            width: calc(100% / 0.65);
+            min-height: calc(100vh / 0.65); /* Use min-height to allow content to extend */
+            overflow-x: hidden; /* Hide horizontal scrollbar that might appear */
+            position: absolute; /* Needed for transform-origin to work correctly in some contexts */
+            top: 0;
+            left: 0;
         }
-
-        .forecast-day:hover {
-            background: #f0f7fa;
-            border-color: #5eb3d6;
-            box-shadow: 0 2px 8px rgba(94, 179, 214, 0.15);
-        }
-
-        .forecast-day.active {
-            background: linear-gradient(135deg, #5eb3d6 0%, #4a9ec4 100%);
-            border-color: #5eb3d6;
-            color: white;
-        }
-
-        .forecast-day.active .day-name,
-        .forecast-day.active .day-date,
-        .forecast-day.active .temp-range,
-        .forecast-day.active .rain-prob {
-            color: white;
-        }
-
-        .day-name {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 0.25rem;
-        }
-
-        .day-date {
-            font-size: 0.75rem;
-            color: #a0aec0;
-            margin-bottom: 1rem;
-        }
-
-        .forecast-icon {
-            font-size: 2.5rem;
-            margin: 0.75rem 0;
-            color: #5eb3d6;
-        }
-
-        .forecast-day.active .forecast-icon {
-            color: white;
-        }
-
-        .temp-range {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: #2d3748;
-            margin: 0.75rem 0 0.5rem;
-        }
-
-        .rain-prob {
-            font-size: 0.75rem;
-            color: #5eb3d6;
-        }
-
-        /* Sun times */
-        .sun-times {
-            display: flex;
-            justify-content: space-around;
-            padding: 1rem 0;
-        }
-
-        .sun-time-item {
-            text-align: center;
-        }
-
-        .sun-icon {
-            font-size: 3rem;
-            color: #f59e0b;
-            margin-bottom: 0.5rem;
-        }
-
-        .sun-label {
-            font-size: 0.875rem;
-            color: #718096;
-            margin-bottom: 0.25rem;
-        }
-
-        .sun-value {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: #2d3748;
-        }
-
-        /* Air quality */
-        .aqi-display {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .aqi-number {
-            font-size: 3.5rem;
-            font-weight: 700;
-            color: #2d3748;
-        }
-
-        .aqi-info {
-            flex: 1;
-        }
-
-        .aqi-badge {
-            background: linear-gradient(135deg, #5eb3d6 0%, #4a9ec4 100%);
-            color: white;
-            padding: 0.375rem 0.875rem;
-            border-radius: 12px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            display: inline-block;
-            margin-bottom: 0.5rem;
-        }
-
-        .aqi-bar {
-            height: 6px;
-            background: #e8eef2;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .aqi-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #5eb3d6, #4a9ec4);
-            border-radius: 3px;
-        }
-
-        /* Pollutants grid */
-        .pollutants-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.25rem;
-        }
-
-        @media (max-width: 575px) {
-            .pollutants-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-        }
-
-        .pollutant-item {
-            text-align: center;
-            padding: 1rem;
-            background: #f8fafb;
-            border-radius: 12px;
-            border: 1px solid #e8eef2;
-        }
-
-        .pollutant-item i {
-            font-size: 1.25rem;
-            color: #5eb3d6;
-            margin-bottom: 0.5rem;
-        }
-
-        .pollutant-label {
-            font-size: 0.75rem;
-            color: #a0aec0;
-            display: block;
-            margin-bottom: 0.25rem;
-        }
-
-        .pollutant-value {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #2d3748;
-        }
-
-        /* Alert styling */
-        .alert {
-            border-radius: 12px;
-            border: 1px solid #e8eef2;
-        }
-
-        /* Spinner */
-        .spinner-border {
-            color: #5eb3d6 !important;
+        body {
+            min-height: calc(100vh / 0.65); /* Ensure body itself is large enough to contain scaled content */
+            overflow-y: auto; /* Allow vertical scrolling when content overflows */
         }
     </style>
-</head>
-<body>
 
-<nav class="navbar navbar-expand-lg navbar-light">
-    <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="/">
-            <i class="bi bi-cloud-sun me-2"></i>WeatherAI
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown">
+
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans transition-colors duration-300 min-h-screen flex flex-col">
+<div id="page-wrapper">
+<nav class="sticky top-0 z-50 bg-surface-light/90 dark:bg-surface-dark/90 backdrop-blur-md shadow-sm border-b border-gray-200 dark:border-gray-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <div class="flex-shrink-0 flex items-center gap-2">
+                <span class="material-icons-round text-primary text-3xl">cloud</span>
+                <span class="font-bold text-xl tracking-tight text-slate-800 dark:text-white">Weather</span>
+            </div>
+            <div class="hidden md:flex space-x-8 text-sm font-medium">
+                <!-- Tỉnh/Thành phố Dropdown -->
+                <div class="relative group">
+                    <a class="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition-colors cursor-pointer" id="navbarDropdownMenuLink">
                         Tỉnh/Thành phố
                     </a>
-                    <div class="dropdown-menu megamenu" aria-labelledby="navbarDropdownMenuLink">
-                        <div class="container">
-                            <div class="row">
-                                <th:block th:each="entry : ${groupedCities}">
-                                    <div class="col-md-3">
-                                        <h6 class="dropdown-header" th:text="${entry.key}"></h6>
-                                        <a th:each="province : ${entry.value}" href="#" th:onclick="fetchWeatherData('[(${province})]');" class="dropdown-item" th:text="${province}"></a>
+                    <div class="absolute hidden group-hover:block bg-surface-light dark:bg-surface-dark shadow-lg rounded-md mt-2 p-4 min-w-max z-50">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-6 gap-y-2 max-h-96 overflow-y-auto">
+                            <th:block th:each="entry : ${groupedCities}">
+                                <div>
+                                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2" th:text="${entry.key}"></p>
+                                    <div class="space-y-1">
+                                        <a th:each="province : ${entry.value}" href="#" th:onclick="fetchWeatherData('[(${province})]');" class="block px-3 py-1 text-sm text-slate-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md transition-colors whitespace-nowrap" th:text="${province}"></a>
                                     </div>
-                                </th:block>
-                            </div>
+                                </div>
+                            </th:block>
                         </div>
                     </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/chart">Biểu đồ</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/perpetual-calendar">Xem lịch vạn niên</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="weatherNewsDropdown" role="button" data-bs-toggle="dropdown">
+                </div>
+
+                <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors" th:href="@{/chart}">Biểu đồ</a>
+                <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors" th:href="@{/perpetual-calendar}">Xem lịch vạn niên</a>
+                <!-- Tin thời tiết Dropdown -->
+                <div class="relative group">
+                    <a class="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition-colors cursor-pointer" id="weatherNewsDropdown">
                         Tin thời tiết
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="weatherNewsDropdown">
-                        <li><a class="dropdown-item" href="/weather-news/daily">Tin tức hằng ngày</a></li>
-                        <li><a class="dropdown-item" href="/weather-news/travel">Thời tiết du lịch</a></li>
-                        <li><a class="dropdown-item" href="/weather-news/nature">Thiên nhiên</a></li>
-                    </ul>
-                </li>
-            </ul>
-            <div class="d-flex align-items-center">
-                <form th:action="@{/}" method="post" class="input-group" style="max-width: 300px;">
-                    <span class="input-group-text border-0 bg-light"><i class="bi bi-search text-muted"></i></span>
-                    <input class="form-control border-0 bg-light" type="search" name="city" placeholder="Nhập tên thành phố...">
-                    <button class="btn btn-primary" type="submit">Tìm kiếm</button>
-                </form>
-                <i class="bi bi-moon fs-5 ms-3 cursor-pointer text-muted"></i>
+                    <div class="absolute hidden group-hover:block bg-surface-light dark:bg-surface-dark shadow-lg rounded-md mt-2 p-2 w-48 z-50">
+                        <a th:href="@{/weather-news/daily}" class="block px-3 py-1 text-sm text-slate-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md transition-colors">Tin tức hằng ngày</a>
+                        <a th:href="@{/weather-news/travel}" class="block px-3 py-1 text-sm text-slate-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md transition-colors">Thời tiết du lịch</a>
+                        <a th:href="@{/weather-news/nature}" class="block px-3 py-1 text-sm text-slate-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md transition-colors">Thiên nhiên</a>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center gap-4">
+                <div class="relative">
+                    <form th:action="@{/}" method="post" class="flex items-center ml-4">
+                        <input class="pl-10 pr-4 py-2 rounded-full border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-slate-700 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none w-64 transition-all" placeholder="Tìm kiếm..." type="text" name="city" />
+                        <span class="material-icons-round absolute left-7 top-1/2 -translate-y-1/2 text-gray-400 text-lg">search</span>
+                        <button class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg shadow-blue-500/30 transition-all transform hover:scale-105" type="submit">
+                            Tìm kiếm
+                        </button>
+                    </form>
+                </div>
+                <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 ml-2 border-l pl-4 border-gray-200 dark:border-gray-700">
+                    <span class="material-icons-round text-base">schedule</span>
+                    <span id="local-time">02:39:52</span>
+                </div>
+                <button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+                    <span class="material-icons-round text-slate-500 dark:text-yellow-400">dark_mode</span>
+                </button>
+            </div>
+            <div class="md:hidden flex items-center">
+                <button class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white focus:outline-none">
+                    <span class="material-icons-round">menu</span>
+                </button>
             </div>
         </div>
     </div>
 </nav>
 
-<main id="weatherDisplayArea" th:fragment="weatherContent">
-    <div class="weather-container">
-        <!-- Error message -->
-        <div th:if="${comprehensiveReport == null or sevenDayForecast == null or #lists.isEmpty(sevenDayForecast)}" class="alert alert-warning text-center" role="alert">
-            <p th:if="${city != null}">Không thể tải dữ liệu thời tiết cho <strong><span th:text="${city}"></span></strong>. Vui lòng thử lại.</p>
-            <p th:if="${city == null}">Vui lòng nhập tên thành phố để xem dự báo thời tiết.</p>
-        </div>
+<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full" id="weatherDisplayArea" th:fragment="weatherContent">
+    <div th:if="${comprehensiveReport == null or sevenDayForecast == null or #lists.isEmpty(sevenDayForecast)}" class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 rounded-md" role="alert">
+        <p th:if="${city != null}">Không thể tải dữ liệu thời tiết cho <strong><span th:text="${city}"></span></strong>. Vui lòng thử lại.</p>
+        <p th:if="${city == null}">Vui lòng nhập tên thành phố để xem dự báo thời tiết.</p>
+    </div>
 
-        <div class="row" th:if="${comprehensiveReport != null and sevenDayForecast != null and not #lists.isEmpty(sevenDayForecast)}">
-            <!-- Left: Current Weather -->
-            <div class="col-lg-4 col-md-12 mb-4">
-                <div class="current-weather-card">
-                    <div class="city-header">
-                        <div>
-                            <h1 class="city-name" th:text="${city}">Hà Nội</h1>
-                            <p class="city-time">Hôm nay, <span th:text="${#temporals.format(T(java.time.OffsetDateTime).now(), 'HH:mm')}">12:00</span> PM</p>
-                        </div>
-                        <span class="status-badge">
-                            <i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> Cập nhật
-                        </span>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6" th:if="${comprehensiveReport != null and sevenDayForecast != null and not #lists.isEmpty(sevenDayForecast)}">
+        <!-- Left Column: Current Weather, Map -->
+        <div class="lg:col-span-3 space-y-6">
+            <!-- Current Weather Card -->
+            <div id="current-weather-card" class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 flex flex-col items-center text-center relative overflow-hidden group transition-all duration-300 hover:shadow-lg hover:scale-[1.01]">
+                <div class="absolute top-0 left-0 w-full h-1 bg-white"></div>
+                <div class="w-full flex justify-between items-start mb-4">
+                    <div class="text-left">
+                        <h2 class="text-2xl font-bold text-slate-800 dark:text-white" th:text="${city}">Hà Nội</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Hôm nay, <span th:text="${#temporals.format(T(java.time.OffsetDateTime).now(), 'HH:mm')}">02:30 PM</span></p>
                     </div>
-
-                    <div th:with="current=${comprehensiveReport.current}, hourly=${comprehensiveReport.hourly}">
-                        <div class="weather-main">
-                            <i class="weather-icon-large bi"
-                               th:classappend="${T(com.weather.forecast.util.WeatherIconMapper).getIconClass(current.weatherCode)}"></i>
-                            <div class="temp-display" th:text="${#numbers.formatDecimal(current.temperature, 0, 0)} + '°C'">22°C</div>
-                            <p class="weather-desc" th:text="${T(com.weather.forecast.util.WeatherCodeMapper).getDescription(current.weatherCode)}">Mưa rào nhẹ</p>
-                            <p class="feels-like" th:text="'Cảm giác như ' + ${#numbers.formatDecimal(current.apparentTemperature, 0, 0)} + '°C'">Cảm giác như 20°C</p>
-                        </div>
-
-                        <div class="metrics-grid">
-                            <div class="metric-item">
-                                <i class="bi bi-droplet-fill"></i>
-                                <span class="metric-value" th:text="${current.humidity} + '%'">84%</span>
-                                <span class="metric-label">ĐỘ ẨM</span>
-                            </div>
-                            <div class="metric-item">
-                                <i class="bi bi-speedometer2"></i>
-                                <span class="metric-value" th:text="${#numbers.formatDecimal(current.surfacePressure, 0, 0)} + ' hPa'">1014 hPa</span>
-                                <span class="metric-label">ÁP SUẤT</span>
-                            </div>
-                            <div class="metric-item">
-                                <i class="bi bi-wind"></i>
-                                <span class="metric-value" th:text="${#numbers.formatDecimal(current.windSpeed, 1, 1)} + ' km/h'">2,4 km/h</span>
-                                <span class="metric-label">TỐC ĐỘ GIÓ</span>
-                            </div>
-                            <!-- Assuming visibility is available in hourly data and taking the first value -->
-                            <div class="metric-item" th:if="${hourly != null and not #lists.isEmpty(hourly.visibility)}">
-                                <i class="bi bi-eye-fill"></i>
-                                <span class="metric-value" th:text="${#numbers.formatDecimal(hourly.visibility.get(0) / 1000, 1, 1)} + ' km'">24,1 km</span>
-                                <span class="metric-label">TẦM NHÌN</span>
-                            </div>
-                             <!-- This was the UV Index metric item. It has been removed as requested. -->
-                        </div>
-                    </div>
+                    <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 text-xs font-semibold px-2 py-1 rounded">Cập nhật</span>
                 </div>
+                <div th:with="current=${comprehensiveReport.current}, hourly=${comprehensiveReport.hourly}">
+                    <div class="my-6 transform transition-transform group-hover:scale-110 duration-500">
+                        <span class="material-icons-round text-7xl drop-shadow-lg filter dark:brightness-90"
+                              th:classappend="${T(com.weather.forecast.util.WeatherIconMapper).getIconClass(current.weatherCode)}"></span>
+                    </div>
+                    <div class="text-6xl font-bold text-slate-800 dark:text-white tracking-tighter" th:text="${#numbers.formatDecimal(current.temperature, 0, 0)} + '°C'">
+                        20°C
+                    </div>
+                    <p class="text-lg font-medium text-slate-600 dark:text-slate-300 mt-2" th:text="${T(com.weather.forecast.util.WeatherCodeMapper).getDescription(current.weatherCode)}">Nhiều mây</p>
+                    <p class="text-sm text-slate-400 mt-1" th:text="'Cảm giác như ' + ${#numbers.formatDecimal(current.apparentTemperature, 0, 0)} + '°C'">Cảm giác như 24°C</p>
 
-                <div class="weather-tip" th:with="code=${comprehensiveReport.current.weatherCode}">
-                    <h5><i class="bi bi-lightbulb me-2"></i>Mẹo thời tiết</h5>
-                    <p th:if="${code >= 51 and code <= 67 or code >= 80 and code <= 82}">Trời có mưa, bạn nhớ mang theo ô hoặc áo mưa khi ra ngoài.</p>
-                    <p th:if="${code >= 45 and code <= 48}">Có sương mù, hãy cẩn thận khi lái xe.</p>
-                    <p th:if="${code >= 71 and code <= 77 or code >= 85 and code <= 86}">Trời có tuyết! Giữ ấm và tận hưởng nhé.</p>
-                    <p th:if="${code <= 3}">Thời tiết đẹp, một ngày tuyệt vời cho các hoạt động ngoài trời.</p>
+                    <div class="grid grid-cols-2 gap-4 w-full mt-8">
+                        <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl flex flex-col items-center">
+                            <span class="material-icons-round text-blue-500 text-xl mb-1">water_drop</span>
+                            <span class="text-sm font-semibold text-slate-700 dark:text-slate-200" th:text="${current.humidity} + '%'">96%</span>
+                            <span class="text-[10px] text-slate-400 uppercase tracking-wide">Độ ẩm</span>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl flex flex-col items-center">
+                            <span class="material-icons-round text-purple-500 text-xl mb-1">compress</span>
+                            <span class="text-sm font-semibold text-slate-700 dark:text-slate-200" th:text="${#numbers.formatDecimal(current.surfacePressure, 0, 0)} + ' hPa'">1015 hPa</span>
+                            <span class="text-[10px] text-slate-400 uppercase tracking-wide">Áp suất</span>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl flex flex-col items-center" th:if="${hourly != null and not #lists.isEmpty(hourly.visibility)}">
+                            <span class="material-icons-round text-teal-500 text-xl mb-1">remove_red_eye</span>
+                            <span class="text-sm font-semibold text-slate-700 dark:text-slate-200" th:text="${#numbers.formatDecimal(hourly.visibility.get(0) / 1000, 1, 1)} + ' km'">24.1 km</span>
+                            <span class="text-[10px] text-slate-400 uppercase tracking-wide">Tầm nhìn</span>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl flex flex-col items-center">
+                            <span class="material-icons-round text-orange-500 text-xl mb-1">air</span>
+                            <span class="text-sm font-semibold text-slate-700 dark:text-slate-200" th:text="${#numbers.formatDecimal(current.windSpeed, 0, 0)} + ' km/h'">3 km/h</span>
+                            <span class="text-[10px] text-slate-400 uppercase tracking-wide">Gió</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Right: Forecasts -->
-            <div class="col-lg-8 col-md-12">
-                <!-- 7-day forecast -->
-                <div class="forecast-section">
-                    <div class="section-header">
-                        <h2 class="section-title"><i class="bi bi-calendar3 me-2"></i>Dự báo 7 ngày tiếp theo</h2>
-                    </div>
-                    <div class="forecast-scroll">
-                        <!--/* Loop through the 7-day forecast data */-->
-                        <a th:each="forecast, iterStat : ${sevenDayForecast}"
-                           th:href="@{/hourly-details(city=${city}, date=${forecast.date})}"
-                           class="forecast-day"
-                           th:classappend="${iterStat.index == 0} ? 'active' : ''">
-
-                            <div class="day-name" th:text="${iterStat.index == 0} ? 'Hôm nay' : ${#temporals.format(forecast.date, 'E', 'vi')}"></div>
-                            <div class="day-date" th:text="${#temporals.format(forecast.date, 'dd/MM')}"></div>
-
-                            <i class="forecast-icon bi"
-                               th:classappend="${T(com.weather.forecast.util.WeatherIconMapper).getIconClass(forecast.weatherCode)}"></i>
-
-                            <div class="temp-range">
-                                <span th:text="${#numbers.formatDecimal(forecast.tempMax, 0, 0)} + '°'"></span> /
-                                <span style="opacity: 0.7;" th:text="${#numbers.formatDecimal(forecast.tempMin, 0, 0)} + '°'"></span>
-                            </div>
-
-                            <div class="rain-prob">
-                                <i class="bi bi-droplet-fill"></i>
-                                <span th:text="${#numbers.formatDecimal(forecast.rainProbability * 100, 0, 0)} + '%'"></span>
-                            </div>
-                        </a>
+            <!-- Google Map Section -->
+            <div id="map-section" class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden relative group transition-all duration-300 hover:shadow-lg hover:scale-[1.01]">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.669866858972!2d106.6908502750379!3d10.759715989392275!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f3605800001%3A0x6b6d582c0b6d6d6!2sThành%20phố%20Hồ%20Chí%20Minh!5e0!3m2!1svi!2s!4v1702434000000"
+                        width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="w-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 dark:opacity-60"></iframe>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+                    <div class="w-full">
+                        <div class="flex items-center justify-between text-white">
+                            <span class="font-medium text-sm">Bản đồ vệ tinh</span>
+                            <button class="bg-white/20 hover:bg-white/30 backdrop-blur-md p-1.5 rounded-lg transition-colors">
+                                <span class="material-icons-round text-sm">open_in_full</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <span class="material-icons-round text-red-500 text-4xl drop-shadow-lg animate-bounce">location_on</span>
+                </div>
+            </div>
+        </div>
 
-                <!-- Sun times -->
-                <div class="forecast-section">
-                    <h2 class="section-title"><i class="bi bi-brightness-high me-2"></i>Mặt trời mọc & lặn</h2>
-                    <div class="sun-times">
-                        <div class="sun-time-item">
-                            <i class="bi bi-sunrise sun-icon"></i>
-                            <p class="sun-label">Mọc</p>
-                            <p class="sun-value">06:15 AM</p>
+        <!-- Right Column: Weather Tip, 7-day forecast, Sun times, Air quality, Prominent Provinces -->
+        <div class="lg:col-span-9 space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <!-- Weather Tip Card -->
+            <div id="weather-tip-card" class="lg:col-span-1 bg-surface-light dark:bg-surface-dark rounded-2xl p-6 text-text-light dark:text-text-dark shadow-lg flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:scale-[1.01]">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="material-icons-round bg-white/20 p-1.5 rounded-lg">tips_and_updates</span>
+                        <span class="font-semibold text-sm uppercase tracking-wide opacity-90">Mẹo thời tiết</span>
+                    </div>
+                    <div th:with="code=${comprehensiveReport.current.weatherCode}">
+                        <h3 class="font-bold text-lg leading-tight mb-2" th:if="${code >= 51 and code <= 67 or code >= 80 and code <= 82}">Em Của Ngày Hôm Qua.</h3>
+                        <h3 class="font-bold text-lg leading-tight mb-2" th:if="${code >= 45 and code <= 48}">Trời hôm nay quá là hôm qua .</h3>
+                        <h3 class="font-bold text-lg leading-tight mb-2" th:if="${code >= 71 and code <= 77 or code >= 85 and code <= 86}">Hãy hít thở những giây phúc cuối cùng .</h3>
+                        <h3 class="font-bold text-lg leading-tight mb-2" th:if="${code <= 3}">Nên ra đường chống đẩy 500 cái.</h3>
+                        <p class="text-sm opacity-80 leading-relaxed" th:if="${code <= 3}">Đừng quên mang theo Sài Gòn với 300 ml!</p>
+                        <p class="text-sm opacity-80 leading-relaxed" th:unless="${code >= 51 and code <= 67 or code >= 80 and code <= 82 or code >= 45 and code <= 48 or code >= 71 and code <= 77 or code >= 85 and code <= 86 or code <= 3}">Kiểm tra dự báo chi tiết để có kế hoạch tốt nhất cho ngày của bạn.</p>
+                    </div>
+                </div>
+                <div class="mt-4 flex justify-end">
+                    <span class="material-icons-round text-6xl text-yellow-500">wb_sunny</span>
+                </div>
+            </div>
+
+                <!-- 7-day forecast -->
+                <div class="lg:col-span-3" id="seven-day-forecast-section">
+                    <div class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-2">
+                                <span class="material-icons-round text-slate-500">calendar_month</span>
+                                <h3 class="font-bold text-slate-800 dark:text-white">Dự báo 7 ngày tiếp theo</h3>
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-slate-400 hover:text-slate-600 transition-colors">
+                                    <span class="material-icons-round">chevron_left</span>
+                                </button>
+                                <button class="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-slate-400 hover:text-slate-600 transition-colors">
+                                    <span class="material-icons-round">chevron_right</span>
+                                </button>
+                            </div>
                         </div>
-                        <div class="sun-time-item">
-                            <i class="bi bi-sunset sun-icon"></i>
-                            <p class="sun-label">Lặn</p>
-                            <p class="sun-value">05:45 PM</p>
+                        <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+                            <!--/* Loop through the 7-day forecast data */-->
+                            <a th:each="forecast, iterStat : ${sevenDayForecast}"
+                               th:href="@{/hourly-details(city=${city}, date=${forecast.date})}"
+                               class="min-w-[120px] bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-700 rounded-2xl p-4 flex flex-col items-center transition-all duration-300 hover:shadow-lg hover:scale-[1.03] cursor-pointer group"
+                               th:classappend="${iterStat.index == 0} ? 'bg-gradient-to-b from-accent-blue to-blue-600 text-white shadow-md transform scale-105 origin-center !border-transparent' : ''">
+
+                                <span class="text-sm font-medium mb-1" th:text="${iterStat.index == 0} ? 'Hôm nay' : ${#temporals.format(forecast.date, 'E', 'vi')}" th:classappend="${iterStat.index == 0} ? 'text-white' : 'text-slate-600 dark:text-slate-300'">Hôm nay</span>
+                                <span class="text-xs opacity-80 mb-3" th:text="${#temporals.format(forecast.date, 'dd/MM')}" th:classappend="${iterStat.index == 0} ? 'text-white/80' : 'text-slate-400'">13/12</span>
+
+                                <span class="material-icons-round text-3xl mb-2 drop-shadow-sm"
+                                      th:classappend="${T(com.weather.forecast.util.WeatherIconMapper).getIconClass(forecast.weatherCode) + (iterStat.index == 0 ? ' text-white' : ' text-slate-400 group-hover:text-blue-500 transition-colors')}"></span>
+
+                                <div class="text-xl font-bold mb-1" th:text="${#numbers.formatDecimal(forecast.tempMax, 0, 0)} + '°'" th:classappend="${iterStat.index == 0} ? 'text-white' : 'text-slate-800 dark:text-white'">20°</div>
+                                <div class="text-xs opacity-80" th:text="${#numbers.formatDecimal(forecast.tempMin, 0, 0)} + '°'" th:classappend="${iterStat.index == 0} ? 'text-white/80' : 'text-slate-400'">16°</div>
+
+                                <div class="mt-3 flex items-center gap-1 text-xs"
+                                     th:classappend="${iterStat.index == 0} ? 'bg-white/20 px-2 py-1 rounded-full text-white' : 'text-blue-500 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded-full'">
+                                    <span class="material-icons-round text-[10px]">water_drop</span>
+                                    <span th:text="${#numbers.formatDecimal(forecast.rainProbability * 100, 0, 0)} + '%'">45%</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Sun times -->
+                <div id="sun-times-section" class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 transition-all duration-300 hover:shadow-lg hover:scale-[1.01]">
+                    <div class="flex items-center gap-2 mb-6">
+                        <span class="material-icons-round text-orange-500">wb_twilight</span>
+                        <h3 class="font-bold text-slate-800 dark:text-white">Mặt trời mọc &amp; lặn</h3>
+                    </div>
+                    <div class="flex items-center justify-around relative pt-4">
+                        <div class="absolute top-4 left-10 right-10 h-24 border-t-2 border-dashed border-orange-300 dark:border-orange-700 rounded-t-full"></div>
+                        <div class="text-center relative z-10">
+                            <span class="material-icons-round text-4xl text-orange-400 mb-2">wb_sunny</span>
+                            <p class="text-xs text-slate-400 uppercase tracking-wide">Mọc</p>
+                            <p class="text-lg font-bold text-slate-800 dark:text-white">06:15 AM</p>
+                        </div>
+                        <div class="text-center relative z-10">
+                            <span class="material-icons-round text-4xl text-indigo-400 mb-2">nights_stay</span>
+                            <p class="text-xs text-slate-400 uppercase tracking-wide">Lặn</p>
+                            <p class="text-lg font-bold text-slate-800 dark:text-white">05:45 PM</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Air quality -->
-                <div class="forecast-section">
-                    <h2 class="section-title"><i class="bi bi-wind me-2"></i>Chất lượng không khí</h2>
-                    <div class="aqi-display">
-                        <div class="aqi-number">32</div>
-                        <div class="aqi-info">
-                            <span class="aqi-badge">Tốt</span>
-                            <div class="aqi-bar">
-                                <div class="aqi-bar-fill" style="width: 32%;"></div>
+                <div id="air-quality-section" class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 transition-all duration-300 hover:shadow-lg hover:scale-[1.01]">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="material-icons-round text-green-500">masks</span>
+                        <h3 class="font-bold text-slate-800 dark:text-white">Chất lượng không khí</h3>
+                    </div>
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="text-5xl font-bold text-slate-800 dark:text-white">32</div>
+                        <div>
+                            <span class="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 text-xs font-bold px-3 py-1 rounded-full uppercase">Tốt</span>
+                            <div class="w-48 h-2 bg-gray-200 dark:bg-gray-700 rounded-full mt-2 overflow-hidden">
+                                <div class="h-full bg-green-500 w-[32%] rounded-full"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="pollutants-grid">
-                        <div class="pollutant-item">
-                            <i class="bi bi-mask"></i>
-                            <span class="pollutant-label">PM2.5:</span>
-                            <span class="pollutant-value">12</span>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-3 text-center">
+                            <p class="text-[10px] text-slate-400 uppercase">PM2.5</p>
+                            <p class="font-bold text-slate-700 dark:text-slate-200">12</p>
                         </div>
-                        <div class="pollutant-item">
-                            <i class="bi bi-mask"></i>
-                            <span class="pollutant-label">PM10:</span>
-                            <span class="pollutant-value">18</span>
+                        <div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-3 text-center">
+                            <p class="text-[10px] text-slate-400 uppercase">PM10</p>
+                            <p class="font-bold text-slate-700 dark:text-slate-200">18</p>
                         </div>
-                        <div class="pollutant-item">
-                            <i class="bi bi-cloud-sun"></i>
-                            <span class="pollutant-label">O3:</span>
-                            <span class="pollutant-value">24</span>
+                        <div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-3 text-center">
+                            <p class="text-[10px] text-slate-400 uppercase">O3</p>
+                            <p class="font-bold text-slate-700 dark:text-slate-200">24</p>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Prominent Provinces Weather -->
+            <div id="prominent-provinces-section" class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6" th:if="${prominentProvincesWeather != null and not #lists.isEmpty(prominentProvincesWeather)}">
+                <div class="flex items-center gap-2 mb-6">
+                    <span class="material-icons-round text-slate-500">place</span>
+                    <h3 class="font-bold text-slate-800 dark:text-white">Thời tiết các tỉnh nổi bật</h3>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <a th:each="provinceWeather : ${prominentProvincesWeather}" th:href="@{/(city=${provinceWeather.provinceName})}"
+                       class="p-4 rounded-xl border border-transparent transition-all duration-300 hover:shadow-lg hover:scale-[1.03] flex flex-col items-center text-center cursor-pointer">
+                        <h4 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2" th:text="${provinceWeather.provinceName}">Hồ Chí Minh</h4>
+                        <span class="material-icons-round text-blue-500 text-2xl mb-1" th:classappend="${T(com.weather.forecast.util.WeatherIconMapper).getIconClass(provinceWeather.weatherCode)}">cloud</span>
+                        <span class="font-bold text-slate-800 dark:text-white" th:text="${#numbers.formatDecimal(provinceWeather.temperature, 0, 0)} + '°C'">24°C</span>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    async function fetchWeatherData(city) {
-        const weatherDisplayArea = document.getElementById('weatherDisplayArea');
-        if (weatherDisplayArea) {
-            weatherDisplayArea.innerHTML = '<div class="text-center p-5"><div class="spinner-border" role="status"><span class="visually-hidden">Đang tải...</span></div><p class="mt-3">Đang tải dữ liệu thời tiết cho ' + city + '...</p></div>';
-            try {
-                const response = await fetch(`/get-weather-fragment?city=${encodeURIComponent(city)}`);
-                if (response.ok) {
-                    const htmlFragment = await response.text();
-                    weatherDisplayArea.innerHTML = htmlFragment;
-                } else {
-                    weatherDisplayArea.innerHTML = '<div class="alert alert-danger text-center" role="alert">Không thể tải dữ liệu thời tiết cho ' + city + '. Vui lòng thử lại.</div>';
-                    console.error('Failed to fetch weather fragment:', response.statusText);
-                }
-            } catch (error) {
-                weatherDisplayArea.innerHTML = '<div class="alert alert-danger text-center" role="alert">Có lỗi xảy ra khi tải dữ liệu thời tiết.</div>';
-                console.error('Error fetching weather data:', error);
-            }
-        }
-    }
-</script>
+<footer class="bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-700 mt-8 py-12">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+<div>
+<div class="flex items-center gap-2 mb-4">
+<img th:src="@{/img/z.png}" alt="Weather Logo" class="w-8 h-8">
+<span class="font-bold text-xl tracking-tight text-slate-800 dark:text-white">Weather</span>
+</div>
+<div class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+<div class="flex items-center gap-2">
+<span class="material-icons-round text-base">email</span>
+<span>lgbbq9999@gmail.com</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-icons-round text-base">phone</span>
+<span>0342157199</span>
+</div>
+</div>
+</div>
+<div>
+<h4 class="font-bold text-slate-800 dark:text-white mb-4 uppercase text-sm tracking-wider">Nhà Xúc Tác</h4>
+<p class="text-sm text-slate-500 dark:text-slate-400">Chưa phát triển</p>
+</div>
+<div>
+<h4 class="font-bold text-slate-800 dark:text-white mb-4 uppercase text-sm tracking-wider">Góp Ý</h4>
+<form id="feedbackForm" class="space-y-3">
+<input type="text" class="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow" id="feedbackName" placeholder="Họ tên" required/>
+<input type="email" class="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow" id="feedbackEmail" placeholder="Email" required/>
+<div class="relative">
+<textarea class="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow resize-none" id="feedbackContent" rows="3" placeholder="Nội dung" required></textarea>
+<span class="material-icons-round absolute bottom-2 right-2 text-gray-400 text-sm pointer-events-none">edit</span>
+</div>
+<button type="submit" class="w-full bg-primary hover:bg-primary-dark text-white py-2 rounded-lg text-sm font-medium shadow-md transition-colors">Gửi</button>
+</form>
+</div>
+</div>
+<div class="border-t border-gray-100 dark:border-gray-800 mt-12 pt-8 text-center text-xs text-slate-400">
+                © 2025 EM CỦA NGÀY HÔM NAY 
+            </div>
+</div>
+</footer>
+
+
+</div>
+
+<script th:src="@{/js/index.js}"></script>
+<script th:src="@{/js/footer.js}"></script>
 
 </body>

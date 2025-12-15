@@ -7,6 +7,7 @@ import com.weather.forecast.api.OpenMeteoAPI;
 import com.weather.forecast.model.DailyForecast;
 import com.weather.forecast.model.HourlyForecast; // Assuming this model will be used
 import com.weather.forecast.model.dto.ComprehensiveWeatherReport; // New DTO
+import com.weather.forecast.model.dto.ProvinceCurrentWeather;
 import com.weather.forecast.repository.WeatherRepository; // Assuming this is still used for something else
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * Core business logic for the weather forecast application.
@@ -253,6 +255,32 @@ public class WeatherService {
     public List<HourlyForecast> getHourlyForecast(String province, LocalDate date) {
         System.out.println("Executing hourly forecast logic for " + province + " on " + date);
         return Collections.emptyList(); // Placeholder
+    }
+
+    /**
+     * Fetches current weather data for a list of prominent provinces.
+     *
+     * @param prominentProvinces A list of province names for which to fetch current weather.
+     * @return A list of ProvinceCurrentWeather DTOs containing the current temperature and weather code for each province.
+     */
+    public List<ProvinceCurrentWeather> getCurrentWeatherForProminentProvinces(List<String> prominentProvinces) {
+        List<ProvinceCurrentWeather> provinceWeatherList = new ArrayList<>();
+        for (String province : prominentProvinces) {
+            try {
+                ComprehensiveWeatherReport report = getWeatherReport(province);
+                // Assuming current weather is available and contains temperature and weather code
+                Optional.ofNullable(report.getCurrent())
+                        .ifPresent(currentWeather -> provinceWeatherList.add(new ProvinceCurrentWeather(
+                                province,
+                                currentWeather.getTemperature(),
+                                currentWeather.getWeatherCode()
+                        )));
+            } catch (Exception e) {
+                System.err.println("Failed to fetch current weather for prominent province " + province + ": " + e.getMessage());
+                // Optionally add a placeholder or skip this province
+            }
+        }
+        return provinceWeatherList;
     }
 }
 

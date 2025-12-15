@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.weather.forecast.model.DailyForecast;
 import com.weather.forecast.model.HourlyForecast;
 import com.weather.forecast.model.dto.ComprehensiveWeatherReport;
+import com.weather.forecast.model.dto.ProvinceCurrentWeather; // Import the new DTO
 import com.weather.forecast.service.WeatherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,7 @@ public class WeatherController {
     private final WeatherService weatherService;
     private final Map<String, List<String>> groupedCities;
     private final List<String> allProvinces;
+    private final List<String> prominentProvinces; // Declare prominentProvinces
     private final ObjectMapper objectMapper;
     private final HttpClient httpClient;
 
@@ -48,6 +50,10 @@ public class WeatherController {
         this.groupedCities = initGroupedCities();
         this.allProvinces = new ArrayList<>();
         this.groupedCities.values().forEach(allProvinces::addAll);
+        this.prominentProvinces = List.of( // Initialize prominentProvinces
+                "Hồ Chí Minh", "Bình Định", "Ninh Thuận", "An Giang", "Kiên Giang", "Đà Nẵng",
+                "Bình Thuận", "Khánh Hòa", "Cần Thơ", "Lâm Đồng", "Quảng Ninh", "Lào Cai"
+        );
     }
 
     @GetMapping("/")
@@ -60,10 +66,12 @@ public class WeatherController {
 
         ComprehensiveWeatherReport comprehensiveReport = weatherService.getWeatherReport(city);
         List<DailyForecast> sevenDayForecast = weatherService.get7DayForecastFromReport(comprehensiveReport);
+        List<ProvinceCurrentWeather> prominentProvincesWeather = weatherService.getCurrentWeatherForProminentProvinces(prominentProvinces); // Get prominent provinces weather
 
         model.addAttribute("comprehensiveReport", comprehensiveReport);
         model.addAttribute("sevenDayForecast", sevenDayForecast);
         model.addAttribute("city", city);
+        model.addAttribute("prominentProvincesWeather", prominentProvincesWeather); // Add to model
         return "index";
     }
 
@@ -180,6 +188,9 @@ public class WeatherController {
         model.addAttribute("comprehensiveReport", comprehensiveReport);
         model.addAttribute("sevenDayForecast", sevenDayForecast);
         model.addAttribute("city", city);
+        // Ensure prominentProvincesWeather is also added to the fragment's model
+        List<ProvinceCurrentWeather> prominentProvincesWeather = weatherService.getCurrentWeatherForProminentProvinces(prominentProvinces);
+        model.addAttribute("prominentProvincesWeather", prominentProvincesWeather);
 
         return "index :: weatherContent";
     }

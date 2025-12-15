@@ -1,7 +1,7 @@
 package com.weather.forecast.controller;
 
-import com.weather.forecast.model.WeatherLog;
-import com.weather.forecast.repository.WeatherLogRepository;
+import com.weather.forecast.model.WeatherHistory;
+import com.weather.forecast.repository.WeatherHistoryRepository;
 import com.weather.forecast.service.DataUpdateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,67 +9,78 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Arrays; // Import Arrays
 
+/**
+ * Controller để quản lý việc cập nhật dữ liệu thời tiết lịch sử.
+ * Truy cập: /admin/data-update
+ */
 @Controller
 @RequestMapping("/admin")
 public class DataUpdateController {
 
     private final DataUpdateService dataUpdateService;
-    private final WeatherLogRepository weatherLogRepository;
-
-    // List of cities to update. In a real app, this might come from a config file or database.
-    private static final List<String> CITIES_TO_UPDATE = Arrays.asList(
-            "An Giang", "Vung Tau", "Bac Giang", "Bac Kan", "Bac Lieu", "Bac Ninh",
-            "Ben Tre", "Qui Nhon", "Binh Duong", "Binh Phuoc", "Binh Thuan", "Ca Mau",
-            "Can Tho", "Cao Bang", "Da Nang", "Buon Ma Thuot", "Gia Nghia", "Dien Bien", "Bien Hoa",
-            "Dong Thap", "Pleiku", "Ha Giang", "Ha Nam", "Ha Noi", "Ha Tinh", "Hai Duong",
-            "Haiphong", "Hau Giang", "Hoa Binh", "Hung Yen", "Khanh Hoa", "Kien Giang",
-            "Kon Tum", "Lai Chau", "Da Lat", "Lang Son", "Lao Cai", "Long An", "Nam Dinh",
-            "Vinh", "Ninh Binh", "Ninh Thuan", "Phu Tho", "Phu Yen", "Quang Binh", "Tam Ky",
-            "Quang Ngai", "Quang Ninh", "Quang Tri", "Soc Trang", "Son La", "Tay Ninh", "Thai Binh",
-            "Thai Nguyen", "Thanh Hoa", "Hue", "Tien Giang", "Tra Vinh", "Tuyen Quang",
-            "Vinh Long", "Vinh Phuc", "Yen Bai", "Ho Chi Minh City"
-    );
+    private final WeatherHistoryRepository weatherHistoryRepository;
 
     @Autowired
-    public DataUpdateController(DataUpdateService dataUpdateService, WeatherLogRepository weatherLogRepository) {
+    public DataUpdateController(DataUpdateService dataUpdateService,
+            WeatherHistoryRepository weatherHistoryRepository) {
         this.dataUpdateService = dataUpdateService;
-        this.weatherLogRepository = weatherLogRepository;
+        this.weatherHistoryRepository = weatherHistoryRepository;
     }
 
     @GetMapping("/data-update")
     public String showUpdatePage(Model model) {
-        List<WeatherLog> logs = weatherLogRepository.findAllByOrderByUpdateTimeDesc();
-        model.addAttribute("weatherLogs", logs);
-        model.addAttribute("cities", CITIES_TO_UPDATE);
-        return "update-data"; // This corresponds to 'update-data.html'
+        List<WeatherHistory> records = weatherHistoryRepository.findAll();
+        long totalRecords = weatherHistoryRepository.count();
+        List<String> provinces = dataUpdateService.getAllProvinces();
+        List<String> savedProvinces = weatherHistoryRepository.findDistinctProvinces();
+
+        model.addAttribute("weatherRecords", records);
+        model.addAttribute("totalRecords", totalRecords);
+        model.addAttribute("provinces", provinces);
+        model.addAttribute("savedProvinces", savedProvinces);
+
+        return "update-data";
     }
 
+    /**
+     * Thu thập dữ liệu LỊCH SỬ 30 NGÀY cho tất cả 63 tỉnh.
+     * Sử dụng Open-Meteo Archive API.
+     */
     @PostMapping("/data-update")
-    public String triggerUpdate(RedirectAttributes redirectAttributes) {
-        System.out.println("Triggering data update for all cities...");
-        int successCount = 0;
-        int failCount = 0;
+    public String triggerHistoricalUpdate(
+            @RequestParam(name = "type", defaultValue = "historical") String type,
+            RedirectAttributes redirectAttributes) {
 
-        for (String city : CITIES_TO_UPDATE) {
-            try {
-                dataUpdateService.collectAndSaveCurrentWeather(city);
-                successCount++;
-            } catch (Exception e) {
-                System.err.println("Failed to update data for city '" + city + "': " + e.getMessage());
-                failCount++;
+        System.out.println("=== Data Update Request: " + type + " ===");
+
+        try {
+            if ("today".equals(type)) {
+                // Thu thập chỉ ngày hôm nay
+                int successCount = dataUpdateService.collectAllProvincesTodayData();
+                long totalRecords = dataUpdateService.getTotalRecords();
+
+                redirectAttributes.addFlashAttribute("successMessage",
+                        "✓ Thu thập thành công dữ liệu NGÀY HÔM NAY cho " + successCount + " tỉnh/thành. " +
+                                "Tổng số bản ghi: " + totalRecords);
+            } else {
+                // Thu thập 30 ngày lịch sử
+                int savedRecords = dataUpdateService.collectAllProvincesHistoricalData();
+                long totalRecords = dataUpdateService.getTotalRecords();
+
+                redirectAttributes.addFlashAttribute("successMessage",
+                        "✓ Thu thập thành công " + savedRecords + " bản ghi LỊCH SỬ 30 NGÀY. " +
+                                "Tổng số bản ghi trong database: " + totalRecords);
             }
-        }
-
-        if (failCount > 0) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Data update finished with " + failCount + " error(s). Check server logs for details.");
-        } else {
-            redirectAttributes.addFlashAttribute("successMessage", "Successfully updated weather data for " + successCount + " cities.");
+        } catch (Exception e) {
+            System.err.println("Error during data collection: " + e.getMessage());
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "❌ Có lỗi xảy ra: " + e.getMessage());
         }
 
         return "redirect:/admin/data-update";

@@ -5,11 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.weather.forecast.ai.ForecastModel;
 import com.weather.forecast.api.OpenMeteoAPI;
 import com.weather.forecast.model.DailyForecast;
-import com.weather.forecast.model.HourlyForecast; // Assuming this model will be used
-import com.weather.forecast.model.dto.ComprehensiveWeatherReport; // New DTO
+import com.weather.forecast.model.HourlyForecast;
+import com.weather.forecast.model.WeatherHistory;
+import com.weather.forecast.model.dto.ComprehensiveWeatherReport;
 import com.weather.forecast.model.dto.ProvinceCurrentWeather;
-import com.weather.forecast.repository.WeatherRepository; // Assuming this is still used for something else
+import com.weather.forecast.repository.WeatherHistoryRepository;
 
+import ml.dmlc.xgboost4j.java.XGBoostError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -23,30 +25,35 @@ import java.util.Optional;
 
 /**
  * Core business logic for the weather forecast application.
- * This service now supports both AI-based 7-day predictions and fetching comprehensive live data.
+ * Hỗ trợ cả dự đoán XGBoost và lấy dữ liệu trực tiếp từ API.
  */
 @Service
 public class WeatherService {
 
     private final OpenMeteoAPI openMeteoAPI;
-    private final WeatherRepository weatherRepository; // Potentially still needed or removed
+    private final WeatherHistoryRepository weatherHistoryRepository;
     private final ForecastModel dailyMaxTempForecastModel;
     private final ForecastModel dailyMinTempForecastModel;
     private final ForecastModel dailyRainProbForecastModel;
-    private final ForecastModel hourlyForecastModel; // This will remain as a single model for hourly
-
+    private final ForecastModel hourlyForecastModel;
     private final ObjectMapper objectMapper;
+
+    // Số ngày lịch sử dùng làm features cho XGBoost
+    private static final int PAST_DAYS_FOR_FEATURES = 3;
+
+    // Flag để bật/tắt XGBoost (có thể set từ config)
+    private boolean useXGBoost = true;
 
     @Autowired
     public WeatherService(OpenMeteoAPI openMeteoAPI,
-                          WeatherRepository weatherRepository,
-                          @Qualifier("dailyMaxTempForecastModel") ForecastModel dailyMaxTempForecastModel,
-                          @Qualifier("dailyMinTempForecastModel") ForecastModel dailyMinTempForecastModel,
-                          @Qualifier("dailyRainProbForecastModel") ForecastModel dailyRainProbForecastModel,
-                          @Qualifier("hourlyForecastModel") ForecastModel hourlyForecastModel,
-                          ObjectMapper objectMapper) { // Inject ObjectMapper
+            WeatherHistoryRepository weatherHistoryRepository,
+            @Qualifier("dailyMaxTempForecastModel") ForecastModel dailyMaxTempForecastModel,
+            @Qualifier("dailyMinTempForecastModel") ForecastModel dailyMinTempForecastModel,
+            @Qualifier("dailyRainProbForecastModel") ForecastModel dailyRainProbForecastModel,
+            @Qualifier("hourlyForecastModel") ForecastModel hourlyForecastModel,
+            ObjectMapper objectMapper) {
         this.openMeteoAPI = openMeteoAPI;
-        this.weatherRepository = weatherRepository;
+        this.weatherHistoryRepository = weatherHistoryRepository;
         this.dailyMaxTempForecastModel = dailyMaxTempForecastModel;
         this.dailyMinTempForecastModel = dailyMinTempForecastModel;
         this.dailyRainProbForecastModel = dailyRainProbForecastModel;
@@ -55,57 +62,162 @@ public class WeatherService {
     }
 
     /**
-     * Gets a comprehensive weather report for a given city (live data from Open-Meteo API).
-     * This is used for current weather and potentially for features for the AI model.
-     * @param city The name of the city.
-     * @return A ComprehensiveWeatherReport object.
+     * Lấy báo cáo thời tiết toàn diện từ API (current, hourly, daily).
      */
     public ComprehensiveWeatherReport getWeatherReport(String city) {
         try {
-            // 1. Get Coordinates
             String geoJson = openMeteoAPI.getCoordinatesForCity(city);
             JsonNode rootNode = objectMapper.readTree(geoJson);
             JsonNode resultsNode = rootNode.path("results");
 
             if (!resultsNode.isArray() || resultsNode.size() == 0) {
                 System.err.println("Could not find coordinates for city: " + city);
-                return new ComprehensiveWeatherReport(); // Return empty but non-null report
+                return new ComprehensiveWeatherReport();
             }
 
             JsonNode firstResult = resultsNode.get(0);
             double lat = firstResult.path("latitude").asDouble();
             double lon = firstResult.path("longitude").asDouble();
 
-            // 2. Get Comprehensive Weather Data
             String weatherJson = openMeteoAPI.getWeatherForecast(lat, lon);
-
-            // 3. Deserialize into DTO
             return objectMapper.readValue(weatherJson, ComprehensiveWeatherReport.class);
 
         } catch (IOException | InterruptedException e) {
             System.err.println("Failed to get weather report for " + city + ": " + e.getMessage());
-            e.printStackTrace();
-            return new ComprehensiveWeatherReport(); // Return empty but non-null report on failure
+            return new ComprehensiveWeatherReport();
         }
     }
 
+    /**
+     * Dự báo 7 ngày sử dụng XGBoost nếu có đủ dữ liệu lịch sử.
+     * Nếu không, fallback về API trực tiếp.
+     */
+    public List<DailyForecast> get7DayForecast(String city) {
+        if (useXGBoost) {
+            try {
+                List<DailyForecast> xgboostForecast = get7DayForecastWithXGBoost(city);
+                if (!xgboostForecast.isEmpty()) {
+                    System.out.println("✓ Using XGBoost prediction for " + city);
+                    return xgboostForecast;
+                }
+            } catch (Exception e) {
+                System.err.println("XGBoost prediction failed for " + city + ": " + e.getMessage());
+            }
+        }
+
+        // Fallback: Lấy từ API trực tiếp
+        System.out.println("→ Fallback to API for " + city);
+        ComprehensiveWeatherReport report = getWeatherReport(city);
+        return get7DayForecastFromReport(report);
+    }
 
     /**
-     * Extracts the 7-day weather forecast directly from the comprehensive API report.
-     * This method no longer uses XGBoost models.
-     * @param comprehensiveReport The full weather report containing the daily forecast data.
-     * @return A list of DailyForecast objects.
+     * Dự báo 7 ngày sử dụng XGBoost models.
      */
-    public List<DailyForecast> get7DayForecastFromReport(ComprehensiveWeatherReport comprehensiveReport) {
-        // If the report is null or doesn't have the necessary data, return an empty list.
-        if (comprehensiveReport == null || comprehensiveReport.getDaily() == null || comprehensiveReport.getDaily().getTime().isEmpty()) {
-            System.err.println("Comprehensive report is missing daily data. Cannot extract 7-day forecast.");
+    private List<DailyForecast> get7DayForecastWithXGBoost(String city) throws XGBoostError {
+        // 1. Lấy dữ liệu lịch sử từ database
+        List<WeatherHistory> historyList = weatherHistoryRepository.findTop7ByProvinceOrderByRecordDateDesc(city);
+
+        if (historyList.size() < PAST_DAYS_FOR_FEATURES) {
+            System.out.println("Not enough historical data for " + city + " (need " + PAST_DAYS_FOR_FEATURES + ", got "
+                    + historyList.size() + ")");
             return Collections.emptyList();
         }
 
-        System.out.println("Extracting 7-day forecast directly from API report.");
+        // 2. Lấy tọa độ
+        double lat = historyList.get(0).getLatitude();
+        double lon = historyList.get(0).getLongitude();
+
+        // 3. Tạo predictions cho 7 ngày tiếp theo
+        List<DailyForecast> predictions = new ArrayList<>();
+
+        for (int dayOffset = 1; dayOffset <= 7; dayOffset++) {
+            LocalDate predictionDate = LocalDate.now().plusDays(dayOffset);
+
+            // Tạo feature vector
+            float[] features = createFeatureVector(lat, lon, predictionDate, historyList);
+
+            // Dự đoán bằng XGBoost
+            float predictedMaxTemp = dailyMaxTempForecastModel.predict(features);
+            float predictedMinTemp = dailyMinTempForecastModel.predict(features);
+            float predictedRainProb = dailyRainProbForecastModel.predict(features);
+
+            // Clamp rain probability to [0, 1]
+            predictedRainProb = Math.max(0, Math.min(1, predictedRainProb));
+
+            // Map rain probability to weather code
+            int weatherCode = mapRainProbToWeatherCode(predictedRainProb);
+
+            predictions.add(new DailyForecast(
+                    predictionDate,
+                    predictedMaxTemp,
+                    predictedMinTemp,
+                    predictedRainProb,
+                    weatherCode));
+        }
+
+        return predictions;
+    }
+
+    /**
+     * Tạo feature vector cho XGBoost prediction.
+     * Features: [lat, lon, day_of_year, past_day1_max, past_day1_min,
+     * past_day1_rain, ...]
+     */
+    private float[] createFeatureVector(double lat, double lon, LocalDate predictionDate,
+            List<WeatherHistory> historyList) {
+        // Total features: 3 (lat, lon, day_of_year) + 3 days * 3 values = 12
+        float[] features = new float[3 + PAST_DAYS_FOR_FEATURES * 3];
+
+        int idx = 0;
+        features[idx++] = (float) lat;
+        features[idx++] = (float) lon;
+        features[idx++] = predictionDate.getDayOfYear();
+
+        // Add historical features (3 days)
+        for (int i = 0; i < PAST_DAYS_FOR_FEATURES && i < historyList.size(); i++) {
+            WeatherHistory history = historyList.get(i);
+            features[idx++] = history.getTempMax() != null ? history.getTempMax().floatValue() : 25.0f;
+            features[idx++] = history.getTempMin() != null ? history.getTempMin().floatValue() : 20.0f;
+            features[idx++] = history.getPrecipitationProbability() != null
+                    ? history.getPrecipitationProbability().floatValue()
+                    : 0.0f;
+        }
+
+        return features;
+    }
+
+    /**
+     * Map xác suất mưa sang weather code.
+     */
+    private int mapRainProbToWeatherCode(float rainProb) {
+        if (rainProb < 0.1)
+            return 0; // Clear sky
+        if (rainProb < 0.2)
+            return 1; // Mainly clear
+        if (rainProb < 0.3)
+            return 2; // Partly cloudy
+        if (rainProb < 0.4)
+            return 3; // Overcast
+        if (rainProb < 0.5)
+            return 61; // Rain: Slight
+        if (rainProb < 0.7)
+            return 63; // Rain: Moderate
+        return 65; // Rain: Heavy
+    }
+
+    /**
+     * Trích xuất dự báo 7 ngày trực tiếp từ API response.
+     */
+    public List<DailyForecast> get7DayForecastFromReport(ComprehensiveWeatherReport comprehensiveReport) {
+        if (comprehensiveReport == null || comprehensiveReport.getDaily() == null ||
+                comprehensiveReport.getDaily().getTime().isEmpty()) {
+            System.err.println("Comprehensive report is missing daily data.");
+            return Collections.emptyList();
+        }
+
         List<DailyForecast> forecastResults = new ArrayList<>();
-        
+
         try {
             ComprehensiveWeatherReport.DailyData dailyData = comprehensiveReport.getDaily();
             List<String> dates = dailyData.getTime();
@@ -114,10 +226,10 @@ public class WeatherService {
             List<Integer> rainProbs = dailyData.getPrecipitationProbabilityMax();
             List<Integer> weatherCodes = dailyData.getWeatherCode();
 
-            // Ensure all lists have the same size to avoid IndexOutOfBoundsException
             int forecastDays = dates.size();
-            if (maxTemps.size() != forecastDays || minTemps.size() != forecastDays || rainProbs.size() != forecastDays || weatherCodes.size() != forecastDays) {
-                System.err.println("Inconsistent daily data sizes in API report. Cannot proceed.");
+            if (maxTemps.size() != forecastDays || minTemps.size() != forecastDays ||
+                    rainProbs.size() != forecastDays || weatherCodes.size() != forecastDays) {
+                System.err.println("Inconsistent daily data sizes in API report.");
                 return Collections.emptyList();
             }
 
@@ -125,162 +237,51 @@ public class WeatherService {
                 LocalDate date = LocalDate.parse(dates.get(i));
                 double maxTemp = maxTemps.get(i);
                 double minTemp = minTemps.get(i);
-                // Convert precipitation probability from percentage to a 0-1 float value
                 double rainProb = rainProbs.get(i) / 100.0;
                 int weatherCode = weatherCodes.get(i);
 
-                DailyForecast day = new DailyForecast(date, maxTemp, minTemp, rainProb, weatherCode);
-                forecastResults.add(day);
+                forecastResults.add(new DailyForecast(date, maxTemp, minTemp, rainProb, weatherCode));
             }
             return forecastResults;
 
         } catch (Exception e) {
             System.err.println("Error extracting 7-day forecast from report: " + e.getMessage());
-            e.printStackTrace();
-            return Collections.emptyList(); // Return empty list on any parsing or processing error
-        }
-    }
-
-
-    /**
-     * This method is now effectively deprecated and kept for reference or internal use if needed.
-     * The main logic is in get7DayXGBoostForecast(ComprehensiveWeatherReport).
-     * @param lat The latitude.
-     * @param lon The longitude.
-     * @return A list of DailyForecast objects.
-     */
-    private List<DailyForecast> get7DayXGBoostForecast(double lat, double lon) {
-        System.out.println("Executing coordinate-based 7-day forecast. Consider using the report-based method for efficiency.");
-        try {
-            String weatherJson = openMeteoAPI.getWeatherForecast(lat, lon);
-            ComprehensiveWeatherReport comprehensiveReport = objectMapper.readValue(weatherJson, ComprehensiveWeatherReport.class);
-            return get7DayForecastFromReport(comprehensiveReport);
-        } catch (Exception e) {
-            System.err.println("Error getting 7-day XGBoost forecast by coords: " + e.getMessage());
-            e.printStackTrace();
-            return getPlaceholderForecast(); // Fallback on API/other errors
-        }
-    }
-
-
-    /**
-     * Parses the latitude and longitude from the geocoding API response.
-     * @param jsonResponse The JSON string from the geocoding API.
-     * @return A double array containing [latitude, longitude], or null if not found.
-     * @throws IOException if JSON parsing fails.
-     */
-    private double[] parseCoordinates(String jsonResponse) throws IOException {
-        JsonNode rootNode = objectMapper.readTree(jsonResponse);
-        JsonNode resultsNode = rootNode.path("results");
-        if (resultsNode.isArray() && resultsNode.size() > 0) {
-            JsonNode firstResult = resultsNode.get(0);
-            double lat = firstResult.path("latitude").asDouble();
-            double lon = firstResult.path("longitude").asDouble();
-            return new double[]{lat, lon};
-        }
-        return null;
-    }
-
-    /**
-     * Extracts historical daily data from the ComprehensiveWeatherReport DTO for feature engineering.
-     * This simulates fetching "historical" data from the daily part of the forecast API.
-     * For a true historical model, you would query an archive API or a database of past weather.
-     * @param report ComprehensiveWeatherReport DTO.
-     * @param numDays The number of historical days to extract.
-     * @return List of DailyForecast objects.
-     */
-    private List<DailyForecast> extractHistoricalDailyData(ComprehensiveWeatherReport report, int numDays) {
-        List<DailyForecast> historicalData = new ArrayList<>();
-        if (report.getDaily() == null || report.getDaily().getTime().isEmpty()) {
-            return historicalData;
-        }
-
-        ComprehensiveWeatherReport.DailyData dailyData = report.getDaily();
-        List<String> dates = dailyData.getTime();
-        List<Double> maxTemps = dailyData.getTemperatureMax();
-        List<Double> minTemps = dailyData.getTemperatureMin();
-        List<Integer> rainProbs = dailyData.getPrecipitationProbabilityMax();
-        List<Integer> weatherCodes = dailyData.getWeatherCode();
-
-        // Ensure all lists have the same size to avoid IndexOutOfBoundsException
-        int dataSize = dates.size();
-        if (maxTemps.size() != dataSize || minTemps.size() != dataSize || rainProbs.size() != dataSize || weatherCodes.size() != dataSize) {
-            System.err.println("Inconsistent daily data sizes in API report for historical data. Cannot proceed.");
             return Collections.emptyList();
         }
-
-        // The API returns daily forecast from today onwards.
-        // We need 'past' data for XGBoost features.
-        // For simplicity, we'll use the *first N days* of the returned daily forecast
-        // as our "historical" features for predicting the next 7 days.
-        // In a real application, this historical data would come from a separate source (e.g., database, archive API).
-        for (int i = 0; i < Math.min(numDays, dataSize); i++) {
-            LocalDate date = LocalDate.parse(dates.get(i));
-            double max = maxTemps.get(i);
-            double min = minTemps.get(i);
-            double rainProb = rainProbs.get(i) / 100.0; // Convert to probability [0,1]
-            int weatherCode = weatherCodes.get(i); // Get the weather code
-
-            historicalData.add(new DailyForecast(date, max, min, rainProb, weatherCode));
-        }
-        return historicalData;
-    }
-
-
-    /**
-     * Generates a list of placeholder forecasts.
-     * @return A list of 7 DailyForecast objects with dummy data.
-     */
-    private List<DailyForecast> getPlaceholderForecast() {
-        System.out.println("Note: AI model logic is not fully implemented or failed. Returning dummy forecast data.");
-        // Provide a default weather code (e.g., 0 for clear sky) for placeholder data
-        return List.of(
-            new DailyForecast(LocalDate.now().plusDays(1), 25.0, 15.0, 0.2, 0),
-            new DailyForecast(LocalDate.now().plusDays(2), 26.0, 16.0, 0.3, 1),
-            new DailyForecast(LocalDate.now().plusDays(3), 27.0, 17.0, 0.1, 2),
-            new DailyForecast(LocalDate.now().plusDays(4), 28.0, 18.0, 0.4, 3),
-            new DailyForecast(LocalDate.now().plusDays(5), 29.0, 19.0, 0.25, 45),
-            new DailyForecast(LocalDate.now().plusDays(6), 30.0, 20.0, 0.15, 51),
-            new DailyForecast(LocalDate.now().plusDays(7), 31.0, 21.0, 0.05, 61)
-        );
-    }
-
-
-    /**
-     * Gets the detailed 3-hourly forecast for a specific day. (Placeholder for future development)
-     * @param province The province name.
-     * @param date The specific date.
-     * @return A list of HourlyForecast objects.
-     */
-    public List<HourlyForecast> getHourlyForecast(String province, LocalDate date) {
-        System.out.println("Executing hourly forecast logic for " + province + " on " + date);
-        return Collections.emptyList(); // Placeholder
     }
 
     /**
-     * Fetches current weather data for a list of prominent provinces.
-     *
-     * @param prominentProvinces A list of province names for which to fetch current weather.
-     * @return A list of ProvinceCurrentWeather DTOs containing the current temperature and weather code for each province.
+     * Lấy thời tiết hiện tại cho các tỉnh nổi bật.
      */
     public List<ProvinceCurrentWeather> getCurrentWeatherForProminentProvinces(List<String> prominentProvinces) {
         List<ProvinceCurrentWeather> provinceWeatherList = new ArrayList<>();
         for (String province : prominentProvinces) {
             try {
                 ComprehensiveWeatherReport report = getWeatherReport(province);
-                // Assuming current weather is available and contains temperature and weather code
                 Optional.ofNullable(report.getCurrent())
                         .ifPresent(currentWeather -> provinceWeatherList.add(new ProvinceCurrentWeather(
                                 province,
                                 currentWeather.getTemperature(),
-                                currentWeather.getWeatherCode()
-                        )));
+                                currentWeather.getWeatherCode())));
             } catch (Exception e) {
-                System.err.println("Failed to fetch current weather for prominent province " + province + ": " + e.getMessage());
-                // Optionally add a placeholder or skip this province
+                System.err.println("Failed to fetch current weather for " + province + ": " + e.getMessage());
             }
         }
         return provinceWeatherList;
     }
-}
 
+    /**
+     * Lấy dự báo theo giờ cho một ngày cụ thể.
+     */
+    public List<HourlyForecast> getHourlyForecast(String province, LocalDate date) {
+        System.out.println("Getting hourly forecast for " + province + " on " + date);
+        return Collections.emptyList();
+    }
+
+    /**
+     * Bật/tắt sử dụng XGBoost.
+     */
+    public void setUseXGBoost(boolean useXGBoost) {
+        this.useXGBoost = useXGBoost;
+    }
+}

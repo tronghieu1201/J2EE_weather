@@ -31,25 +31,31 @@ public class OpenMeteoAPI {
 
     /**
      * Fetches the current weather for a given location.
+     * 
      * @param lat latitude
      * @param lon longitude
      * @return JSON string of the current weather data.
-     * @throws IOException if the API call fails.
+     * @throws IOException          if the API call fails.
      * @throws InterruptedException if the API call is interrupted.
      */
     /**
-     * Fetches a comprehensive weather forecast (current, hourly, daily) in a single API call.
+     * Fetches a comprehensive weather forecast (current, hourly, daily) in a single
+     * API call.
+     * 
      * @param lat latitude
      * @param lon longitude
      * @return JSON string of the comprehensive weather data.
-     * @throws IOException if the API call fails.
+     * @throws IOException          if the API call fails.
      * @throws InterruptedException if the API call is interrupted.
      */
     public String getWeatherForecast(double lat, double lon) throws IOException, InterruptedException {
         String url = API_BASE_URL + "/forecast?latitude=" + lat + "&longitude=" + lon +
-                "&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,cloud_cover,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m" +
-                "&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,weather_code,visibility,uv_index,is_day,wind_speed_10m" +
-                "&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,uv_index_max,precipitation_sum,precipitation_hours,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max,wind_direction_10m_dominant" +
+                "&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,cloud_cover,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m"
+                +
+                "&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,weather_code,visibility,uv_index,is_day,wind_speed_10m"
+                +
+                "&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,uv_index_max,precipitation_sum,precipitation_hours,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max,wind_direction_10m_dominant"
+                +
                 "&timezone=auto&forecast_days=8";
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -66,10 +72,11 @@ public class OpenMeteoAPI {
 
     /**
      * Converts a city name to coordinates (latitude, longitude).
+     * 
      * @param cityName The name of the city.
      * @return The JSON response from the geocoding API.
      */
-     public String getCoordinatesForCity(String cityName) throws IOException, InterruptedException {
+    public String getCoordinatesForCity(String cityName) throws IOException, InterruptedException {
         // URL encode city name to handle spaces and special characters
         String encodedCityName = java.net.URLEncoder.encode(cityName, java.nio.charset.StandardCharsets.UTF_8);
         String url = GEOCODING_API_URL + "?name=" + encodedCityName + "&count=1&language=en&format=json";
@@ -78,9 +85,39 @@ public class OpenMeteoAPI {
                 .build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-         if (response.statusCode() != 200) {
+        if (response.statusCode() != 200) {
             throw new IOException("Failed to fetch geocoding data: " + response.body());
         }
         return response.body();
-     }
+    }
+
+    /**
+     * Lấy dữ liệu thời tiết lịch sử từ Open-Meteo Archive API.
+     * 
+     * @param lat       latitude
+     * @param lon       longitude
+     * @param startDate ngày bắt đầu (format: yyyy-MM-dd)
+     * @param endDate   ngày kết thúc (format: yyyy-MM-dd)
+     * @return JSON string của dữ liệu lịch sử
+     */
+    public String getHistoricalWeather(double lat, double lon, String startDate, String endDate)
+            throws IOException, InterruptedException {
+        String url = "https://archive-api.open-meteo.com/v1/archive" +
+                "?latitude=" + lat + "&longitude=" + lon +
+                "&start_date=" + startDate + "&end_date=" + endDate +
+                "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_hours,wind_speed_10m_max"
+                +
+                "&timezone=auto";
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            throw new IOException("Failed to fetch historical weather from Open-Meteo Archive API: " + response.body());
+        }
+        return response.body();
+    }
 }

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biên độ nhiệt là gì? - Tin Tức Thời Tiết</title>
+    <!-- Inherit styles from index -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#3B82F6",
+                        "primary-dark": "#2563EB",
+                        "background-light": "#F0F9FF",
+                        "background-dark": "#0F172A",
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#1E293B",
+                        "text-light": "#334155",
+                        "text-dark": "#E2E8F0",
+                        "accent-blue": "#0EA5E9",
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.75rem", "xl": "1rem", "2xl": "1.5rem",
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        #page-wrapper {
+            transform: scale(0.65); transform-origin: top left;
+            width: calc(100% / 0.65); min-height: calc(100vh / 0.65);
+            overflow-x: hidden; position: absolute; top: 0; left: 0;
+        }
+        body { min-height: calc(100vh / 0.65); overflow-y: auto; }
+        .article-content h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+        .article-content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .article-content p {
+            margin-bottom: 1rem;
+            line-height: 1.75;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans transition-colors duration-300 flex flex-col">
+<div id="page-wrapper">
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-surface-light/90 dark:bg-surface-dark/90 backdrop-blur-md shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                 <div class="flex-shrink-0 flex items-center gap-2">
+                    <a th:href="@{/}" class="flex items-center gap-2">
+                        <span class="material-icons-round text-primary text-3xl">cloud</span>
+                        <span class="font-bold text-xl tracking-tight text-slate-800 dark:text-white">Weather</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium">
+                     <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors" th:href="@{/}">Trang chủ</a>
+                     <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors" th:href="@{/chart}">Biểu đồ</a>
+                    <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors" th:href="@{/perpetual-calendar}">Xem lịch vạn niên</a>
+                    <a class="text-primary font-semibold dark:text-blue-400 transition-colors" th:href="@{/weather-news}">Tin tức</a>
+                </div>
+                <div class="hidden md:flex items-center gap-4">
+                     <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 ml-2 border-l pl-4 border-gray-200 dark:border-gray-700">
+                        <span class="material-icons-round text-base">schedule</span>
+                        <span id="local-time" style="font-variant-numeric: tabular-nums;">00:00:00</span>
+                    </div>
+                    <button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+                        <span class="material-icons-round text-slate-500 dark:text-yellow-400">dark_mode</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <div class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800/50 p-6 sm:p-10 article-content">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white mb-4 leading-tight">Biên độ nhiệt là gì? Công thức tính biên độ nhiệt chuẩn</h1>
+            
+            <div class="sticky top-24 z-10 bg-slate-100 dark:bg-slate-700/50 p-4 rounded-lg my-6 backdrop-blur-md">
+                <h3 class="font-bold mb-2">Mục lục</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#section-1" class="hover:text-primary">1. Tổng quan biên độ nhiệt là gì?</a></li>
+                    <li><a href="#section-2" class="hover:text-primary">2. Cách tính biên độ nhiệt là gì?</a></li>
+                    <li><a href="#section-3" class="hover:text-primary">3. Phân loại biên độ nhiệt là gì?</a></li>
+                    <li><a href="#section-4" class="hover:text-primary">4. Yếu tố ảnh hưởng đến biên độ nhiệt là gì?</a></li>
+                </ul>
+            </div>
+
+            <p class="text-lg text-slate-600 dark:text-slate-300">
+                <strong class="text-slate-800 dark:text-slate-100">Biên độ nhiệt là gì?</strong> Biên độ nhiệt là sự thay đổi nhiệt độ được tính theo ngày, tháng hoặc năm. Vậy cách tính biên độ nhiệt như thế nào? Việt Nam có biên độ nhiệt bao nhiêu? Cùng Dự Báo tham khảo bài viết dưới đây.
+            </p>
+
+            <img th:src="@{/News/New2/1.jpg}" alt="Biên độ nhiệt" class="my-6 rounded-lg shadow-md">
+
+            <section id="section-1">
+                <h2>1. Tổng quan biên độ nhiệt là gì?</h2>
+                <p>Biên độ nhiệt là sự chênh lệch giữa nhiệt độ cao nhất và thấp nhất trong cùng một thời gian nhất định (như một ngày, một tháng hoặc một năm) tại cùng một vùng địa lý.</p>
+                <p>Đối với cơ điện và xây dựng, biên độ nhiệt cũng có tác động quan trọng đến các vật liệu như thép hình, thanh U, giá đỡ, thang máng cáp, ảnh hưởng đến sự co giãn nhiệt, độ bền và tuổi thọ của các cấu trúc. Sự mở rộng và co lại do thay đổi nhiệt độ liên tục có thể ảnh hưởng đến độ ổn định kích thước của vật liệu.</p>
+                <p>Do đó, trong xây dựng, đặc biệt là các công trình lớn như cầu đường, kết cấu cần được thiết kế và lựa chọn vật liệu cẩn thận để đảm bảo chịu được biên độ nhiệt, đảm bảo vận hành an toàn và hiệu quả.</p>
+                <img th:src="@{/News/New2/2.jpg}" alt="Minh họa biên độ nhiệt" class="my-6 rounded-lg shadow-md">
+            </section>
+            
+            <section id="section-2">
+                <h2>2. Cách tính biên độ nhiệt là gì?</h2>
+                <h3 id="section-2.1">2.1. Công thức tính biên độ nhiệt</h3>
+                <p>Dựa vào sự khác biệt về nhiệt độ, chúng ta có thể tính toán biên độ nhiệt theo một công thức cụ thể như sau:</p>
+                <ul class="list-disc list-inside ml-4 space-y-2">
+                    <li><strong>A = Tmax – Tmin</strong></li>
+                </ul>
+                <p>Trong đó:</p>
+                <ul class="list-disc list-inside ml-4 space-y-2">
+                    <li>A: biên độ nhiệt độ (℃)</li>
+                    <li>Tmax: nhiệt độ tối đa (℃)</li>
+                    <li>Tmin: nhiệt độ tối thiểu (℃)</li>
+                </ul>
+                <p>Lưu ý: Nhiệt độ cực đại và nhiệt độ cực thiểu ghi nhận trong một đoạn thời gian (ngày, tháng, hoặc năm).</p>
+                <img th:src="@{/News/New2/3.jpg}" alt="Công thức biên độ nhiệt" class="my-6 rounded-lg shadow-md">
+
+                <h3 id="section-2.2">2.2. Tính biên độ nhiệt của Việt Nam</h3>
+                <p>Biên độ nhiệt độ của Việt Nam thường dao động khá lớn, phụ thuộc vào từng vùng miền và địa hình:</p>
+                <ul class="list-disc list-inside ml-4 space-y-2">
+                    <li><strong>Miền Bắc:</strong> Miền Bắc có biên độ nhiệt độ rõ rệt giữa mùa đông lạnh và mùa hè nóng ẩm. Vùng núi cao như Sapa có mùa đông lạnh giá, trong khi các thung lũng như Hà Nội có mùa hè nóng ẩm.</li>
+                    <li><strong>Miền Trung:</strong> Miền Trung có biên độ nhiệt độ từ mát mẻ đến nóng ẩm, nhưng ít biến đổi so với miền Bắc và Nam. Các địa phương như Đà Nẵng thường có khí hậu ấm áp quanh năm.</li>
+                    <li><strong>Miền Nam:</strong> Miền Nam có khí hậu nhiệt đới, có biên độ nhiệt độ nhỏ hơn so với hai miền còn lại. Sài Gòn (TP.HCM) thường có mùa hè nóng và mùa đông ấm áp.</li>
+                </ul>
+                <img th:src="@{/News/New2/4.webp}" alt="Biên độ nhiệt Việt Nam" class="my-6 rounded-lg shadow-md">
+            </section>
+
+            <section id="section-3">
+                <h2>3. Phân loại biên độ nhiệt là gì?</h2>
+                <p>Chúng ta có thể dễ dàng quan sát được biến động của nhiệt độ hoặc nhiệt độ tuyệt đối theo ngày, tháng.</p>
+                
+                <h3 id="section-3.1">3.1. Biên độ nhiệt theo ngày</h3>
+                <p>Biên độ nhiệt độ ngày được ảnh hưởng bởi tình trạng thời tiết của ngày đó. Thông thường, khi trời quang mây và có nắng, biên độ nhiệt sẽ cao hơn; ngược lại, khi trời nhiều mây hoặc có mưa, biên độ nhiệt sẽ thấp hơn.</p>
+                <p>Nhiệt độ cao nhất trong ngày thường đạt vào khoảng 13-14 giờ, còn nhiệt độ thấp nhất thường xảy ra trước khi mặt trời mọc, vào sáng sớm.</p>
+                
+                <h3 id="section-3.2">3.2. Biên độ nhiệt trung bình tháng</h3>
+                <p>Biên độ nhiệt trung bình tháng là sự khác biệt giữa nhiệt độ trung bình cao nhất và nhiệt độ trung bình thấp nhất trong một tháng. Được tính bằng công thức:</p>
+                <ul class="list-disc list-inside ml-4 space-y-2">
+                    <li><strong>ATBT = TmaxTBT – TminTBT</strong></li>
+                </ul>
+                <p>Trong đó:</p>
+                <ul class="list-disc list-inside ml-4 space-y-2">
+                    <li>ATBT: Biên độ nhiệt độ trung bình của tháng</li>
+                    <li>Tmax TBT: Nhiệt độ trung bình cao nhất của tháng</li>
+                    <li>Tmin TBT: Nhiệt độ trung bình thấp nhất của tháng</li>
+                </ul>
+                <p>Biên độ nhiệt tháng thường có giá trị cao nhất vào mùa Hè và thấp nhất vào mùa Đông. Tại khu vực miền Bắc, biên độ nhiệt thường đạt giá trị cao nhất vào cuối Thu và đầu Đông.</p>
+                
+                <h3 id="section-3.3">3.3. Biên độ nhiệt trung bình năm</h3>
+                <p>Như các biến thể nhiệt độ khác, biên độ nhiệt trung bình hàng năm được tính bằng cách lấy nhiệt độ trung bình cao nhất trong năm trừ đi nhiệt độ trung bình thấp nhất trong năm đó.</p>
+                <ul class="list-disc list-inside ml-4 space-y-2">
+                    <li><strong>ATBN = TmaxTBN – TminTBN</strong></li>
+                </ul>
+                <p>Trong đó:</p>
+                <ul class="list-disc list-inside ml-4 space-y-2">
+                    <li>ATBN: Biên độ nhiệt độ trung bình năm</li>
+                    <li>Tmax TBN: Nhiệt độ trung bình cao nhất năm</li>
+                    <li>Tmin TBN: Nhiệt độ trung bình thấp nhất năm</li>
+                </ul>
+                
+                <h3 id="section-3.4">3.4. Biên độ nhiệt tuyệt đối</h3>
+                <p>Là phạm vi nhiệt độ giữa giá trị cao nhất và thấp nhất trong một khoảng thời gian, được sử dụng để đánh giá biến động lớn nhất của nhiệt độ trong đó. Phạm vi này phụ thuộc vào các yếu tố như trạng thái thời tiết, địa hình, vùng khí hậu, …</p>
+            </section>
+            
+            <section id="section-4">
+                <h2>4. Yếu tố ảnh hưởng đến biên độ nhiệt là gì?</h2>
+                <p>Biến động nhiệt độ là khía cạnh quan trọng phản ánh đặc tính khí hậu của mỗi vùng, phụ thuộc và chịu ảnh hưởng từ tương tác với các yếu tố môi trường khác như:</p>
+                <ul class="list-disc list-inside ml-4 space-y-2">
+                    <li><p><strong>Mùa và thời gian trong năm:</strong></p> Do sự thay đổi của lượng bức xạ mặt trời mà Trái Đất nhận được vào từng khoảng thời gian trong năm, tạo nên sự biến đổi khí hậu giữa các mùa trong năm.</li>
+                    <li><p><strong>Địa hình và điều kiện môi trường:</strong></p> Sự chênh lệch nhiệt độ giữa các địa hình khác nhau, ví dụ như khu vực núi cao có biên độ nhiệt độ lớn hơn so với đồng bằng. Mặt khác, cây cối giúp giảm thiểu biên độ nhiệt, làm cho các khu vực có rừng xanh phong phú mát mẻ hơn so với những khu vực thiếu rừng hoặc các thành phố đô thị.</li>
+                    <li><p><strong>Vị trí địa lý:</strong></p> Biên độ nhiệt độ thường ổn định hơn ở các vùng gần xích đạo và có xu hướng biến động lớn hơn ở những vùng cách xích đạo xa hơn.</li>
+                    <li><p><strong>Miền núi và vùng ven biển:</strong></p> So với các khu vực ven biển, miền núi thường có biên độ nhiệt độ lớn hơn do khả năng điều hòa nhiệt của hơi nước. Các khu vực lục địa xa xôi thường có biên độ nhiệt rộng hơn, mùa đông lạnh hơn và mùa hè nóng hơn.</li>
+                </ul>
+                <img th:src="@{/News/New2/5.jpg}" alt="Yếu tố ảnh hưởng biên độ nhiệt" class="my-6 rounded-lg shadow-md">
+                <p class="mt-6 text-sm text-slate-600 dark:text-slate-300">
+                    Như vậy, thông qua bài viết biên độ nhiệt là gì, ta có thể thấy biên độ nhiệt có thể thay đổi theo mùa hoặc theo năm. Nếu muốn tìm hiểu thêm về các hiện tượng tự nhiên, hãy theo dõi<strong class="text-slate-800 dark:text-slate-100"> Dubaothoitiet</strong> để cập nhật các bài viết mới nhất nhé!
+                </p>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{perpetual_calendar :: footer}"></footer>
+</div>
+
+<script th:src="@{/js/footer.js(v=${cacheBuster})}" defer></script>
+</body>
+</html>

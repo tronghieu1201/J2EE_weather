@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miền Bắc có mấy mùa? - Tin Tức Thời Tiết</title>
+    <!-- Inherit styles from index -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#3B82F6",
+                        "primary-dark": "#2563EB",
+                        "background-light": "#F0F9FF",
+                        "background-dark": "#0F172A",
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#1E293B",
+                        "text-light": "#334155",
+                        "text-dark": "#E2E8F0",
+                        "accent-blue": "#0EA5E9",
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.75rem", "xl": "1rem", "2xl": "1.5rem",
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        #page-wrapper {
+            transform: scale(0.65); transform-origin: top left;
+            width: calc(100% / 0.65); min-height: calc(100vh / 0.65);
+            overflow-x: hidden; position: absolute; top: 0; left: 0;
+        }
+        body { min-height: calc(100vh / 0.65); overflow-y: auto; }
+        .article-content h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+        .article-content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .article-content p {
+            margin-bottom: 1rem;
+            line-height: 1.75;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans transition-colors duration-300 flex flex-col">
+<div id="page-wrapper">
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-surface-light/90 dark:bg-surface-dark/90 backdrop-blur-md shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                 <div class="flex-shrink-0 flex items-center gap-2">
+                    <a th:href="@{/}" class="flex items-center gap-2">
+                        <span class="material-icons-round text-primary text-3xl">cloud</span>
+                        <span class="font-bold text-xl tracking-tight text-slate-800 dark:text-white">Weather</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium">
+                     <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors" th:href="@{/}">Trang chủ</a>
+                     <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors" th:href="@{/chart}">Biểu đồ</a>
+                    <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors" th:href="@{/perpetual-calendar}">Xem lịch vạn niên</a>
+                    <a class="text-primary font-semibold dark:text-blue-400 transition-colors" th:href="@{/weather-news}">Tin tức</a>
+                </div>
+                <div class="hidden md:flex items-center gap-4">
+                     <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 ml-2 border-l pl-4 border-gray-200 dark:border-gray-700">
+                        <span class="material-icons-round text-base">schedule</span>
+                        <span id="local-time" style="font-variant-numeric: tabular-nums;">00:00:00</span>
+                    </div>
+                    <button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+                        <span class="material-icons-round text-slate-500 dark:text-yellow-400">dark_mode</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <div class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800/50 p-6 sm:p-10 article-content">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white mb-4 leading-tight">Miền Bắc có mấy mùa? Sự phân hóa khí hậu tại miền Bắc</h1>
+            
+            <div class="sticky top-24 z-10 bg-slate-100 dark:bg-slate-700/50 p-4 rounded-lg my-6 backdrop-blur-md">
+                <h3 class="font-bold mb-2">Mục lục</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#section-1" class="hover:text-primary">1. Miền Bắc có mấy mùa?</a></li>
+                    <li><a href="#section-2" class="hover:text-primary">2. Đặc điểm khí hậu miền Bắc theo vùng</a></li>
+                    <li><a href="#section-3" class="hover:text-primary">3. Mùa mưa ở miền Bắc bắt đầu vào mùa nào?</a></li>
+                </ul>
+            </div>
+
+            <p class="text-lg text-slate-600 dark:text-slate-300">
+                <strong class="text-slate-800 dark:text-slate-100">Miền Bắc có mấy mùa?</strong> Miền Bắc Việt Nam là một vùng đất có khí hậu phân bố theo 4 mùa rõ rệt, mỗi mùa mang đến những đặc trưng riêng biệt về thời tiết và cảnh quan. Hôm nay cùng Dubaothoitiet tìm hiểu chi tiết về sự phân hóa khí hậu tại đây.
+            </p>
+
+            <img th:src="@{/News/New3/1.jpg}" alt="Miền Bắc có mấy mùa?" class="my-6 rounded-lg shadow-md">
+
+            <section id="section-1">
+                <h2>1. Miền Bắc có mấy mùa?</h2>
+                <p>Miền Bắc có mấy mùa? Miền Bắc được phân chia thành bốn mùa rõ ràng trong năm: xuân, hạ, thu và đông. Mỗi mùa đều có những đặc điểm riêng biệt rõ rệt về thời tiết.</p>
+                
+                <h3 id="section-1.1">1.1. Mùa xuân miền Bắc</h3>
+                <p>Mùa xuân ở miền Bắc khởi đầu từ tháng 3 và kết thúc vào tháng 5 dương lịch mỗi năm. Thời gian này, thời tiết rất dễ chịu, ấm áp, không quá nóng cũng không quá lạnh. Nhiệt độ trung bình khoảng 20 đến 21 độ C. Đây là thời gian lý tưởng để bà con nông dân gieo trồng vụ mùa. Cùng với đó, thời tiết ấm áp, dễ chịu khiến nhiều địa phương thường tổ chức các lễ hội. Mọi người dành thời gian để du lịch, lễ chùa, và ngắm cảnh.</p>
+                <img th:src="@{/News/New3/2.jpg}" alt="Mùa xuân miền Bắc" class="my-6 rounded-lg shadow-md">
+                
+                <h3 id="section-1.2">1.2. Mùa hè miền Bắc</h3>
+                <p>Mùa hè là yếu tố thứ ba trả lời cho thắc mắc miền Bắc có mấy mùa? Mùa hè kéo dài từ đầu tháng 6 đến cuối tháng 8 theo lịch dương. Đây là thời kỳ mà người dân miền Bắc phải chịu đựng nhiều đợt nắng nóng dữ dội, kéo dài nhiều ngày. Nhiệt độ luôn ở mức cao, có thể đạt 37, 38 độ C. Đây là thời điểm trái đất nhận được nhiều nhiệt lượng từ mặt trời nhất. Đặc trưng khí hậu miền Bắc mùa hạ là những cơn mưa rào bất chợt.</p>
+                <img th:src="@{/News/New3/3.jpg}" alt="Mùa hè miền Bắc" class="my-6 rounded-lg shadow-md">
+                <p>Những địa điểm du lịch mùa hè ở miền Bắc được yêu thích nhất có không khí mát mẻ, trong lành, nhiều cây xanh. Ví dụ: Hà Nội, Đồng Văn – Hà Giang, Tràng An, Mai Châu – Hòa Bình, Tam Cốc – Ninh Bình, Chùa Tam Chúc – Hà Nam…</p>
+                
+                <h3 id="section-1.3">1.3. Mùa thu miền Bắc</h3>
+                <p>Miền Bắc bắt đầu vào thu từ đầu tháng 9 đến tháng 11 hàng năm. Đây là khoảng thời gian được coi là đẹp nhất trong năm về thời tiết. Nhiệt độ bắt đầu giảm dần, không còn nắng gay gắt như mùa hè. Dấu hiệu dễ nhận biết khi mùa thu đến là buổi sáng có sương mù nhẹ. Vào buổi tối, bạn sẽ cảm nhận được cái se lạnh khi gió thổi qua.</p>
+                <img th:src="@{/News/New3/4.jpg}" alt="Mùa thu miền Bắc" class="my-6 rounded-lg shadow-md">
+                <p>Nhiệt độ trung bình khoảng 24-25 độ C, những tia nắng nhẹ nhàng len lỏi qua từng hàng cây. Trong khoảng thời gian này, trời ít mưa, bầu trời cao và trong xanh. Thỉnh thoảng vẫn có những cơn mưa rào bất chợt nhưng cũng nhanh chóng qua đi.</p>
+                
+                <h3 id="section-1.4">1.4. Mùa đông miền Bắc</h3>
+                <p>Mùa lạnh ở miền Bắc thường bắt đầu từ tháng 11 và kéo dài đến hết tháng 2 năm sau, đặc trưng bởi thời tiết lạnh và khô. Tuy nhiên, thời gian bắt đầu và kết thúc mùa đông có thể thay đổi, có năm bắt đầu hoặc kết thúc sớm hoặc muộn hơn một chút.</p>
+                <img th:src="@{/News/New3/5.jpg}" alt="Mùa đông miền Bắc" class="my-6 rounded-lg shadow-md">
+                <p>Nhiệt độ trong mùa đông thường giảm xuống thấp, chỉ khoảng 15 độ C. Thậm chí, có những ngày nhiệt độ xuống dưới 10 độ, và ở vùng núi có thể chỉ còn 3 đến 5 độ C. Cùng với đó là những đợt gió mùa Đông Bắc tăng cường, mang theo mưa phùn khiến nhiều khu vực chìm trong giá rét.</p>
+            </section>
+            
+            <section id="section-2">
+                <h2>2. Đặc điểm khí hậu miền Bắc theo vùng</h2>
+                <p>Ngoài việc tìm hiểu miền Bắc có mấy mùa, nhiều người còn quan tâm đến đặc trưng thời tiết theo từng vùng khu vực. Do địa hình phân hóa nên khí hậu cũng khác biệt giữa Tây Bắc, Đông Bắc và Đồng bằng sông Hồng.</p>
+                
+                <h3 id="section-2.1">2.1. Khí hậu của vùng Tây Bắc</h3>
+                <p>Khu vực Tây Bắc có địa hình núi cao hiểm trở, với dãy Hoàng Liên Sơn bao quanh. Vì thế, nơi đây không bị ảnh hưởng bởi các đợt gió mùa. Khí hậu ở đây quanh năm khá ổn định và ôn hòa, không phải chịu mưa bão như khu vực Đông Bắc. Thời tiết ở Tây Bắc có sự phân hóa rõ rệt giữa mùa hè và mùa đông. Mùa hè đặc trưng với khí hậu nóng ẩm và nhiều mưa. Trong khi đó, mùa đông thì lạnh lẽo, trời nhiều mây, và mưa phùn xuất hiện trên diện rộng trong thời gian dài.</p>
+                <img th:src="@{/News/New3/6.png}" alt="Khí hậu vùng Tây Bắc" class="my-6 rounded-lg shadow-md">
+                <p>Nhiệt độ trung bình hàng năm dao động trong khoảng 24 đến 25 độ C. Tháng lạnh nhất trong năm là tháng 12 và tháng 1, khi nhiệt độ có thể giảm xuống dưới 0 độ C, kèm theo hiện tượng sương muối và băng tuyết. Đây là một hiện tượng tự nhiên thu hút sự tò mò và thích thú của nhiều du khách.</p>
+                
+                <h3 id="section-2.2">2.2. Khí hậu của vùng Đông Bắc</h3>
+                <p>Khu vực Đông Bắc nổi bật với địa hình đồi núi thấp và các đồng bằng rộng lớn. Tuy nhiên, khí hậu ở đây lại thất thường hơn so với vùng Tây Bắc, bị ảnh hưởng nhiều bởi các hiện tượng thời tiết khắc nghiệt. Vào mùa đông, bạn sẽ cảm nhận được cái lạnh “thấu xương” do khu vực này phải đón nhận những đợt gió mùa Đông Bắc.</p>
+                <p>Mùa hè thì lại phải đối mặt với những cơn bão kèm theo mưa dông, gây lũ lụt và thiệt hại nghiêm trọng về tài sản, cơ sở hạ tầng, và đe dọa tính mạng người dân.</p>
+                <img th:src="@{/News/New3/7.jpg}" alt="Khí hậu vùng Đông Bắc" class="my-6 rounded-lg shadow-md">
+                <p>Đặc biệt, giữa mùa hè, khu vực Đông Bắc chịu ảnh hưởng của gió phơn (gió Lào) với nhiệt độ cao lên đến 40 độ C. Sự khác biệt rõ rệt giữa mùa đông và mùa hè khiến người dân khó thích nghi, nhất là vào thời điểm chuyển mùa.</p>
+                
+                <h3 id="section-2.3">2.3. Khí hậu của vùng Đồng Bằng Sông Hồng</h3>
+                <p>Vùng Đồng bằng sông Hồng thể hiện rõ nét đặc trưng của khí hậu nhiệt đới gió mùa. Nhiệt độ trung bình năm dao động từ 23 đến 25 độ C, độ ẩm không khí cao, thường xuyên phải đối mặt với nhiều mưa bão. Để hiểu rõ hơn về thời tiết tại đây, bạn có thể cập nhật thông tin hàng ngày với đầy đủ các yếu tố khí hậu cực kỳ chi tiết và thuận lợi.</p>
+                <p>Với khí hậu ẩm ướt, nắng nóng và mưa nhiều, Đồng bằng sông Hồng rất thuận lợi cho việc phát triển nông nghiệp lúa nước. Tuy nhiên, đặc điểm khí hậu này cũng mang lại không ít khó khăn cho nông dân trong việc trồng trọt và chăm sóc cây trồng.</p>
+                <img th:src="@{/News/New3/8.jpg}" alt="Khí hậu vùng Đồng bằng sông Hồng" class="my-6 rounded-lg shadow-md">
+                <p>Từ tháng 5 đến tháng 10, mùa mưa bão gây ra tình trạng ngập úng trên diện rộng do nước lũ dâng cao. Thời điểm đỉnh điểm là cuối tháng 7, đầu tháng 8, khi thời tiết trở nên xấu đi với các hiện tượng cực đoan như bão, dông lốc và mưa lớn kéo dài trong nhiều ngày. Mùa đông ở đây lạnh và hanh khô, với lượng mưa thấp gây ra tình trạng hạn hán và đất đai khô cằn. Điều này ảnh hưởng đáng kể đến hoạt động sản xuất và tưới tiêu của người nông dân.</p>
+            </section>
+            
+            <section id="section-3">
+                <h2>3. Mùa mưa ở miền Bắc bắt đầu vào mùa nào?</h2>
+                <p>Ở miền Bắc thường xuyên có những đợt mưa nặng vào các tháng mùa hè, với lượng mưa trung bình hàng năm từ 1200-2000mm. Khi mưa to, thường đi kèm với các hiện tượng thiên tai như sấm sét, lũ lụt và sạt lở đất. Đặc biệt, các vùng thấp như Hà Nội thường bị ngập úng nghiêm trọng khi mưa lớn. Vì vậy, mỗi người dân nên tự bảo vệ mình, hạn chế ra ngoài trong những trận mưa lớn hoặc khi bão đang diễn ra.</p>
+                <img th:src="@{/News/New3/9.jpg}" alt="Mùa mưa ở miền Bắc" class="my-6 rounded-lg shadow-md">
+                <p class="mt-6 text-sm text-slate-600 dark:text-slate-300">
+                    Với sự thay đổi rõ rệt giữa 4 mùa, miền Bắc không chỉ là nơi sinh sống của người dân mà còn là một vùng đất đa dạng về văn hóa và thiên nhiên.<strong class="text-slate-800 dark:text-slate-100"> Dubaothoitiet</strong> hy vọng qua bài viết này, các bạn đã giải đáp được thắc mắc <strong class="text-slate-800 dark:text-slate-100">miền Bắc có mấy mùa.</strong>
+                </p>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{perpetual_calendar :: footer}"></footer>
+</div>
+
+<script th:src="@{/js/footer.js(v=${cacheBuster})}" defer></script>
+</body>
+</html>

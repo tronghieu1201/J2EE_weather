@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Động đất là gì? - Tin Tức Thời Tiết</title>
+    <!-- Inherit styles from index -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#3B82F6",
+                        "primary-dark": "#2563EB",
+                        "background-light": "#F0F9FF",
+                        "background-dark": "#0F172A",
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#1E293B",
+                        "text-light": "#334155",
+                        "text-dark": "#E2E8F0",
+                        "accent-blue": "#0EA5E9",
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.75rem", "xl": "1rem", "2xl": "1.5rem",
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        #page-wrapper {
+            transform: scale(0.65); transform-origin: top left;
+            width: calc(100% / 0.65); min-height: calc(100vh / 0.65);
+            overflow-x: hidden; position: absolute; top: 0; left: 0;
+        }
+        body { min-height: calc(100vh / 0.65); overflow-y: auto; }
+        .article-content h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+        .article-content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .article-content p {
+            margin-bottom: 1rem;
+            line-height: 1.75;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans transition-colors duration-300 flex flex-col">
+<div id="page-wrapper">
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-surface-light/90 dark:bg-surface-dark/90 backdrop-blur-md shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                 <div class="flex-shrink-0 flex items-center gap-2">
+                    <a th:href="@{/}" class="flex items-center gap-2">
+                        <span class="material-icons-round text-primary text-3xl">cloud</span>
+                        <span class="font-bold text-xl tracking-tight text-slate-800 dark:text-white">Weather</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium">
+                     <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors" th:href="@{/}">Trang chủ</a>
+                     <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors" th:href="@{/chart}">Biểu đồ</a>
+                    <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors" th:href="@{/perpetual-calendar}">Xem lịch vạn niên</a>
+                    <a class="text-primary font-semibold dark:text-blue-400 transition-colors" th:href="@{/weather-news}">Tin tức</a>
+                </div>
+                <div class="hidden md:flex items-center gap-4">
+                     <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 ml-2 border-l pl-4 border-gray-200 dark:border-gray-700">
+                        <span class="material-icons-round text-base">schedule</span>
+                        <span id="local-time" style="font-variant-numeric: tabular-nums;">00:00:00</span>
+                    </div>
+                    <button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+                        <span class="material-icons-round text-slate-500 dark:text-yellow-400">dark_mode</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <div class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800/50 p-6 sm:p-10 article-content">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white mb-4 leading-tight">Động đất là gì? Nguyên do hình thành và tác hại của động đất</h1>
+            
+            <div class="sticky top-24 z-10 bg-slate-100 dark:bg-slate-700/50 p-4 rounded-lg my-6 backdrop-blur-md">
+                <h3 class="font-bold mb-2">Mục lục</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#section-1" class="hover:text-primary">1. Động đất là gì?</a></li>
+                    <li><a href="#section-2" class="hover:text-primary">2. Nguyên nhân gây ra động đất là gì?</a></li>
+                    <li><a href="#section-3" class="hover:text-primary">3. Các cấp độ và độ lớn của động đất là gì?</a></li>
+                    <li><a href="#section-4" class="hover:text-primary">4. Tại sao không thể dự báo động đất?</a></li>
+                    <li><a href="#section-5" class="hover:text-primary">5. Tác hại của động đất là gì?</a></li>
+                    <li><a href="#section-6" class="hover:text-primary">6. Những trận động đất tàn khốc nhất trên thế giới</a></li>
+                </ul>
+            </div>
+
+            <p class="text-lg text-slate-600 dark:text-slate-300">
+                <strong class="text-slate-800 dark:text-slate-100">Động đất là gì?</strong> Đây là một hiện tượng tự nhiên thông thường hay còn chứa đựng sự tức giận của “mẹ thiên nhiên” đối với con người không? Dưới đây là thông tin chi tiết mà Dubaothoitiet cung cấp để giúp bạn đọc hiểu sâu hơn về thiên tai này.
+            </p>
+
+            <img th:src="@{/News/New6/1.jpg}" alt="Động đất" class="my-6 rounded-lg shadow-md">
+
+            <section id="section-1">
+                <h2>1. Động đất là gì?</h2>
+                <h3 id="section-1.1">1.1. Khái niệm động đất là gì?</h3>
+                <p>Động đất là một hiện tượng tự nhiên xảy ra khi có sự giải phóng năng lượng từ bên trong Trái Đất, tạo ra các dao động sóng đất. Nguyên nhân chính của động đất thường là do sự chuyển động của các tảng đá trong lòng đất. Khi những tảng đá này chuyển động, chúng có thể gây ra sự biến đổi đất đai xung quanh và tạo ra những dao động sóng lan truyền ra xa.</p>
+                <p>Động đất có thể xảy ra ở bất kỳ địa điểm nào trên Trái Đất và thường được đo bằng độ Richter hoặc các phương pháp khác để đánh giá mức độ mạnh của sự kiện. Động đất có thể có ảnh hưởng lớn đến môi trường và đời sống con người, gây ra tổn thất về người và tài sản.</p>
+
+                <h3 id="section-1.2">1.2. Hiện trạng tình hình động đất tại Việt Nam</h3>
+                <p>Trận động đất gần nhất ở Việt Nam xảy ra vào khoảng 21h49 (giờ GMT) ngày 4/4/2023 (tức 4h49, giờ Hà Nội ngày 5/4/2023). Trận động đất có độ lớn 3.2 tại vị trí có tọa độ (14.882 độ vĩ Bắc, 108.274 độ kinh Đông), với độ sâu chấn tiêu khoảng 8.1km.</p>
+                <p>Sự cố động đất đã diễn ra tại khu vực huyện Kon Plông, tỉnh Kon Tum, và được xác định cấp độ rủi ro thiên tai là cấp 0. Trung tâm báo tin về động đất và cảnh báo sóng thần của Viện Vật lý Địa cầu đang tiếp tục theo dõi sự kiện này.</p>
+                <p>Trước đó, các nhà khoa học tại Viện Vật lý Địa cầu (thuộc Viện Hàn lâm Khoa học và Công nghệ Việt Nam) đã nhận định rằng, động đất ở Kon Plông là kết quả của động đất kích thích, xuất phát từ hoạt động của hồ chứa thủy điện khi áp lực nước tăng lên gây đứt gãy hệ thống dưới đất, dẫn đến việc xảy ra sự kiện động đất trước thời gian dự kiến.</p>
+                <img th:src="@{/News/New6/2.jpg}" alt="Động đất ở Việt Nam" class="my-6 rounded-lg shadow-md">
+            </section>
+            
+            <section id="section-2">
+                <h2>2. Nguyên nhân gây ra động đất là gì?</h2>
+                <p>Tại sao lại có động đất? Nguyên nhân động đất thường liên quan đến các tình huống như sạt lở trong các khu vực rỗng của vỏ Trái Đất, các hoạt động phun trào của núi lửa, và các biến động năng lượng tích tụ do các vận động bên trong địa chất.</p>
+                <p>Sự xuất hiện của động đất có thể bắt nguồn từ việc sạt lở của các hệ thống hang động ngầm dưới bề mặt đất, cũng như từ các sự trượt lở tự nhiên của đất đá với khối lượng lớn. Loại động đất này thường chỉ tạo ra rung chuyển trong một vùng hẹp và chiếm khoảng 3% tổng số sự kiện động đất trên toàn thế giới.</p>
+                <p>Đối với động đất kiến tạo, chiếm 90% tỷ lệ, chúng liên quan đến hoạt động đứt gãy kiến tạo, đặc biệt là ở rìa các mảng thạch quyển và các khu vực vận động kiến tạo trong các đới hút chìm.</p>
+                <p>Hiện tượng động đất kiến tạo cũng có thể phát sinh do hoạt động macma xâm nhập vào vỏ Trái Đất, làm hủy hoại trạng thái cân bằng áp lực trước của đá vây quanh, tạo ra ứng suất và khi bị đứt vỡ, sự kiện động đất sẽ xảy ra. Ngoài ra, biến đổi tướng đá từ dạng tinh thể này sang dạng khác cũng có thể gây ra động đất bằng cách làm thay đổi thể tích đá do co rút và dãn nở.</p>
+                <img th:src="@{/News/New6/3.jpg}" alt="Nguyên nhân động đất" class="my-6 rounded-lg shadow-md">
+            </section>
+
+            <section id="section-3">
+                <h2>3. Các cấp độ và độ lớn của động đất là gì?</h2>
+                <h3 id="section-3.1">3.1. Các cấp độ của động đất</h3>
+                <p>Các cấp độ của động đất là gì? Động đất được phân loại thành năm cấp độ rủi ro thiên tai theo các tiêu chí sau đây:</p>
+                <ul class="list-disc list-inside ml-4 space-y-2">
+                    <li><strong>Cấp độ rủi ro thiên tai 1:</strong> Cường độ chấn động trên mặt đất quan trắc từ cấp 5 đến cấp 6, xuất hiện ở mọi vùng thuộc lãnh thổ Việt Nam.</li>
+                    <li><strong>Cấp độ rủi ro thiên tai 2:</strong> Cường độ chấn động trên mặt đất quan trắc từ cấp 6 đến cấp 7, xảy ra ở khu vực nông thôn và đô thị.</li>
+                    <li><strong>Cấp độ rủi ro thiên tai 3:</strong> Cường độ chấn động trên mặt đất quan trắc từ cấp 6 đến cấp 7, xảy ra tại khu vực có các hồ chứa thủy lợi, hồ chứa thủy điện; hoặc cường độ chấn động từ cấp 7 đến cấp 8 xảy ra ở khu vực nông thôn.</li>
+                    <li><strong>Cấp độ rủi ro thiên tai 4:</strong> Cường độ chấn động trên mặt đất quan trắc từ cấp 7 đến cấp 8, xảy ra ở khu đô thị hoặc nơi có các hồ chứa thủy lợi.</li>
+                    <li><strong>Cấp độ rủi ro thiên tai 5:</strong> Cường độ chấn động trên mặt đất quan trắc lớn hơn cấp 8, xuất hiện tại bất kỳ vùng nào trên lãnh thổ Việt Nam.</li>
+                </ul>
+
+                <h3 id="section-3.2">3.2. Độ lớn của động đất</h3>
+                <p>Kích thước của động đất được đo bằng thang đo độ Richter hay còn được gọi là độ lớn, được phân loại như sau:</p>
+                <ul class="list-disc list-inside ml-4 space-y-2">
+                    <li><strong>Từ 1 – 2:</strong> Khó nhận biết.</li>
+                    <li><strong>Từ 2 – 4:</strong> Có thể nhận biết, thường không gây thiệt hại đáng kể.</li>
+                    <li><strong>Từ 4 – 5:</strong> Đất đai rung chuyển, có thể nghe tiếng nổ, thương hại không đáng kể.</li>
+                    <li><strong>Từ 5 – 6:</strong> Nhà cửa rung chuyển, một số công trình có dấu hiệu nứt.</li>
+                    <li><strong>Từ 6 – 7:</strong> Nhà cửa bị tổn thương nhẹ.</li>
+                    <li><strong>Từ 7 – 8:</strong> Động đất mạnh làm hư hại hầu hết các công trình xây dựng thông thường, có những vết nứt lớn hoặc sụt lún trên mặt đất.</li>
+                    <li><strong>Từ 8 – 9:</strong> Nhà cửa sụp đổ, mặt đất lún sâu đến 1m, có những sự thay đổi đáng kể trong địa hình, đặc biệt là ở vùng núi.</li>
+                    <li><strong>Trên 9:</strong> Hiếm khi xảy ra. Các trận động đất có độ lớn lớn hơn 9 thường xuất hiện rất hiếm, và chúng thường tập trung ở những đoạn địa chấn đặc biệt mạnh, được gọi là đới hoạt động địa chấn.</li>
+                </ul>
+            </section>
+            
+            <section id="section-4">
+                <h2>4. Tại sao không thể dự báo động đất?</h2>
+                <p>Theo giải thích của PGS.TS Cao Đình Triều (Viện trưởng Viện Địa Vật lý ứng dụng), động đất có thể xảy ra bất cứ lúc nào, tuy nhiên, thống kê cho thấy rằng hầu hết các sự kiện động đất diễn ra vào ban đêm.</p>
+                <p>Hiện tượng động đất được giải thích là kết quả của tác động của sức hút từ Mặt Trăng và Mặt Trời, tạo ra triều đối trong vỏ Trái Đất giống như hiện tượng thủy triều. Dưới tác động của sức hút này, lực tác động lên nham thạch gần mức độ gãy nứt, giúp năng lượng tích tụ trong lòng đất được giải phóng. Tuy nhiên, điều này chỉ là thống kê và chưa được hỗ trợ bằng nghiên cứu khoa học chi tiết.</p>
+                <p>TS Nguyễn Xuân Anh (Viện Vật lý Địa cầu) chỉ cảnh báo về khả năng xảy ra động đất ở một vùng cụ thể mà khó dự báo thời điểm chính xác. Mặc dù ở Nhật Bản, có các trận động đất gây thiệt hại nặng, nhưng việc dự báo thời điểm xảy ra động đất gần như là không khả thi.</p>
+                <p>Đến nay, trên toàn cầu, chưa có quốc gia nào có khả năng dự báo chính xác khi nào động đất sẽ xảy ra, cũng như không có cách nào để ngăn chặn hoặc dự trữ động đất. Những nhà khoa học chỉ có thể đưa ra cảnh báo sớm cho một khu vực cụ thể, cho biết có thể xảy ra động đất với độ lớn nào đó.</p>
+            </section>
+            
+            <section id="section-5">
+                <h2>5. Tác hại của động đất là gì?</h2>
+                <p>Tác hại của động đất là gì? Hậu quả của động đất để lại rất nghiêm trọng, có thể ảnh hưởng đến cả tính mạng của con người:</p>
+                <ul class="list-disc list-inside ml-4 space-y-2">
+                    <li>Tác động trực tiếp của các sự kiện động đất là sự rung cuộc của mặt đất, gây ra hiện tượng nứt vỡ, làm sụp đổ các công trình xây dựng, gây sạt lở đất và lở tuyết. Mức độ nghiêm trọng của thảm họa này phụ thuộc vào cường độ của động đất, khoảng cách tính từ chấn tâm và các điều kiện địa chất cũng như địa mạo tại vùng bị ảnh hưởng.</li>
+                    <li>Động đất thường kèm theo nguy cơ hỏa hoạn khi chúng phá hủy các đường dây điện và đường ống khí.</li>
+                    <li>Các sự kiện động đất dưới đáy biển có thể tạo ra lở đất hoặc biến dạng đáy biển, gây ra sóng thần mạnh mẽ tràn qua các đại dương và đổ bộ vào đất liền.</li>
+                    <li>Động đất có thể kích thích hoạt động của núi lửa, thậm chí là núi lửa đã tắt từ lâu.</li>
+                    <li>Trên toàn cầu, đã có nhiều hiện tượng động đất lớn, mang lại thiệt hại khủng khiếp về người và tài sản. Những quốc gia như Nhật Bản và Indonesia thường xuyên phải đối mặt với động đất có các cấp độ khác nhau.</li>
+                </ul>
+            </section>
+            
+            <section id="section-6">
+                <h2>6. Những trận động đất tàn khốc nhất trên thế giới</h2>
+                <ul class="list-disc list-inside ml-4 space-y-2">
+                    <li><strong>Trận động đất mạnh 9,2 độ Richter tại Mỹ (28/3/1964):</strong> Trận động đất tại Anchorage, Alaska, với độ sâu 124,8 km đã gần như phá hủy thành phố và gây tử vong cho 131 người, trong đó có 128 người vì sóng thần. Thiệt hại về người và tài sản đạt 311 triệu USD, là trận động đất có cường độ mạnh nhất từng được ghi nhận.</li>
+                    <li><strong>Động đất tại Tứ Xuyên, Trung Quốc (12/5/2008):</strong> Trận động đất mạnh 7,9 độ Richter gây mất nhà cửa cho 10 triệu người và khiến hơn 250.000 người thiệt mạng. Thiệt hại ước tính là 86 tỷ USD, là một trong những thảm họa động đất đáng sợ nhất trong lịch sử.</li>
+                    <li><strong>Thảm họa động đất tại Thổ Nhĩ Kỳ – Syria (6/2/2023):</strong> Hai trận động đất mạnh 7,8 và 7,5 độ Richter tại Thổ Nhĩ Kỳ gây thiệt mạng cho hơn 5.800 người và làm hơn 34.000 người bị thương. Thiệt hại lớn tại Thổ Nhĩ Kỳ và Syria đã kêu gọi sự giúp đỡ khẩn cấp.</li>
+                    <li><strong>Động đất Chile mạnh 9,5 độ Richter (22/5/1960):</strong> Trận động đất Valdivia gây mất mát cho gần 5.000 người và làm hơn 2 triệu người mất nhà cửa. Thiệt hại lên đến 550 triệu USD, với sự kết hợp của sóng thần và núi lửa.</li>
+                    <li><strong>Động đất Việt Nam:</strong> Tính từ năm 1935 đến nay, Việt Nam ghi nhận một số trận động đất như Điện Biên (1935, 6,75 độ Richter) và Tuần Giáo (1983, 6,8 độ Richter). Tuy nhiên, số lượng và cường độ của chúng thường không gây ra thiệt hại lớn. Các vùng có nguy cơ chịu động đất nhiều nhất ở Việt Nam là khu vực Tây Bắc và miền Trung.</li>
+                </ul>
+                <img th:src="@{/News/New6/4.jpg}" alt="Các trận động đất tàn khốc" class="my-6 rounded-lg shadow-md">
+                <p class="mt-6 text-sm text-slate-600 dark:text-slate-300">
+                    Qua bài viết này, Dự báo thời tiết mong rằng bạn đã hiểu rõ hơn về khái niệm động đất là gì và đã tích lũy thêm nhiều kiến thức về thiên tai này, giúp bạn tự bảo vệ bản thân và gia đình mình. Đừng quên theo dõi<strong class="text-slate-800 dark:text-slate-100"> Dubaothoitiet</strong> để không bỏ lỡ bất kỳ thông tin thú vị nào trong tương lai!
+                </p>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{perpetual_calendar :: footer}"></footer>
+</div>
+
+<script th:src="@{/js/footer.js(v=${cacheBuster})}" defer></script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mưa axit là gì? - Tin Tức Thời Tiết</title>
+    <!-- Inherit styles from index -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#3B82F6",
+                        "primary-dark": "#2563EB",
+                        "background-light": "#F0F9FF",
+                        "background-dark": "#0F172A",
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#1E293B",
+                        "text-light": "#334155",
+                        "text-dark": "#E2E8F0",
+                        "accent-blue": "#0EA5E9",
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.75rem", "xl": "1rem", "2xl": "1.5rem",
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        #page-wrapper {
+            transform: scale(0.65); transform-origin: top left;
+            width: calc(100% / 0.65); min-height: calc(100vh / 0.65);
+            overflow-x: hidden; position: absolute; top: 0; left: 0;
+        }
+        body { min-height: calc(100vh / 0.65); overflow-y: auto; }
+        .article-content h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+        .article-content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .article-content p {
+            margin-bottom: 1rem;
+            line-height: 1.75;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans transition-colors duration-300 flex flex-col">
+<div id="page-wrapper">
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-surface-light/90 dark:bg-surface-dark/90 backdrop-blur-md shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                 <div class="flex-shrink-0 flex items-center gap-2">
+                    <a th:href="@{/}" class="flex items-center gap-2">
+                        <span class="material-icons-round text-primary text-3xl">cloud</span>
+                        <span class="font-bold text-xl tracking-tight text-slate-800 dark:text-white">Weather</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium">
+                     <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors" th:href="@{/}">Trang chủ</a>
+                     <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors" th:href="@{/chart}">Biểu đồ</a>
+                    <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors" th:href="@{/perpetual-calendar}">Xem lịch vạn niên</a>
+                    <a class="text-primary font-semibold dark:text-blue-400 transition-colors" th:href="@{/weather-news}">Tin tức</a>
+                </div>
+                <div class="hidden md:flex items-center gap-4">
+                     <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 ml-2 border-l pl-4 border-gray-200 dark:border-gray-700">
+                        <span class="material-icons-round text-base">schedule</span>
+                        <span id="local-time" style="font-variant-numeric: tabular-nums;">00:00:00</span>
+                    </div>
+                    <button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+                        <span class="material-icons-round text-slate-500 dark:text-yellow-400">dark_mode</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <div class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800/50 p-6 sm:p-10 article-content">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white mb-4 leading-tight">Mưa axit là gì? Mưa axit ảnh hưởng thế nào đến đời sống?</h1>
+            
+            <div class="sticky top-24 z-10 bg-slate-100 dark:bg-slate-700/50 p-4 rounded-lg my-6 backdrop-blur-md">
+                <h3 class="font-bold mb-2">Mục lục</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#section-1" class="hover:text-primary">1. Mưa axit là gì?</a></li>
+                    <li><a href="#section-2" class="hover:text-primary">2. Nguyên nhân hình thành mưa axit</a></li>
+                    <li><a href="#section-3" class="hover:text-primary">3. Quá trình hình thành mưa axit</a></li>
+                    <li><a href="#section-4" class="hover:text-primary">4. Mưa axit ảnh hưởng thế nào đến đời sống?</a></li>
+                    <li><a href="#section-5" class="hover:text-primary">5. Biện pháp khắc phục mưa axit</a></li>
+                </ul>
+            </div>
+
+            <p class="text-lg text-slate-600 dark:text-slate-300">
+                <strong class="text-slate-800 dark:text-slate-100">Mưa axit</strong> là hiện tượng hóa học gây hại cho con người và môi trường sống. Vậy, đây là loại mưa gì? Có cách nào để khắc phục không? Hãy cùng Dubaothoitiet đi tìm câu trả lời trong bài viết dưới đây.
+            </p>
+
+            <img th:src="@{/News/New1/1.jpg}" alt="Minh họa mưa axit" class="my-6 rounded-lg shadow-md">
+
+            <section id="section-1">
+                <h2>1. Mưa axit là gì?</h2>
+                <p>
+                    Mưa axit (hay còn gọi là acid rain hay axit rain) là hiện tượng mưa bị tác động bởi các chất ô nhiễm công nghiệp như SO2 và NO. Các khí thải này được tạo ra trong quá trình sản xuất, khai thác than đá và chế tạo hóa chất,… Acid rain có độ pH dưới 5,6, do đó có khả năng hòa tan một số kim loại nguy hiểm trong không khí, gây ảnh hưởng tiêu cực đến môi trường, cuộc sống hàng ngày và hoạt động sản xuất của con người.
+                </p>
+                <p>
+                    Loại mưa này được phát hiện lần đầu tiên tại Thụy Điển vào năm 1948. Ở Việt Nam, hiện tượng bắt đầu được chú ý hơn vào những năm 90. Mưa axit được xem là một trong những thảm họa nguy hiểm nhất trên hành tinh.
+                </p>
+                <p>
+                    Hiện nay, axit rain tập trung ở các khu công nghiệp tại các thành phố lớn như Hà Nội, Hồ Chí Minh, Bình Dương, Cần Thơ, Hải Phòng, … Tần suất xuất hiện trong vòng 10 năm qua ở Tây Ninh là 57,9%, trong khi ở Cần Thơ là 58%.
+                </p>
+                <img th:src="@{/News/New1/2.jpg}" alt="Biểu đồ mưa axit" class="my-6 rounded-lg shadow-md">
+            </section>
+            
+            <section id="section-2">
+                <h2>2. Nguyên nhân hình thành mưa axit</h2>
+                <p>
+                    Có hai nguyên nhân chính dẫn đến axit rain: yếu tố tự nhiên và hoạt động của con người.
+                </p>
+                <h3 id="section-2.1">2.1. Nguyên nhân từ tự nhiên</h3>
+                <p>
+                    Các hiện tượng như núi lửa phun trào, cháy rừng,… làm tăng lượng lưu huỳnh và nitơ trong không khí một cách đột ngột, gây ra acid rain.
+                </p>
+                <h3 id="section-2.2">2.2. Nguyên nhân từ con người</h3>
+                <p>
+                    Các hoạt động sản xuất tại các nhà máy công nghiệp sử dụng các loại chất đốt như dầu mỏ, than đá tạo ra các khí độc hại như nitơ đioxit và lưu huỳnh đioxit. Thêm vào đó, sự xuất hiện của các nhà máy lọc dầu, luyện kim và nhiệt điện cũng là nguyên nhân gây ra hiện tượng mưa axit.
+                </p>
+                <img th:src="@{/News/New1/3.jpg}" alt="Nguyên nhân hình thành mưa axit" class="my-6 rounded-lg shadow-md">
+            </section>
+
+            <section id="section-3">
+                <h2>3. Quá trình hình thành mưa axit</h2>
+                <p>
+                    Khi lượng lưu huỳnh và nitơ trong không khí tăng lên, chúng sẽ hòa hợp với nước trong không khí tạo ra axit nitric và axit nitrico. Khi lượng axit này tăng lên, chúng sẽ hòa hợp với nước trong không khí tạo ra axit nitric và axit nitrico. Khi lượng axit này tăng lên, chúng sẽ hòa hợp với nước trong không khí tạo ra axit nitric và axit nitrico.
+                </p>
+                <p>
+                    Acid rain là sự ngưng tụ của các axit dưới dạng mưa. Axit chủ yếu là từ nitơ và lưu huỳnh, cụ thể là sự kết hợp giữa các oxit phi kim (như SO2, NO, NO2,…) và nước. Nước có sẵn trong tự nhiên, trong khi các oxit chủ yếu do hoạt động của con người sinh ra (như khai thác than đá, dầu mỏ và các nhiên liệu khác, cũng như chất thải từ các nhà máy công nghiệp,…).
+                </p>
+                <p>
+                    Do đó, có thể kết luận rằng hiện tượng mưa axit xuất hiện dựa trên các phương trình phản ứng hóa học như sau:
+                </p>
+                <p class="text-center font-mono">
+                    2SO2 + O2 + 2H2O → 2H2SO4<br>
+                    2NO + O2 → 2NO2<br>
+                    4NO2 + O2 + 2H2O → 4HNO3
+                </p>
+                <p>
+                    H2SO4 và HNO3 được tạo ra sẽ hòa tan vào nước mưa, hình thành mưa axit, trong đó axit H2SO4 là thành phần chính của acid rain.
+                </p>
+                <img th:src="@{/News/New1/4.jpg}" alt="Quá trình hình thành mưa axit" class="my-6 rounded-lg shadow-md">
+            </section>
+
+            <section id="section-4">
+                <h2>4. Mưa axit ảnh hưởng thế nào đến đời sống?</h2>
+                <p>
+                    Axit rain gây hại cho sự phát triển của động thực vật, làm rửa trôi các chất dinh dưỡng, biến đổi thành phần của đất, ảnh hưởng xấu đến môi trường và nhiều hoạt động kinh tế xã hội của con người.
+                </p>
+                <h3 id="section-4.1">4.1. Tác động đến con người</h3>
+                <p>
+                    Acid rain có thể gây ra nhiều bệnh nguy hiểm cho con người, thậm chí dẫn đến tử vong. Việc sử dụng nước mưa chứa axit chưa qua xử lý trong sinh hoạt hàng ngày như giặt quần áo, tắm gội có thể dẫn đến các bệnh về da như mẩn đỏ, ngứa, nấm, viêm da.
+                </p>
+                <p>
+                    Đặc biệt, nếu dùng nước mưa này trong ăn uống và chế biến thực phẩm, bạn có thể mắc phải nhiều bệnh nghiêm trọng về đường ruột và tiêu hóa. Nhiễm độc nặng có thể ảnh hưởng đến não bộ, và trẻ em ăn phải thực phẩm nhiễm acid rain có thể chịu tổn thương thần kinh nghiêm trọng.
+                </p>
+                <p>
+                    Theo các chuyên gia khoa học, các kim loại trong mưa này có thể gây ra bệnh Alzheimer, ảnh hưởng đến trí nhớ, suy nghĩ và hành vi. Mưa axit còn gây ra các bệnh về hô hấp và làm suy giảm hệ miễn dịch.
+                </p>
+                <h3 id="section-4.2">4.2. Tác động đến sinh vật</h3>
+                <p>
+                    Theo nghiên cứu:
+                </p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Khi pH < 6.0: Các sinh vật bậc thấp trong chuỗi thức ăn (phù du) sẽ chết.</li>
+                    <li>Khi pH < 5.5: Các loài cá sẽ bị dị dạng do thiếu dinh dưỡng, chết ngạt và không thể sinh sản.</li>
+                    <li>Khi pH < 5.0: Quần thể cá sẽ chết.</li>
+                    <li>Khi pH < 4: Xuất hiện các sinh vật mới khác với ban đầu.</li>
+                </ul>
+                <p>
+                    Mưa axit ảnh hưởng lớn đến sự tồn tại và phát triển của các loài sinh vật, đặc biệt là sinh vật biển, do độ pH trong nước biển giảm, gây mất cân bằng muối và làm suy yếu khả năng duy trì nồng độ canxi của các sinh vật.
+                </p>
+                <img th:src="@{/News/New1/6.jpg}" alt="Mưa axit ảnh hưởng đến sinh vật" class="my-6 rounded-lg shadow-md">
+
+                <h3 id="section-4.3">4.3. Tác động đến thực vật</h3>
+                <p>
+                    Dưới tác động của axit rain, dưỡng chất trong đất bị rửa trôi và các hợp chất chứa nhôm phóng thích ion nhôm gây độc cho cây. Một phần SO2 trong khí quyển lắng đọng dưới dạng khí SO2, khi tiếp xúc với lá cây sẽ đi vào khí khổng, làm hư hại hệ thống giảm thoát nước, giảm khả năng kháng bệnh và cản trở quá trình quang hợp.
+                </p>
+                <img th:src="@{/News/New1/7.jpg}" alt="Mưa axit ảnh hưởng đến thực vật" class="my-6 rounded-lg shadow-md">
+            </section>
+            
+            <section id="section-5">
+                <h2>5. Biện pháp khắc phục mưa axit</h2>
+                <p>
+                    Hiện nay, việc nghiên cứu nguyên nhân và quá trình hình thành của acid rain đã giúp con người tìm ra nhiều biện pháp khắc phục hiện tượng này. Cụ thể là:
+                </p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>
+                        <strong>Kiểm soát lượng khí thải trong môi trường:</strong> Các nghiên cứu cho thấy điều chỉnh lượng khí thải từ các phương tiện và khu công nghiệp là bước quan trọng để giảm thiểu axit rain. Ví dụ, kiểm soát và loại bỏ lưu huỳnh và nitơ trong dầu mỏ và than đá trước khi sử dụng (phương pháp vật lý, phương pháp vi sinh vật,…).
+                    </li>
+                    <li>
+                        <strong>Ưu tiên sử dụng năng lượng sạch:</strong> Hạn chế sử dụng nhiên liệu hóa thạch. Có thể thay thế bằng những nguồn năng lượng tái tạo như gió, năng lượng mặt trời, …
+                    </li>
+                    <li>
+                        <strong>Quản lý nguồn nước:</strong> Quản lý nguồn nước hiệu quả và kiểm tra định kỳ để tránh tăng độ axit của nước.
+                    </li>
+                    <li>
+                        <strong>Nâng cấp và sử dụng phương tiện giao thông sạch:</strong> Cải tiến động cơ các phương tiện giao thông theo tiêu chuẩn EURO (quy định về giới hạn khí thải đối với xe bán ra trong Liên minh Châu Âu và các quốc gia thành viên khu vực kinh tế Châu Âu), với các tiêu chuẩn ngày càng nghiêm ngặt.
+                    </li>
+                </ul>
+                <img th:src="@{/News/New1/8.jpg}" alt="Biện pháp khắc phục mưa axit" class="my-6 rounded-lg shadow-md">
+                <p class="text-sm text-slate-600 dark:text-slate-300">
+                    Mưa axit tác động mạnh mẽ đến môi trường và con người, ảnh hướng đến sự phát triển của nền kinh tế. Vì vậy, Dubaothoitiet hy vọng qua bài viết này, các bạn đã có thêm những thông tin hữu ích để góp phần làm giảm sự hình thành của loại mưa “độc” này.
+                </p>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{perpetual_calendar :: footer}"></footer>
+</div>
+
+<script th:src="@{/js/footer.js(v=${cacheBuster})}" defer></script>
+</body>
+</html>

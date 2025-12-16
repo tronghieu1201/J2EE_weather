@@ -4,6 +4,7 @@ import com.weather.forecast.model.WeatherHistory;
 import com.weather.forecast.repository.WeatherHistoryRepository;
 import com.weather.forecast.service.DataUpdateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,7 @@ import java.util.List;
 
 /**
  * Controller để quản lý việc cập nhật dữ liệu thời tiết lịch sử.
- * Truy cập: /admin/data-update
+ * Truy cập: /admin/data-update?token=YOUR_SECRET_KEY
  */
 @Controller
 @RequestMapping("/admin")
@@ -24,6 +25,9 @@ public class DataUpdateController {
 
     private final DataUpdateService dataUpdateService;
     private final WeatherHistoryRepository weatherHistoryRepository;
+
+    @Value("${admin.secret.key}")
+    private String adminSecretKey;
 
     @Autowired
     public DataUpdateController(DataUpdateService dataUpdateService,
@@ -33,7 +37,16 @@ public class DataUpdateController {
     }
 
     @GetMapping("/data-update")
-    public String showUpdatePage(Model model) {
+    public String showUpdatePage(@RequestParam(name = "token", required = false) String token, Model model) {
+        // Kiểm tra token xác thực
+        if (token == null || !token.equals(adminSecretKey)) {
+            model.addAttribute("error", "Bạn cần token hợp lệ để truy cập trang này!");
+            return "admin-login"; // Trang yêu cầu nhập token
+        }
+
+        // Token hợp lệ - tiếp tục hiển thị trang admin
+        model.addAttribute("token", token); // Truyền token để dùng trong form POST
+
         List<WeatherHistory> records = weatherHistoryRepository.findAll();
         long totalRecords = weatherHistoryRepository.count();
         List<String> provinces = dataUpdateService.getAllProvinces();
@@ -54,7 +67,14 @@ public class DataUpdateController {
     @PostMapping("/data-update")
     public String triggerHistoricalUpdate(
             @RequestParam(name = "type", defaultValue = "historical") String type,
+            @RequestParam(name = "token", required = false) String token,
             RedirectAttributes redirectAttributes) {
+
+        // Kiểm tra token xác thực
+        if (token == null || !token.equals(adminSecretKey)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Token không hợp lệ!");
+            return "redirect:/admin/data-update";
+        }
 
         System.out.println("=== Data Update Request: " + type + " ===");
 
@@ -83,6 +103,7 @@ public class DataUpdateController {
                     "❌ Có lỗi xảy ra: " + e.getMessage());
         }
 
-        return "redirect:/admin/data-update";
+        // Redirect với token để giữ phiên đăng nhập
+        return "redirect:/admin/data-update?token=" + token;
     }
 }

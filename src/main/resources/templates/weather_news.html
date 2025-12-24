@@ -8,37 +8,13 @@
     <!-- Inherit styles from index -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdn.tailwindcss.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
-        rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#3B82F6",
-                        "primary-dark": "#2563EB",
-                        "background-light": "#F0F9FF",
-                        "background-dark": "#0F172A",
-                        "surface-light": "#FFFFFF",
-                        "surface-dark": "#1E293B",
-                        "text-light": "#334155",
-                        "text-dark": "#E2E8F0",
-                        "accent-blue": "#0EA5E9",
-                    },
-                    fontFamily: {
-                        sans: ["Inter", "sans-serif"],
-                    },
-                    borderRadius: {
-                        DEFAULT: "0.75rem", "xl": "1rem", "2xl": "1.5rem",
-                    },
-                },
-            },
-        };
-    </script>
+    <link th:href="@{/css/tailwind.min.css(v=${cacheBuster})}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <!-- Tailwind CSS Production Build -->
     <style>
         ::-webkit-scrollbar {
             width: 8px;
@@ -59,10 +35,10 @@
         }
 
         #page-wrapper {
-            transform: scale(0.65);
+            transform: scale(0.75);
             transform-origin: top left;
-            width: calc(100% / 0.65);
-            min-height: calc(100vh / 0.65);
+            width: calc(100% / 0.75);
+            min-height: calc(100vh / 0.75);
             overflow-x: hidden;
             position: absolute;
             top: 0;
@@ -70,11 +46,12 @@
         }
 
         body {
-            min-height: calc(100vh / 0.65);
+            min-height: calc(100vh / 0.75);
             overflow-y: auto;
         }
     </style>
 </head>
+<script th:src="@{/js/darkmode.js}"></script>
 
 <body
     class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans transition-colors duration-300 flex flex-col">
@@ -85,18 +62,19 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
                     <div class="flex-shrink-0 flex items-center gap-2">
-                        <a th:href="@{/}" class="flex items-center gap-2">
+                        <a th:href="@{/index}" class="flex items-center gap-2">
                             <img th:src="@{/img/z.png}" alt="Weather Icon" class="w-[75px] h-[60px]">
-                            <span class="font-bold text-xl tracking-tight text-blue-500">Weather</span>
+                            <span
+                                class="font-bold text-xl tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Weather</span>
                         </a>
                     </div>
-                    <div class="hidden md:flex space-x-8 text-sm font-medium">
-                        <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
-                            th:href="@{/}">Trang chủ</a>
+                    <div class="hidden md:flex items-center space-x-6 text-base font-semibold">
+                        <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors whitespace-nowrap"
+                            th:href="@{/index}">Trang chủ</a>
 
-                        <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
+                        <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors whitespace-nowrap"
                             th:href="@{/perpetual-calendar}">Xem lịch vạn niên</a>
-                        <a class="text-primary font-semibold dark:text-blue-400 transition-colors"
+                        <a class="text-primary font-semibold dark:text-blue-400 transition-colors whitespace-nowrap"
                             th:href="@{/weather-news}">Tin tức</a>
                     </div>
                     <div class="hidden md:flex items-center gap-4">
@@ -106,7 +84,7 @@
                             <span id="local-time" style="font-variant-numeric: tabular-nums;">00:00:00</span>
                         </div>
                         <button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
-                            onclick="document.documentElement.classList.toggle('dark')">
+                            onclick="toggleDarkMode()">
                             <span class="material-icons-round text-slate-500 dark:text-yellow-400">dark_mode</span>
                         </button>
                     </div>
@@ -117,13 +95,21 @@
         <!-- Main Content -->
         <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
             <div
-                class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800/50 p-6 sm:p-8">
-                <h1 class="text-3xl font-bold text-slate-800 dark:text-white mb-6">Kiến thức bạn dell biết</h1>
+                class="relative group bg-surface-light dark:bg-surface-dark rounded-2xl shadow-soft hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700 p-6 sm:p-8">
+                <div
+                    class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110">
+                </div>
+                <h1
+                    class="relative z-10 text-3xl font-bold text-slate-800 dark:text-white mb-6 group-hover:text-primary transition-colors">
+                    Kiến thức bạn dell biết</h1>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Article Card -->
-                    <a th:href="@{/weather-news/acid-rain}" class="block group">
+                    <a th:href="@{/weather-news/acid-rain}" class="block group/card">
                         <div
-                            class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-white dark:bg-slate-800/50 p-4 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+                            class="relative overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-white dark:bg-slate-800/50 p-4 rounded-2xl shadow-soft hover:shadow-xl transition-all duration-300">
+                            <div
+                                class="absolute top-0 right-0 w-16 h-16 bg-indigo-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover/card:scale-110">
+                            </div>
                             <div class="md:col-span-1">
                                 <img th:src="@{/News/New1/1.jpg}" alt="Mưa axit"
                                     class="w-full h-full object-cover rounded-lg">
@@ -140,9 +126,12 @@
                     </a>
 
                     <!-- Article Card: Biển Chết -->
-                    <a th:href="@{/weather-news/dead-sea}" class="block group">
+                    <a th:href="@{/weather-news/dead-sea}" class="block group/card">
                         <div
-                            class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-white dark:bg-slate-800/50 p-4 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+                            class="relative overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-white dark:bg-slate-800/50 p-4 rounded-2xl shadow-soft hover:shadow-xl transition-all duration-300">
+                            <div
+                                class="absolute top-0 right-0 w-16 h-16 bg-pink-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover/card:scale-110">
+                            </div>
                             <div class="md:col-span-1">
                                 <img th:src="@{/News/New10/1.jpg}" alt="Biển Chết"
                                     class="w-full h-full object-cover rounded-lg">
@@ -158,9 +147,12 @@
                     </a>
 
                     <!-- Article Card: Bão nhiệt đới -->
-                    <a th:href="@{/weather-news/tropical-storm}" class="block group">
+                    <a th:href="@{/weather-news/tropical-storm}" class="block group/card">
                         <div
-                            class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-white dark:bg-slate-800/50 p-4 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+                            class="relative overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-white dark:bg-slate-800/50 p-4 rounded-2xl shadow-soft hover:shadow-xl transition-all duration-300">
+                            <div
+                                class="absolute top-0 right-0 w-16 h-16 bg-amber-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover/card:scale-110">
+                            </div>
                             <div class="md:col-span-1">
                                 <img th:src="@{/News/New9/1.jpg}" alt="Bão nhiệt đới"
                                     class="w-full h-full object-cover rounded-lg">
@@ -177,9 +169,12 @@
                     </a>
 
                     <!-- Article Card: Gió Tây ôn đới -->
-                    <a th:href="@{/weather-news/westerly-winds}" class="block group">
+                    <a th:href="@{/weather-news/westerly-winds}" class="block group/card">
                         <div
-                            class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-white dark:bg-slate-800/50 p-4 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+                            class="relative overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-white dark:bg-slate-800/50 p-4 rounded-2xl shadow-soft hover:shadow-xl transition-all duration-300">
+                            <div
+                                class="absolute top-0 right-0 w-16 h-16 bg-emerald-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover/card:scale-110">
+                            </div>
                             <div class="md:col-span-1">
                                 <img th:src="@{/News/New8/1.jpg}" alt="Gió Tây ôn đới"
                                     class="w-full h-full object-cover rounded-lg">
@@ -197,9 +192,12 @@
                     </a>
 
                     <!-- Article Card: Biển Trắng -->
-                    <a th:href="@{/weather-news/white-sea}" class="block group">
+                    <a th:href="@{/weather-news/white-sea}" class="block group/card">
                         <div
-                            class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-white dark:bg-slate-800/50 p-4 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+                            class="relative overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-white dark:bg-slate-800/50 p-4 rounded-2xl shadow-soft hover:shadow-xl transition-all duration-300">
+                            <div
+                                class="absolute top-0 right-0 w-16 h-16 bg-indigo-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover/card:scale-110">
+                            </div>
                             <div class="md:col-span-1">
                                 <img th:src="@{/News/New7/1.jpg}" alt="Biển Trắng"
                                     class="w-full h-full object-cover rounded-lg">
@@ -216,9 +214,12 @@
                     </a>
 
                     <!-- Article Card: Động đất -->
-                    <a th:href="@{/weather-news/earthquake}" class="block group">
+                    <a th:href="@{/weather-news/earthquake}" class="block group/card">
                         <div
-                            class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-white dark:bg-slate-800/50 p-4 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+                            class="relative overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-white dark:bg-slate-800/50 p-4 rounded-2xl shadow-soft hover:shadow-xl transition-all duration-300">
+                            <div
+                                class="absolute top-0 right-0 w-16 h-16 bg-pink-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover/card:scale-110">
+                            </div>
                             <div class="md:col-span-1">
                                 <img th:src="@{/News/New6/1.jpg}" alt="Động đất"
                                     class="w-full h-full object-cover rounded-lg">
@@ -235,9 +236,12 @@
                     </a>
 
                     <!-- Article Card: Biên độ nhiệt -->
-                    <a th:href="@{/weather-news/temperature-amplitude}" class="block group">
+                    <a th:href="@{/weather-news/temperature-amplitude}" class="block group/card">
                         <div
-                            class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-white dark:bg-slate-800/50 p-4 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+                            class="relative overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-white dark:bg-slate-800/50 p-4 rounded-2xl shadow-soft hover:shadow-xl transition-all duration-300">
+                            <div
+                                class="absolute top-0 right-0 w-16 h-16 bg-amber-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover/card:scale-110">
+                            </div>
                             <div class="md:col-span-1">
                                 <img th:src="@{/News/New2/1.jpg}" alt="Biên độ nhiệt"
                                     class="w-full h-full object-cover rounded-lg">
@@ -253,9 +257,12 @@
                     </a>
 
                     <!-- Article Card: Miền Bắc có mấy mùa? -->
-                    <a th:href="@{/weather-news/northern-seasons}" class="block group">
+                    <a th:href="@{/weather-news/northern-seasons}" class="block group/card">
                         <div
-                            class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-white dark:bg-slate-800/50 p-4 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+                            class="relative overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-white dark:bg-slate-800/50 p-4 rounded-2xl shadow-soft hover:shadow-xl transition-all duration-300">
+                            <div
+                                class="absolute top-0 right-0 w-16 h-16 bg-emerald-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover/card:scale-110">
+                            </div>
                             <div class="md:col-span-1">
                                 <img th:src="@{/News/New3/1.jpg}" alt="Miền Bắc có mấy mùa?"
                                     class="w-full h-full object-cover rounded-lg">
@@ -282,3 +289,4 @@
 </body>
 
 </html>
+

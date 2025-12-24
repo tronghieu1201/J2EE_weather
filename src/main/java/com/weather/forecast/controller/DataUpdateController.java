@@ -4,7 +4,7 @@ import com.weather.forecast.model.WeatherHistory;
 import com.weather.forecast.repository.WeatherHistoryRepository;
 import com.weather.forecast.service.DataUpdateService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,8 +26,8 @@ public class DataUpdateController {
     private final DataUpdateService dataUpdateService;
     private final WeatherHistoryRepository weatherHistoryRepository;
 
-    @Value("${admin.secret.key}")
-    private String adminSecretKey;
+    // Key cố định cho admin
+    private final String adminSecretKey = "j2weather.%s@angtesas/ang/a222/TH@2";
 
     @Autowired
     public DataUpdateController(DataUpdateService dataUpdateService,
@@ -38,10 +38,14 @@ public class DataUpdateController {
 
     @GetMapping("/data-update")
     public String showUpdatePage(@RequestParam(name = "token", required = false) String token, Model model) {
-        // Kiểm tra token xác thực
-        if (token == null || !token.equals(adminSecretKey)) {
-            model.addAttribute("error", "Bạn cần token hợp lệ để truy cập trang này!");
+        // Nếu không có token, hiển thị trang đăng nhập
+        if (token == null || token.isEmpty()) {
             return "admin-login"; // Trang yêu cầu nhập token
+        }
+
+        // Kiểm tra token xác thực - nếu sai thì vào trang trắng
+        if (!token.equals(adminSecretKey)) {
+            return "blank-page"; // Trang trắng khi nhập sai key
         }
 
         // Token hợp lệ - tiếp tục hiển thị trang admin
@@ -70,10 +74,9 @@ public class DataUpdateController {
             @RequestParam(name = "token", required = false) String token,
             RedirectAttributes redirectAttributes) {
 
-        // Kiểm tra token xác thực
+        // Kiểm tra token xác thực - nếu sai thì vào trang trắng
         if (token == null || !token.equals(adminSecretKey)) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Token không hợp lệ!");
-            return "redirect:/admin/data-update";
+            return "blank-page"; // Trang trắng khi token không hợp lệ
         }
 
         System.out.println("=== Data Update Request: " + type + " ===");

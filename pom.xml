@@ -72,6 +72,14 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- DevTools - Hot reload, khong can restart khi sua code -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+
         <!-- Lunar Calendar Library -->
         <dependency>
             <groupId>cn.6tail</groupId>

@@ -8,39 +8,13 @@
     <!-- Preconnect for faster loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdn.tailwindcss.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
-        rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#3B82F6",
-                        "primary-dark": "#2563EB",
-                        "background-light": "#F0F9FF",
-                        "background-dark": "#0F172A",
-                        "surface-light": "#FFFFFF",
-                        "surface-dark": "#1E293B",
-                        "text-light": "#334155",
-                        "text-dark": "#E2E8F0",
-                        "accent-blue": "#0EA5E9",
-                    },
-                    fontFamily: {
-                        sans: ["Inter", "sans-serif"],
-                    },
-                    borderRadius: {
-                        DEFAULT: "0.75rem",
-                        "xl": "1rem",
-                        "2xl": "1.5rem",
-                    },
-                },
-            },
-        };
-    </script>
+    <link th:href="@{/css/tailwind.min.css(v=${cacheBuster})}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <!-- Tailwind CSS Production Build -->
     <style>
         ::-webkit-scrollbar {
             width: 8px;
@@ -61,10 +35,10 @@
         }
 
         #page-wrapper {
-            transform: scale(0.65);
+            transform: scale(0.75);
             transform-origin: top left;
-            width: calc(100% / 0.65);
-            min-height: calc(100vh / 0.65);
+            width: calc(100% / 0.75);
+            min-height: calc(100vh / 0.75);
             overflow-x: hidden;
             position: absolute;
             top: 0;
@@ -72,11 +46,12 @@
         }
 
         body {
-            min-height: calc(100vh / 0.65);
+            min-height: calc(100vh / 0.75);
             overflow-y: auto;
         }
     </style>
 </head>
+<script th:src="@{/js/darkmode.js}"></script>
 
 <body
     class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans transition-colors duration-300 min-h-screen flex flex-col">
@@ -87,19 +62,20 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
                     <div class="flex-shrink-0 flex items-center gap-2">
-                        <a href="http://localhost:8080/" class="flex items-center gap-2">
+                        <a th:href="@{/index}" class="flex items-center gap-2">
                             <img th:src="@{/img/z.png}" alt="Weather Icon" class="w-[75px] h-[60px]">
-                            <span class="font-bold text-xl tracking-tight text-blue-500">Weather</span>
+                            <span
+                                class="font-bold text-xl tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Weather</span>
                         </a>
                     </div>
-                    <div class="hidden md:flex space-x-8 text-sm font-medium">
-                        <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
-                            th:href="@{/}">Trang chủ</a>
-                        <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
+                    <div class="hidden md:flex items-center space-x-6 text-base font-semibold">
+                        <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors whitespace-nowrap"
+                            th:href="@{/index}">Trang chủ</a>
+                        <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors whitespace-nowrap"
                             th:href="@{/chart}">Biểu đồ</a>
-                        <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
+                        <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors whitespace-nowrap"
                             th:href="@{/perpetual-calendar}">Xem lịch vạn niên</a>
-                        <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
+                        <a class="text-slate-500 hover:text-primary-dark dark:text-slate-400 dark:hover:text-slate-200 transition-colors whitespace-nowrap"
                             th:href="@{/weather-news}">Tin tức</a>
                     </div>
                     <div class="hidden md:flex items-center gap-4">
@@ -109,7 +85,7 @@
                             <span id="local-time" style="font-variant-numeric: tabular-nums;">00:00:00</span>
                         </div>
                         <button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
-                            onclick="document.documentElement.classList.toggle('dark')">
+                            onclick="toggleDarkMode()">
                             <span class="material-icons-round text-slate-500 dark:text-yellow-400">dark_mode</span>
                         </button>
                     </div>
@@ -128,7 +104,10 @@
 
             <!-- Title -->
             <div
-                class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-6">
+                class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-soft border border-primary/20 dark:border-primary/30 p-6 mb-6 relative overflow-hidden transition-all duration-300 hover:shadow-glow hover:border-primary/50">
+                <div
+                    class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-primary/10 to-transparent rounded-bl-full">
+                </div>
                 <div class="flex items-center gap-3 mb-2">
                     <span class="material-icons-round text-primary text-3xl">schedule</span>
                     <h1 class="text-2xl font-bold text-slate-800 dark:text-white"
@@ -146,46 +125,58 @@
 
             <!-- Hourly Forecast Cards -->
             <div th:if="${hourlyForecast != null and not #lists.isEmpty(hourlyForecast)}"
-                class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+                class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-soft border border-primary/20 dark:border-primary/30 p-6 relative overflow-hidden transition-all duration-300 hover:shadow-glow hover:border-primary/50">
+                <div
+                    class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-primary/10 to-transparent rounded-bl-full">
+                </div>
                 <div class="flex items-center gap-2 mb-6">
-                    <span class="material-icons-round text-slate-500">wb_sunny</span>
+                    <span class="material-icons-round text-primary">wb_sunny</span>
                     <h3 class="font-bold text-slate-800 dark:text-white">Dự báo theo từng giờ</h3>
                 </div>
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4"
+                    id="hourlyGrid" th:attr="data-forecast-date=${#temporals.format(date, 'yyyy-MM-dd')}">
                     <div th:each="hour, iterStat : ${hourlyForecast}"
-                        class="bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-700 rounded-2xl p-4 flex flex-col items-center transition-all duration-300 hover:shadow-lg hover:scale-[1.03] cursor-pointer group"
-                        th:classappend="${iterStat.index == 0} ? 'bg-gradient-to-b from-accent-blue to-blue-600 text-white shadow-md transform scale-105 origin-center !border-transparent' : ''">
+                        class="hourly-card relative group bg-surface-light dark:bg-surface-dark rounded-2xl p-4 shadow-soft hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col items-center hover:scale-[1.02] cursor-pointer"
+                        th:attr="data-hour=${#temporals.format(hour.time, 'HH')}">
+
+                        <!-- Decorative corner - màu thay đổi theo index -->
+                        <div th:classappend="${iterStat.index % 4 == 0} ? 'bg-indigo-500/10' : (${iterStat.index % 4 == 1} ? 'bg-pink-500/10' : (${iterStat.index % 4 == 2} ? 'bg-amber-500/10' : 'bg-emerald-500/10'))"
+                            class="absolute top-0 right-0 w-16 h-16 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110">
+                        </div>
 
                         <!-- Time -->
-                        <span class="text-sm font-medium mb-1" th:text="${#temporals.format(hour.time, 'HH:mm')}"
-                            th:classappend="${iterStat.index == 0} ? 'text-white' : 'text-slate-600 dark:text-slate-300'">00:00</span>
+                        <span
+                            class="time-text relative z-10 text-sm font-semibold mb-2 text-slate-700 dark:text-slate-200"
+                            th:text="${#temporals.format(hour.time, 'HH:mm')}">00:00</span>
 
-                        <!-- Weather Icon -->
-                        <span class="material-icons-round text-3xl mb-2 drop-shadow-sm"
-                            th:classappend="${T(com.weather.forecast.util.WeatherIconMapper).getIconClass(hour.weatherCode) + (iterStat.index == 0 ? ' text-white' : ' text-slate-400 group-hover:text-blue-500 transition-colors')}"></span>
+                        <!-- Weather Icon với màu theo index -->
+                        <div class="relative z-10 p-2 rounded-xl transition-colors mb-2"
+                            th:classappend="${iterStat.index % 4 == 0} ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white' : (${iterStat.index % 4 == 1} ? 'bg-pink-50 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400 group-hover:bg-pink-600 group-hover:text-white' : (${iterStat.index % 4 == 2} ? 'bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 group-hover:bg-amber-600 group-hover:text-white' : 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white'))">
+                            <span class="weather-icon material-icons-round text-2xl"
+                                th:classappend="${T(com.weather.forecast.util.WeatherIconMapper).getIconClass(hour.weatherCode)}"></span>
+                        </div>
 
                         <!-- Temperature -->
-                        <div class="text-xl font-bold mb-1"
-                            th:text="${#numbers.formatDecimal(hour.temperature, 0, 0)} + '°'"
-                            th:classappend="${iterStat.index == 0} ? 'text-white' : 'text-slate-800 dark:text-white'">
+                        <div class="temp-text relative z-10 text-xl font-bold mb-1 text-slate-800 dark:text-white"
+                            th:classappend="${iterStat.index % 4 == 0} ? 'group-hover:text-indigo-600 dark:group-hover:text-indigo-400' : (${iterStat.index % 4 == 1} ? 'group-hover:text-pink-600 dark:group-hover:text-pink-400' : (${iterStat.index % 4 == 2} ? 'group-hover:text-amber-600 dark:group-hover:text-amber-400' : 'group-hover:text-emerald-600 dark:group-hover:text-emerald-400'))"
+                            th:text="${#numbers.formatDecimal(hour.temperature, 0, 0)} + '°'">
                             25°</div>
 
                         <!-- Weather Description (short) -->
-                        <div class="text-[10px] text-center opacity-80 mb-2"
-                            th:text="${T(com.weather.forecast.util.WeatherCodeMapper).getDescription(hour.weatherCode)}"
-                            th:classappend="${iterStat.index == 0} ? 'text-white/80' : 'text-slate-400'">Nhiều mây</div>
+                        <div class="desc-text relative z-10 text-[10px] text-center mb-2 text-slate-500 dark:text-slate-400"
+                            th:text="${T(com.weather.forecast.util.WeatherCodeMapper).getDescription(hour.weatherCode)}">
+                            Nhiều mây</div>
 
                         <!-- Rain probability -->
-                        <div class="flex items-center gap-1 text-xs"
-                            th:classappend="${iterStat.index == 0} ? 'bg-white/20 px-2 py-1 rounded-full text-white' : 'text-blue-500 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded-full'">
+                        <div class="rain-prob relative z-10 flex items-center gap-1 text-xs px-2 py-1 rounded-full"
+                            th:classappend="${iterStat.index % 4 == 0} ? 'text-indigo-600 bg-indigo-50 dark:bg-indigo-900/30 dark:text-indigo-400' : (${iterStat.index % 4 == 1} ? 'text-pink-600 bg-pink-50 dark:bg-pink-900/30 dark:text-pink-400' : (${iterStat.index % 4 == 2} ? 'text-amber-600 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-400' : 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-400'))">
                             <span class="material-icons-round text-[10px]">water_drop</span>
                             <span
                                 th:text="${#numbers.formatDecimal(hour.precipitationProbability, 0, 0)} + '%'">45%</span>
                         </div>
 
                         <!-- Wind speed -->
-                        <div class="mt-2 flex items-center gap-1 text-xs"
-                            th:classappend="${iterStat.index == 0} ? 'text-white/70' : 'text-slate-400'">
+                        <div class="wind-text relative z-10 mt-2 flex items-center gap-1 text-xs text-slate-400">
                             <span class="material-icons-round text-[10px]">air</span>
                             <span th:text="${#numbers.formatDecimal(hour.windSpeed, 0, 0)} + ' km/h'">5 km/h</span>
                         </div>
@@ -197,49 +188,150 @@
         <!-- Footer -->
         <footer class="bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-700 mt-8 py-12">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+                    <!-- Cột 1: Giới thiệu dự án -->
                     <div>
                         <div class="flex items-center gap-2 mb-4">
-                            <img th:src="@{/img/z.png}" alt="Weather Logo" class="w-[75px] h-[60px]">
-                            <span class="font-bold text-xl tracking-tight text-slate-800 dark:text-white">Weather</span>
+                            <img th:src="@{/img/z.png}" alt="Weather Logo" class="w-[60px] h-[48px]">
+                            <span
+                                class="font-bold text-xl tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Weather</span>
                         </div>
-                        <div class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
-                            <div class="flex items-center gap-2">
-                                <span class="material-icons-round text-base">email</span>
-                                <span>lgbbq9999@gmail.com</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="material-icons-round text-base">phone</span>
-                                <span>0342157199</span>
-                            </div>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-4">
+                            Thực tại không phải là một vật thể có sẵn nằm ngoài kia để ta quan sát, mà là một cấu trúc ý
+                            hướng được dệt nên từ sự tương tác không thể tách rời giữa ý thức chủ thể và thế giới; do
+                            đó, khi ta nhìn vào một bông hoa, ta không nhìn thấy chính bông hoa đó như nó là (cái vật tự
+                            thân), mà chỉ đang nhìn thấy sự phản chiếu của chính cấu trúc nhận thức và những trải nghiệm
+                            tiền-phản tính của chúng ta đang 'gán nghĩa' lên nó trong một khoảnh khắc hiện tại vĩnh cửu.
+                        </p>
+                        <div class="flex gap-3">
+                            <a href="#"
+                                class="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg hover:bg-primary hover:text-white transition-colors">
+                                <span class="material-icons-round text-lg">facebook</span>
+                            </a>
+                            <a href="#"
+                                class="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg hover:bg-primary hover:text-white transition-colors">
+                                <span class="material-icons-round text-lg">share</span>
+                            </a>
                         </div>
                     </div>
+
+                    <!-- Cột 2: Điều hướng nhanh -->
                     <div>
-                        <h4 class="font-bold text-slate-800 dark:text-white mb-4 uppercase text-sm tracking-wider">Nhà
-                            Xúc Tác</h4>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">Chưa phát triển</p>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-slate-800 dark:text-white mb-4 uppercase text-sm tracking-wider">Góp Ý
+                        <h4
+                            class="font-bold text-slate-800 dark:text-white mb-4 uppercase text-sm tracking-wider flex items-center gap-2">
+                            <span class="material-icons-round text-primary text-base">navigation</span>
+                            Điều Hướng
                         </h4>
-                        <form id="feedbackForm" class="space-y-3">
-                            <input type="text"
-                                class="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow"
-                                id="feedbackName" placeholder="Họ tên" required>
-                            <input type="email"
-                                class="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow"
-                                id="feedbackEmail" placeholder="Email" required>
-                            <textarea
-                                class="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow resize-none"
-                                id="feedbackContent" rows="3" placeholder="Nội dung" required></textarea>
-                            <button type="submit"
-                                class="w-full bg-primary hover:bg-primary-dark text-white py-2 rounded-lg text-sm font-medium shadow-md transition-colors">Gửi</button>
-                        </form>
+                        <ul class="space-y-3 text-sm">
+                            <li>
+                                <a th:href="@{/}"
+                                    class="text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2">
+                                    <span class="material-icons-round text-xs">chevron_right</span>
+                                    Trang chủ
+                                </a>
+                            </li>
+                            <li>
+                                <a th:href="@{/chart}"
+                                    class="text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2">
+                                    <span class="material-icons-round text-xs">chevron_right</span>
+                                    Biểu đồ thời tiết
+                                </a>
+                            </li>
+                            <li>
+                                <a th:href="@{/perpetual-calendar}"
+                                    class="text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2">
+                                    <span class="material-icons-round text-xs">chevron_right</span>
+                                    Lịch vạn niên
+                                </a>
+                            </li>
+                            <li>
+                                <a th:href="@{/weather-news}"
+                                    class="text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2">
+                                    <span class="material-icons-round text-xs">chevron_right</span>
+                                    Tin tức thời tiết
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Cột 3: Chính sách -->
+                    <div>
+                        <h4
+                            class="font-bold text-slate-800 dark:text-white mb-4 uppercase text-sm tracking-wider flex items-center gap-2">
+                            <span class="material-icons-round text-primary text-base">verified_user</span>
+                            Chính Sách
+                        </h4>
+                        <ul class="space-y-3 text-sm">
+                            <li>
+                                <a href="#"
+                                    class="text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2">
+                                    <span class="material-icons-round text-xs">chevron_right</span>
+                                    Điều khoản sử dụng
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                    class="text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2">
+                                    <span class="material-icons-round text-xs">chevron_right</span>
+                                    Chính sách bảo mật
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                    class="text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2">
+                                    <span class="material-icons-round text-xs">chevron_right</span>
+                                    Quyền riêng tư
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                    class="text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2">
+                                    <span class="material-icons-round text-xs">chevron_right</span>
+                                    Nguồn dữ liệu
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Cột 4: Liên hệ -->
+                    <div>
+                        <h4
+                            class="font-bold text-slate-800 dark:text-white mb-4 uppercase text-sm tracking-wider flex items-center gap-2">
+                            <span class="material-icons-round text-primary text-base">contact_mail</span>
+                            Liên Hệ
+                        </h4>
+                        <div class="space-y-3 text-sm text-slate-500 dark:text-slate-400">
+                            <div class="flex items-start gap-3">
+                                <span class="material-icons-round text-primary text-base mt-0.5">location_on</span>
+                                <span>TP. Hồ Chí Minh, Việt Nam</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="material-icons-round text-primary text-base">email</span>
+                                <a href="mailto:lgbbq9999@gmail.com"
+                                    class="hover:text-primary transition-colors">lgbbq9999@gmail.com</a>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="material-icons-round text-primary text-base">phone</span>
+                                <a href="tel:0342157199" class="hover:text-primary transition-colors">0342 157 199</a>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="material-icons-round text-primary text-base">schedule</span>
+                                <span>Hỗ trợ 24/7</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Copyright -->
                 <div
-                    class="border-t border-gray-100 dark:border-gray-800 mt-12 pt-8 text-center text-xs text-slate-400">
-                    © 2025 EM CỦA NGÀY HÔM NAY
+                    class="border-t border-gray-100 dark:border-gray-800 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p class="text-sm text-slate-400">
+                        © 2025 <span class="font-semibold text-primary">Weather Forecast</span> Đồ án J2EE - Dự báo
+                        thời tiết.
+                    </p>
+                    <p class="text-xs text-slate-400">
+                        Những Thằng Lính
+                    </p>
                 </div>
             </div>
         </footer>
@@ -255,8 +347,51 @@
         }
         setInterval(updateTime, 1000);
         updateTime();
+
+        // Highlight current hour realtime
+        function highlightCurrentHour() {
+            const hourlyGrid = document.getElementById('hourlyGrid');
+            if (!hourlyGrid) return;
+
+            const forecastDate = hourlyGrid.getAttribute('data-forecast-date'); // Format: yyyy-MM-dd
+            const now = new Date();
+            const todayStr = now.getFullYear() + '-' +
+                String(now.getMonth() + 1).padStart(2, '0') + '-' +
+                String(now.getDate()).padStart(2, '0');
+
+            const currentHour = now.getHours();
+            const hourlyCards = document.querySelectorAll('.hourly-card');
+
+            // Remove highlight from all cards first
+            hourlyCards.forEach(card => {
+                card.classList.remove('ring-4', 'ring-primary', 'ring-offset-2', 'scale-105', 'current-hour-highlight');
+            });
+
+            // Only highlight if viewing today's forecast
+            if (forecastDate === todayStr) {
+                hourlyCards.forEach(card => {
+                    const cardHour = parseInt(card.getAttribute('data-hour'), 10);
+                    if (cardHour === currentHour) {
+                        // Add subtle ring highlight for current hour
+                        card.classList.add('ring-4', 'ring-primary', 'ring-offset-2', 'scale-105', 'current-hour-highlight');
+                    }
+                });
+            }
+        }
+
+        // Run when DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', highlightCurrentHour);
+
+        // Also run immediately in case DOM is already loaded
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            setTimeout(highlightCurrentHour, 100);
+        }
+
+        // Update highlight every minute (when hour may change)
+        setInterval(highlightCurrentHour, 60000);
     </script>
     <script th:src="@{/js/footer.js(v=${cacheBuster})}" defer></script>
 </body>
 
 </html>
+

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Cảnh Báo - Admin Panel</title>
+    <link th:href="@{/css/tailwind.min.css(v=${cacheBuster})}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+
+        /* Scale 75% như các trang khác */
+        #page-wrapper {
+            transform: scale(0.75);
+            transform-origin: top left;
+            width: calc(100% / 0.75);
+            min-height: calc(100vh / 0.75);
+            overflow-x: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        body {
+            min-height: calc(100vh / 0.75);
+            overflow-y: auto;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+        }
+
+        .dark .glass {
+            background: rgba(30, 41, 59, 0.9);
+        }
+    </style>
+    <script th:src="@{/js/darkmode.js(v=${cacheBuster})}"></script>
+</head>
+
+<body
+    class="bg-slate-100 dark:bg-[#0b1120] text-slate-800 dark:text-slate-200 font-sans min-h-screen transition-colors duration-300">
+
+    <div id="page-wrapper">
+        <!-- Header Admin -->
+        <header class="sticky top-0 z-40 w-full glass shadow-sm border-b border-slate-200 dark:border-slate-700">
+            <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+                <!-- Logo & Title -->
+                <div class="flex items-center gap-4">
+                    <a th:href="@{/index}" class="flex items-center gap-3">
+                        <img th:src="@{/img/z.png}" alt="Weather Icon" class="w-[60px] h-[48px]">
+                        <div class="h-8 w-[1px] bg-slate-300 dark:bg-slate-600"></div>
+                        <div>
+                            <h1 class="text-lg font-bold text-slate-800 dark:text-white">Quản Lý Cảnh Báo</h1>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="hidden md:flex items-center gap-2">
+                    <a th:href="@{/admin/dashboard(token=${token})}"
+                        class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                        Bảng Điều Khiển
+                    </a>
+                    <a th:href="@{/admin/data-update(token=${token})}"
+                        class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                        Update Data
+                    </a>
+                    <a th:href="@{/admin/alerts(token=${token})}"
+                        class="px-4 py-2 text-sm font-medium bg-primary/10 text-primary rounded-lg">
+                        Cảnh Báo
+                    </a>
+                </nav>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-3">
+                    <button id="themeToggleBtn"
+                        class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-yellow-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
+                        onclick="toggleTheme()">
+                        <span id="themeIcon" class="material-symbols-outlined text-xl">dark_mode</span>
+                    </button>
+                    <a th:href="@{/index}"
+                        class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary bg-slate-100 dark:bg-slate-800 rounded-lg transition-colors">
+                        Trang Chủ
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-6 py-8 space-y-6">
+            <!-- Success/Error Messages -->
+            <div th:if="${successMessage}"
+                class="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 px-6 py-4 rounded-xl flex items-center gap-3">
+                <span class="material-symbols-outlined text-emerald-500">check_circle</span>
+                <span th:text="${successMessage}"></span>
+            </div>
+            <div th:if="${errorMessage}"
+                class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 px-6 py-4 rounded-xl flex items-center gap-3">
+                <span class="material-symbols-outlined text-red-500">error</span>
+                <span th:text="${errorMessage}"></span>
+            </div>
+
+            <!-- Header với nút tạo mới -->
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800 dark:text-white">Danh Sách Cảnh Báo</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Tạo và quản lý cảnh báo thời tiết cho người
+                        dùng</p>
+                </div>
+                <button onclick="document.getElementById('createAlertModal').classList.remove('hidden')"
+                    class="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-xl shadow-lg shadow-primary/30 hover:shadow-xl hover:scale-[1.02] transition-all">
+                    <span class="material-symbols-outlined">add_circle</span>
+                    Tạo Cảnh Báo Mới
+                </button>
+            </div>
+
+            <!-- Alert Types Legend -->
+            <div
+                class="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-soft border border-slate-100 dark:border-slate-700">
+                <div class="flex flex-wrap items-center gap-6">
+                    <span class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                        <span class="text-lg">🌀</span> Bão
+                    </span>
+                    <span class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                        <span class="text-lg">🌊</span> Lũ lụt
+                    </span>
+                    <span class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                        <span class="text-lg">☀️</span> Nắng nóng
+                    </span>
+                    <span class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                        <span class="text-lg">❄️</span> Rét đậm
+                    </span>
+                    <span class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                        <span class="text-lg">🌧️</span> Mưa lớn
+                    </span>
+                    <div class="ml-auto flex items-center gap-2">
+                        <span
+                            class="px-2.5 py-1 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 text-xs font-bold rounded-full">Nghiêm
+                            trọng</span>
+                        <span
+                            class="px-2.5 py-1 bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 text-xs font-bold rounded-full">Cao</span>
+                        <span
+                            class="px-2.5 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-bold rounded-full">Trung
+                            bình</span>
+                        <span
+                            class="px-2.5 py-1 bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400 text-xs font-bold rounded-full">Thấp</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div th:if="${#lists.isEmpty(alerts)}"
+                class="bg-white dark:bg-slate-800 rounded-2xl p-12 shadow-soft border border-slate-100 dark:border-slate-700 text-center">
+                <span
+                    class="material-symbols-outlined text-6xl text-slate-300 dark:text-slate-600 mb-4">notifications_off</span>
+                <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">Chưa có cảnh báo nào</h3>
+                <p class="text-slate-500 dark:text-slate-400">Nhấn "Tạo Cảnh Báo Mới" để thêm cảnh báo đầu tiên</p>
+            </div>
+
+            <!-- Alerts Grid -->
+            <div th:unless="${#lists.isEmpty(alerts)}" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div th:each="alert : ${alerts}"
+                    class="relative group bg-white dark:bg-slate-800 rounded-2xl shadow-soft hover:shadow-xl transition-all duration-300 overflow-hidden border-l-4"
+                    th:classappend="'border-' + ${alert.severityColor == 'danger' ? 'red-500' : (alert.severityColor == 'warning' ? 'orange-500' : (alert.severityColor == 'info' ? 'blue-500' : 'slate-400'))} + ' border border-slate-100 dark:border-slate-700'">
+
+                    <!-- Corner Decoration -->
+                    <div class="absolute top-0 right-0 w-24 h-24 rounded-bl-full -mr-6 -mt-6 transition-transform group-hover:scale-110"
+                        th:classappend="${alert.severityColor == 'danger' ? 'bg-red-500/10' : (alert.severityColor == 'warning' ? 'bg-orange-500/10' : (alert.severityColor == 'info' ? 'bg-blue-500/10' : 'bg-slate-500/10'))}">
+                    </div>
+
+                    <div class="relative z-10 p-6">
+                        <!-- Header -->
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex items-center gap-3">
+                                <span class="text-3xl" th:text="${alert.alertType == 'STORM'} ? '🌀' : 
+                                              (${alert.alertType == 'FLOOD'} ? '🌊' : 
+                                              (${alert.alertType == 'HEAT'} ? '☀️' : 
+                                              (${alert.alertType == 'COLD'} ? '❄️' : 
+                                              (${alert.alertType == 'RAIN'} ? '🌧️' : '⚠️'))))">⚠️</span>
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-800 dark:text-white"
+                                        th:text="${alert.title}">Alert Title</h3>
+                                    <span class="text-sm text-slate-500 dark:text-slate-400"
+                                        th:text="${alert.alertType}">Type</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="px-2.5 py-1 text-xs font-bold rounded-full"
+                                    th:classappend="${alert.severityColor == 'danger' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' : 
+                                                     (alert.severityColor == 'warning' ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' : 
+                                                     (alert.severityColor == 'info' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' : 
+                                                     'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400'))}" th:text="${alert.severity}">Severity</span>
+                                <span th:if="${alert.isActive}"
+                                    class="px-2.5 py-1 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 text-xs font-bold rounded-full">Đang
+                                    bật</span>
+                                <span th:unless="${alert.isActive}"
+                                    class="px-2.5 py-1 bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400 text-xs font-bold rounded-full">Đã
+                                    tắt</span>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <p class="text-slate-600 dark:text-slate-300 text-sm mb-4" th:text="${alert.description}">
+                            Description</p>
+
+                        <!-- Meta Info -->
+                        <div class="flex flex-wrap gap-4 text-sm text-slate-500 dark:text-slate-400 mb-4">
+                            <div th:if="${alert.affectedProvinces}" class="flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-base text-primary">location_on</span>
+                                <span th:text="${alert.affectedProvinces}">Provinces</span>
+                            </div>
+                            <div th:if="${alert.startDate != null || alert.endDate != null}"
+                                class="flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-base text-primary">calendar_month</span>
+                                <span>
+                                    <span th:if="${alert.startDate}"
+                                        th:text="${#temporals.format(alert.startDate, 'dd/MM')}"></span>
+                                    <span th:if="${alert.startDate != null && alert.endDate != null}"> - </span>
+                                    <span th:if="${alert.endDate}"
+                                        th:text="${#temporals.format(alert.endDate, 'dd/MM/yyyy')}"></span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="flex items-center gap-3">
+                            <form th:action="@{/admin/alerts/{id}/toggle(id=${alert.id})}" method="post" class="inline">
+                                <input type="hidden" name="token" th:value="${token}">
+                                <button type="submit"
+                                    th:class="${alert.isActive} ? 'flex items-center gap-2 px-4 py-2 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-800 rounded-lg font-medium text-sm hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-colors' : 'flex items-center gap-2 px-4 py-2 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 rounded-lg font-medium text-sm hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors'">
+                                    <span class="material-symbols-outlined text-lg"
+                                        th:text="${alert.isActive} ? 'pause' : 'play_arrow'"></span>
+                                    <span th:text="${alert.isActive} ? 'Tắt' : 'Bật'">Toggle</span>
+                                </button>
+                            </form>
+                            <form th:action="@{/admin/alerts/{id}/delete(id=${alert.id})}" method="post" class="inline"
+                                onsubmit="return confirm('Bạn có chắc muốn xóa cảnh báo này?')">
+                                <input type="hidden" name="token" th:value="${token}">
+                                <button type="submit"
+                                    class="flex items-center gap-2 px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 rounded-lg font-medium text-sm hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors">
+                                    <span class="material-symbols-outlined text-lg">delete</span>
+                                    Xóa
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div
+                        class="px-6 py-3 bg-slate-50 dark:bg-slate-700/30 border-t border-slate-100 dark:border-slate-700">
+                        <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                            <span class="material-symbols-outlined text-sm">schedule</span>
+                            Tạo lúc: <span
+                                th:text="${#temporals.format(alert.createdAt, 'dd/MM/yyyy HH:mm')}">Date</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Create Alert Modal -->
+    <div id="createAlertModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <!-- Overlay -->
+        <div onclick="document.getElementById('createAlertModal').classList.add('hidden')"
+            class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+
+        <!-- Modal Content -->
+        <div
+            class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
+            <!-- Modal Header -->
+            <div
+                class="px-6 py-4 border-b border-slate-100 dark:border-slate-700 bg-gradient-to-r from-orange-500 to-amber-500">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3 text-white">
+                        <span class="material-symbols-outlined text-2xl">add_alert</span>
+                        <h3 class="text-lg font-bold">Tạo Cảnh Báo Mới</h3>
+                    </div>
+                    <button onclick="document.getElementById('createAlertModal').classList.add('hidden')"
+                        class="text-white/80 hover:text-white">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal Body -->
+            <form th:action="@{/admin/alerts/create}" method="post">
+                <input type="hidden" name="token" th:value="${token}">
+                <div class="p-6 space-y-5 max-h-[60vh] overflow-y-auto">
+                    <!-- Tiêu đề -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Tiêu đề cảnh
+                            báo *</label>
+                        <input type="text" name="title" required
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                            placeholder="VD: Cảnh báo bão số 5 đổ bộ miền Trung">
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Loại -->
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Loại cảnh
+                                báo *</label>
+                            <select name="alertType" required
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none">
+                                <option value="STORM">🌀 Bão</option>
+                                <option value="FLOOD">🌊 Lũ lụt</option>
+                                <option value="HEAT">☀️ Nắng nóng</option>
+                                <option value="COLD">❄️ Rét đậm/Rét hại</option>
+                                <option value="RAIN">🌧️ Mưa lớn</option>
+                                <option value="OTHER">⚠️ Khác</option>
+                            </select>
+                        </div>
+                        <!-- Mức độ -->
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Mức độ
+                                nghiêm trọng *</label>
+                            <select name="severity" required
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none">
+                                <option value="LOW">Thấp - Theo dõi</option>
+                                <option value="MEDIUM">Trung bình - Cảnh giác</option>
+                                <option value="HIGH" selected>Cao - Chuẩn bị</option>
+                                <option value="CRITICAL">Nghiêm trọng - Nguy hiểm</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Mô tả -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Mô tả chi
+                            tiết</label>
+                        <textarea name="description" rows="3"
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none resize-none"
+                            placeholder="Mô tả chi tiết về cảnh báo, hướng dẫn phòng tránh..."></textarea>
+                    </div>
+
+                    <!-- Tỉnh/Thành -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Tỉnh/Thành bị
+                            ảnh hưởng</label>
+                        <input type="text" name="affectedProvinces"
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                            placeholder="VD: Đà Nẵng, Quảng Nam, Quảng Ngãi">
+                        <p class="text-xs text-slate-400 mt-1">Để trống nếu áp dụng toàn quốc</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Ngày bắt đầu -->
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Ngày bắt
+                                đầu</label>
+                            <input type="date" name="startDate"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none">
+                        </div>
+                        <!-- Ngày kết thúc -->
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Ngày kết
+                                thúc</label>
+                            <input type="date" name="endDate"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div
+                    class="px-6 py-4 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/30 flex justify-end gap-3">
+                    <button type="button" onclick="document.getElementById('createAlertModal').classList.add('hidden')"
+                        class="px-5 py-2.5 text-slate-600 dark:text-slate-300 font-medium rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                        Hủy
+                    </button>
+                    <button type="submit"
+                        class="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        Tạo Cảnh Báo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

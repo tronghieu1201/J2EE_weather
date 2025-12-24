@@ -1,0 +1,30 @@
+{
+  "name": "j2ee_weather",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:css": ".\\tailwindcss.exe -i ./src/main/resources/static/css/input.css -o ./src/main/resources/static/css/tailwind.min.css --minify",
+    "watch:css": ".\\tailwindcss.exe -i ./src/main/resources/static/css/input.css -o ./src/main/resources/static/css/tailwind.min.css --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tronghieu1201/J2EE_weather.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/tronghieu1201/J2EE_weather/issues"
+  },
+  "homepage": "https://github.com/tronghieu1201/J2EE_weather#readme",
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.11",
+    "@tailwindcss/typography": "^0.5.19",
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18"
+  }
+}

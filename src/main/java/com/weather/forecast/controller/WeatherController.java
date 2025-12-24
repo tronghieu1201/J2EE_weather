@@ -3,8 +3,10 @@ package com.weather.forecast.controller;
 import com.weather.forecast.model.DailyForecast;
 import com.weather.forecast.model.HourlyForecast;
 import com.weather.forecast.model.LunarDayInfo;
+import com.weather.forecast.model.WeatherAlert;
 import com.weather.forecast.model.dto.ComprehensiveWeatherReport;
-import com.weather.forecast.model.dto.ProvinceCurrentWeather; // Import the new DTO
+import com.weather.forecast.model.dto.ProvinceCurrentWeather;
+import com.weather.forecast.repository.WeatherAlertRepository;
 import com.weather.forecast.service.WeatherService;
 import com.weather.forecast.util.LunarConverterUtil;
 import com.nlf.calendar.Lunar;
@@ -34,22 +36,24 @@ public class WeatherController {
     private static final Logger logger = LoggerFactory.getLogger(WeatherController.class);
 
     private final WeatherService weatherService;
+    private final WeatherAlertRepository weatherAlertRepository;
     private final Map<String, List<String>> groupedCities;
     private final List<String> allProvinces;
-    private final List<String> prominentProvinces; // Declare prominentProvinces
+    private final List<String> prominentProvinces;
 
     @Autowired
-    public WeatherController(WeatherService weatherService) {
+    public WeatherController(WeatherService weatherService, WeatherAlertRepository weatherAlertRepository) {
         this.weatherService = weatherService;
+        this.weatherAlertRepository = weatherAlertRepository;
         this.groupedCities = initGroupedCities();
         this.allProvinces = new ArrayList<>();
         this.groupedCities.values().forEach(allProvinces::addAll);
-        this.prominentProvinces = List.of( // Initialize prominentProvinces
+        this.prominentProvinces = List.of(
                 "Hồ Chí Minh", "Bình Định", "Ninh Thuận", "An Giang", "Kiên Giang", "Đà Nẵng",
                 "Bình Thuận", "Khánh Hòa", "Cần Thơ", "Lâm Đồng", "Quảng Ninh", "Lào Cai");
     }
 
-    @GetMapping("/")
+    @GetMapping({ "/", "/index" })
     public String index(@RequestParam(name = "city", required = false) String city, Model model) {
         model.addAttribute("groupedCities", groupedCities);
         if (city == null || city.isEmpty()) {
@@ -62,10 +66,14 @@ public class WeatherController {
         List<ProvinceCurrentWeather> prominentProvincesWeather = weatherService
                 .getCurrentWeatherForProminentProvinces(prominentProvinces); // Get prominent provinces weather
 
+        // Lấy cảnh báo đang hoạt động để hiển thị popup cho user
+        List<WeatherAlert> activeAlerts = weatherAlertRepository.findByIsActiveTrueOrderByCreatedAtDesc();
+
         model.addAttribute("comprehensiveReport", comprehensiveReport);
         model.addAttribute("sevenDayForecast", sevenDayForecast);
         model.addAttribute("city", city);
-        model.addAttribute("prominentProvincesWeather", prominentProvincesWeather); // Add to model
+        model.addAttribute("prominentProvincesWeather", prominentProvincesWeather);
+        model.addAttribute("activeAlerts", activeAlerts);
         return "index";
     }
 
@@ -79,10 +87,14 @@ public class WeatherController {
         List<ProvinceCurrentWeather> prominentProvincesWeather = weatherService
                 .getCurrentWeatherForProminentProvinces(prominentProvinces);
 
+        // Lấy cảnh báo đang hoạt động để hiển thị popup cho user
+        List<WeatherAlert> activeAlerts = weatherAlertRepository.findByIsActiveTrueOrderByCreatedAtDesc();
+
         model.addAttribute("comprehensiveReport", comprehensiveReport);
         model.addAttribute("sevenDayForecast", sevenDayForecast);
         model.addAttribute("city", city);
         model.addAttribute("prominentProvincesWeather", prominentProvincesWeather);
+        model.addAttribute("activeAlerts", activeAlerts);
         return "index";
     }
 

@@ -14,6 +14,7 @@ import com.weather.forecast.repository.WeatherHistoryRepository;
 import ml.dmlc.xgboost4j.java.XGBoostError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -63,7 +64,9 @@ public class WeatherService {
 
     /**
      * Lấy báo cáo thời tiết toàn diện từ API (current, hourly, daily).
+     * Kết quả được cache trong 5 phút để tối ưu performance.
      */
+    @Cacheable(value = "weatherReports", key = "#city")
     public ComprehensiveWeatherReport getWeatherReport(String city) {
         try {
             String geoJson = openMeteoAPI.getCoordinatesForCity(city);
@@ -131,7 +134,8 @@ public class WeatherService {
         // 3. Tạo predictions cho 7 ngày tiếp theo
         List<DailyForecast> predictions = new ArrayList<>();
 
-        for (int dayOffset = 1; dayOffset <= 7; dayOffset++) {
+        // Dự báo hôm nay + 7 ngày tiếp theo = 8 ngày
+        for (int dayOffset = 0; dayOffset <= 7; dayOffset++) {
             LocalDate predictionDate = LocalDate.now().plusDays(dayOffset);
 
             // Tạo feature vector
@@ -252,7 +256,9 @@ public class WeatherService {
 
     /**
      * Lấy thời tiết hiện tại cho các tỉnh nổi bật.
+     * Kết quả được cache 5 phút để tránh gọi API lại mỗi lần vào trang chủ.
      */
+    @Cacheable(value = "prominentProvincesWeather", key = "'all'")
     public List<ProvinceCurrentWeather> getCurrentWeatherForProminentProvinces(List<String> prominentProvinces) {
         List<ProvinceCurrentWeather> provinceWeatherList = new ArrayList<>();
         for (String province : prominentProvinces) {

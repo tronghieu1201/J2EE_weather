@@ -175,9 +175,9 @@ def prepare_features(df):
     return X, y_max_temp, y_min_temp, y_rain_prob
 
 
-def train_and_save_model(X, y, model_name, output_dir):
+def train_and_save_model(X, y, model_name, output_dir, conn):
     """
-    Huấn luyện XGBoost Regressor và lưu model.
+    Huấn luyện XGBoost Regressor, lưu model và lưu metrics vào database.
     """
     print(f"\n--- Training: {model_name} ---")
     
@@ -217,7 +217,54 @@ def train_and_save_model(X, y, model_name, output_dir):
     
     print(f"  ✓ Model saved to: {model_path}")
     
-    return model_path, rmse
+    # Lưu metrics vào database
+    try:
+        save_metrics_to_db(conn, model_name, rmse, mae, len(X_train), len(X_test))
+        print(f"  ✓ Metrics saved to database")
+    except Exception as e:
+        print(f"  ⚠ Warning: Could not save metrics to DB: {e}")
+    
+    return model_path, rmse, mae
+
+
+def save_metrics_to_db(conn, model_name, rmse, mae, train_samples, test_samples):
+    """
+    Lưu training metrics vào bảng model_metrics trong PostgreSQL.
+    """
+    import json
+    from datetime import datetime
+    
+    cursor = conn.cursor()
+    
+    # Hyperparameters đang sử dụng
+    hyperparams = json.dumps({
+        "n_estimators": 100,
+        "learning_rate": 0.1,
+        "max_depth": 6,
+        "objective": "reg:squarederror"
+    })
+    
+    # Tạo version tự động theo timestamp
+    model_version = datetime.now().strftime("v%Y%m%d_%H%M")
+    
+    sql = """
+    INSERT INTO model_metrics 
+    (model_name, model_version, rmse, mae, train_samples, test_samples, hyperparameters, trained_at)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, NOW())
+    """
+    
+    cursor.execute(sql, (
+        model_name, 
+        model_version, 
+        float(rmse), 
+        float(mae), 
+        train_samples, 
+        test_samples, 
+        hyperparams
+    ))
+    
+    conn.commit()
+    cursor.close()
 
 
 def main():
@@ -229,7 +276,10 @@ def main():
     
     output_dir = "src/main/resources/models/"
     
-    # 1. Load data
+    # 1. Load data và lấy connection
+    import psycopg2
+    conn = psycopg2.connect(**DB_CONFIG)
+    
     df = load_training_data()
     
     # 2. Prepare features
@@ -243,16 +293,19 @@ def main():
     results = []
     
     # Max Temperature Model
-    path, rmse = train_and_save_model(X, y_max_temp, "daily_model_max_temp", output_dir)
-    results.append(("Max Temp", rmse))
+    path, rmse, mae = train_and_save_model(X, y_max_temp, "daily_model_max_temp", output_dir, conn)
+    results.append(("Max Temp", rmse, mae))
     
     # Min Temperature Model
-    path, rmse = train_and_save_model(X, y_min_temp, "daily_model_min_temp", output_dir)
-    results.append(("Min Temp", rmse))
+    path, rmse, mae = train_and_save_model(X, y_min_temp, "daily_model_min_temp", output_dir, conn)
+    results.append(("Min Temp", rmse, mae))
     
     # Rain Probability Model
-    path, rmse = train_and_save_model(X, y_rain_prob, "daily_model_rain_prob", output_dir)
-    results.append(("Rain Prob", rmse))
+    path, rmse, mae = train_and_save_model(X, y_rain_prob, "daily_model_rain_prob", output_dir, conn)
+    results.append(("Rain Prob", rmse, mae))
+    
+    # Close connection
+    conn.close()
     
     # Summary
     print("\n" + "=" * 60)
@@ -260,10 +313,11 @@ def main():
     print("=" * 60)
     print("\nKết quả huấn luyện:")
     print("-" * 40)
-    for name, rmse in results:
-        print(f"  {name:15s}: RMSE = {rmse:.3f}")
+    for name, rmse, mae in results:
+        print(f"  {name:15s}: RMSE = {rmse:.3f}, MAE = {mae:.3f}")
     
     print(f"\nModels đã được lưu vào: {output_dir}")
+    print("✓ Metrics đã được lưu vào database (table: model_metrics)")
     print("\n📋 BƯỚC TIẾP THEO:")
     print("   1. Khởi động lại Spring Boot: mvn spring-boot:run")
     print("   2. Truy cập http://localhost:8080 để xem kết quả dự đoán")

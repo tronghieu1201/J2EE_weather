@@ -51,7 +51,7 @@
         }
     </style>
 </head>
-<script th:src="@{/js/darkmode.js}"></script>
+<script th:src="@{/js/darkmode.js(v=${cacheBuster})}"></script>
 
 <body
     class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans transition-colors duration-300 flex flex-col">
@@ -84,8 +84,9 @@
                             <span id="local-time" style="font-variant-numeric: tabular-nums;">00:00:00</span>
                         </div>
                         <button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
-                            onclick="toggleDarkMode()">
-                            <span class="material-icons-round text-slate-500 dark:text-yellow-400">dark_mode</span>
+                            onclick="toggleTheme()">
+                            <span id="themeIcon"
+                                class="material-icons-round text-slate-500 dark:text-yellow-400">dark_mode</span>
                         </button>
                     </div>
                 </div>
@@ -289,4 +290,3 @@
 </body>
 
 </html>
-

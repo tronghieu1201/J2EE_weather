@@ -1,6 +1,9 @@
 com\weather\forecast\service\DataUpdateService.class
 com\weather\forecast\model\WeatherHistory.class
+com\weather\forecast\repository\PredictionResultRepository.class
 com\weather\forecast\model\dto\ProvinceCurrentWeather.class
+com\weather\forecast\service\WeatherLogService.class
+com\weather\forecast\model\PredictionResult.class
 com\weather\forecast\service\AdminService.class
 com\weather\forecast\repository\WeatherLogRepository.class
 com\weather\forecast\config\AppConfig.class
@@ -14,10 +17,13 @@ com\weather\forecast\util\WeatherCodeMapper.class
 com\weather\forecast\controller\GlobalControllerAdvice.class
 com\weather\forecast\api\OpenMeteoAPI.class
 com\weather\forecast\repository\WeatherAlertRepository.class
+com\weather\forecast\service\PredictionResultService.class
 com\weather\forecast\util\WeatherIconMapper.class
 com\weather\forecast\model\WeatherAlert.class
 com\weather\forecast\config\CacheConfig.class
+com\weather\forecast\repository\ModelMetricsRepository.class
 com\weather\forecast\model\LunarDayInfo.class
+com\weather\forecast\model\ModelMetrics.class
 com\weather\forecast\util\LunarConverterUtil.class
 com\weather\forecast\controller\WeatherController.class
 com\weather\forecast\service\WeatherService.class

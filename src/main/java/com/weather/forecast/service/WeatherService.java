@@ -33,6 +33,8 @@ public class WeatherService {
 
     private final OpenMeteoAPI openMeteoAPI;
     private final WeatherHistoryRepository weatherHistoryRepository;
+    private final WeatherLogService weatherLogService;
+    private final PredictionResultService predictionResultService;
     private final ForecastModel dailyMaxTempForecastModel;
     private final ForecastModel dailyMinTempForecastModel;
     private final ForecastModel dailyRainProbForecastModel;
@@ -48,6 +50,8 @@ public class WeatherService {
     @Autowired
     public WeatherService(OpenMeteoAPI openMeteoAPI,
             WeatherHistoryRepository weatherHistoryRepository,
+            WeatherLogService weatherLogService,
+            PredictionResultService predictionResultService,
             @Qualifier("dailyMaxTempForecastModel") ForecastModel dailyMaxTempForecastModel,
             @Qualifier("dailyMinTempForecastModel") ForecastModel dailyMinTempForecastModel,
             @Qualifier("dailyRainProbForecastModel") ForecastModel dailyRainProbForecastModel,
@@ -55,6 +59,8 @@ public class WeatherService {
             ObjectMapper objectMapper) {
         this.openMeteoAPI = openMeteoAPI;
         this.weatherHistoryRepository = weatherHistoryRepository;
+        this.weatherLogService = weatherLogService;
+        this.predictionResultService = predictionResultService;
         this.dailyMaxTempForecastModel = dailyMaxTempForecastModel;
         this.dailyMinTempForecastModel = dailyMinTempForecastModel;
         this.dailyRainProbForecastModel = dailyRainProbForecastModel;
@@ -83,7 +89,12 @@ public class WeatherService {
             double lon = firstResult.path("longitude").asDouble();
 
             String weatherJson = openMeteoAPI.getWeatherForecast(lat, lon);
-            return objectMapper.readValue(weatherJson, ComprehensiveWeatherReport.class);
+            ComprehensiveWeatherReport report = objectMapper.readValue(weatherJson, ComprehensiveWeatherReport.class);
+
+            // Log weather data vào database (async)
+            weatherLogService.logWeatherData(city, report);
+
+            return report;
 
         } catch (IOException | InterruptedException e) {
             System.err.println("Failed to get weather report for " + city + ": " + e.getMessage());
@@ -101,6 +112,10 @@ public class WeatherService {
                 List<DailyForecast> xgboostForecast = get7DayForecastWithXGBoost(city);
                 if (!xgboostForecast.isEmpty()) {
                     System.out.println("✓ Using XGBoost prediction for " + city);
+
+                    // Lưu kết quả dự đoán vào database (async)
+                    predictionResultService.savePredictions(city, xgboostForecast);
+
                     return xgboostForecast;
                 }
             } catch (Exception e) {

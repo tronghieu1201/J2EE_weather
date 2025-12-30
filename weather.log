@@ -10831,3 +10831,364 @@ Identify and stop the process that's listening on port 8080 or configure this ap
 2025-12-24 19:50:20.177 [http-nio-8080-exec-5] INFO  c.w.f.controller.WeatherController - Searching for city: H� N?i
 2025-12-24 19:52:29.411 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
 2025-12-24 19:52:29.416 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-12-24 19:55:25.321 [main] INFO  com.weather.forecast.Application - Starting Application v1.0-SNAPSHOT using Java 17.0.17 on DESKTOP-B4U5OFT with PID 4652 (C:\Users\giapt\OneDrive\M�y t�nh\J2EE_weather\target\weather-forecast-j2ee-1.0-SNAPSHOT.jar started by giapt in C:\Users\giapt\OneDrive\M�y t�nh\J2EE_weather)
+2025-12-24 19:55:25.327 [main] INFO  com.weather.forecast.Application - No active profile set, falling back to 1 default profile: "default"
+2025-12-24 19:55:27.374 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-24 19:55:27.375 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-24 19:55:27.375 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.68]
+2025-12-24 19:55:27.465 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-24 19:55:28.234 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-24 19:55:28.541 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-24 19:55:30.609 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-24 19:55:30.700 [main] INFO  com.weather.forecast.Application - Started Application in 6.002 seconds (JVM running for 6.527)
+2025-12-24 19:55:47.220 [http-nio-8080-exec-1] INFO  o.a.tomcat.util.http.parser.Cookie - A cookie header was received [g_state={"i_l":0,"i_ll":1761962380141,"i_b":"Gfn1EG2nyF/Kf52WhZUhGlDs1MljjBhh1r+jKETh+B4","i_t":1762027889487}] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2025-12-24 19:55:47.230 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-24 19:55:48.194 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - Searching for city: H� N?i
+2025-12-24 19:56:34.338 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-12-24 19:56:34.367 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-12-28 14:49:56.303 [main] INFO  com.weather.forecast.Application - Starting Application v1.0-SNAPSHOT using Java 17.0.17 on DESKTOP-B4U5OFT with PID 7592 (C:\Users\giapt\OneDrive\M�y t�nh\J2EE_weather\target\weather-forecast-j2ee-1.0-SNAPSHOT.jar started by giapt in C:\Users\giapt\OneDrive\M�y t�nh\J2EE_weather)
+2025-12-28 14:49:56.307 [main] INFO  com.weather.forecast.Application - No active profile set, falling back to 1 default profile: "default"
+2025-12-28 14:49:59.471 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-28 14:49:59.473 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-28 14:49:59.475 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.68]
+2025-12-28 14:49:59.765 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-28 14:50:01.207 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-28 14:50:02.144 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-28 14:50:05.841 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-28 14:50:06.000 [main] INFO  com.weather.forecast.Application - Started Application in 10.526 seconds (JVM running for 11.296)
+2025-12-28 14:50:07.436 [http-nio-8080-exec-1] INFO  o.a.tomcat.util.http.parser.Cookie - A cookie header was received [g_state={"i_l":0,"i_ll":1761962380141,"i_b":"Gfn1EG2nyF/Kf52WhZUhGlDs1MljjBhh1r+jKETh+B4","i_t":1762027889487}] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2025-12-28 14:50:07.446 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-28 14:50:08.274 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - Searching for city: H� N?i
+2025-12-28 14:51:38.838 [http-nio-8080-exec-5] INFO  o.apache.tomcat.util.http.Parameters - Character decoding failed. Parameter [token] with value [j2weather.%s@angtesas/ang/a222/TH@2] has been ignored. Note that the name and value quoted here may be corrupted due to the failed decoding. Use debug level logging to see the original, non-corrupted values.
+ Note: further occurrences of Parameter errors will be logged at DEBUG level.
+2025-12-28 14:52:19.462 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-12-28 14:52:19.469 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-12-28 14:53:16.509 [restartedMain] INFO  com.weather.forecast.Application - Starting Application using Java 17.0.17 on DESKTOP-B4U5OFT with PID 2728 (C:\Users\giapt\OneDrive\Máy tính\J2EE_weather\target\classes started by giapt in C:\Users\giapt\OneDrive\Máy tính\J2EE_weather)
+2025-12-28 14:53:16.511 [restartedMain] INFO  com.weather.forecast.Application - No active profile set, falling back to 1 default profile: "default"
+2025-12-28 14:53:19.540 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-28 14:53:19.541 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-28 14:53:19.542 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.68]
+2025-12-28 14:53:19.689 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-28 14:53:20.616 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-28 14:53:21.095 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-28 14:53:23.646 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-28 14:53:23.803 [restartedMain] INFO  com.weather.forecast.Application - Started Application in 8.25 seconds (JVM running for 8.988)
+2025-12-28 14:53:32.957 [http-nio-8080-exec-1] INFO  o.a.tomcat.util.http.parser.Cookie - A cookie header was received [g_state={"i_l":0,"i_ll":1761962380141,"i_b":"Gfn1EG2nyF/Kf52WhZUhGlDs1MljjBhh1r+jKETh+B4","i_t":1762027889487};] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2025-12-28 14:53:32.974 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-28 14:53:33.636 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - Searching for city: Hà Nội
+2025-12-28 14:54:26.079 [http-nio-8080-exec-6] INFO  c.w.f.controller.WeatherController - Searching for city: Hà Nội
+2025-12-28 14:54:30.847 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - User searching for city (POST): Hồ Chí Minh
+2025-12-28 14:54:37.423 [http-nio-8080-exec-6] INFO  c.w.f.controller.WeatherController - Fetching hourly details for city: Hồ Chí Minh on date: 2025-12-28
+2025-12-28 14:54:40.207 [http-nio-8080-exec-10] INFO  c.w.f.controller.WeatherController - Searching for city: Hà Nội
+2025-12-28 14:54:45.195 [http-nio-8080-exec-5] INFO  c.w.f.controller.WeatherController - User searching for city (POST): Hồ Chí Minh
+2025-12-28 14:54:55.892 [http-nio-8080-exec-10] INFO  c.w.f.controller.WeatherController - Fetching hourly details for city: Hồ Chí Minh on date: 2025-12-28
+2025-12-28 14:55:01.080 [http-nio-8080-exec-2] INFO  c.w.f.controller.WeatherController - Searching for city: Hà Nội
+2025-12-28 14:55:05.704 [http-nio-8080-exec-8] INFO  c.w.f.controller.WeatherController - User searching for city (POST): Hồ Chí Minh
+2025-12-28 14:55:42.893 [http-nio-8080-exec-2] INFO  c.w.f.controller.WeatherController - Searching for city: Hà Nội
+2025-12-28 14:57:49.111 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - Searching for city: Hà Nội
+2025-12-28 14:58:27.169 [http-nio-8080-exec-6] INFO  c.w.f.controller.WeatherController - Searching for city: Hà Nội
+2025-12-28 14:58:39.236 [http-nio-8080-exec-10] INFO  c.w.f.controller.WeatherController - User searching for city (POST): Bình Định
+2025-12-28 15:14:13.791 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-12-28 15:14:13.822 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-12-28 15:22:19.980 [restartedMain] INFO  com.weather.forecast.Application - Starting Application using Java 17.0.17 on DESKTOP-B4U5OFT with PID 180 (C:\Users\giapt\OneDrive\Máy tính\J2EE_weather\target\classes started by giapt in C:\Users\giapt\OneDrive\Máy tính\J2EE_weather)
+2025-12-28 15:22:19.982 [restartedMain] INFO  com.weather.forecast.Application - No active profile set, falling back to 1 default profile: "default"
+2025-12-28 15:22:23.141 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-28 15:22:23.142 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-28 15:22:23.142 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.68]
+2025-12-28 15:22:23.326 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-28 15:22:24.294 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-28 15:22:24.593 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-28 15:22:27.045 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-28 15:22:27.147 [restartedMain] INFO  com.weather.forecast.Application - Started Application in 8.074 seconds (JVM running for 9.097)
+2025-12-28 15:22:38.836 [http-nio-8080-exec-1] INFO  o.a.tomcat.util.http.parser.Cookie - A cookie header was received [g_state={"i_l":0,"i_ll":1761962380141,"i_b":"Gfn1EG2nyF/Kf52WhZUhGlDs1MljjBhh1r+jKETh+B4","i_t":1762027889487};] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2025-12-28 15:22:38.847 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-28 15:22:39.550 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - Searching for city: Hà Nội
+2025-12-28 15:22:41.802 [task-1] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Hà Nội: 21.4°C, Ít mây
+2025-12-28 15:22:42.252 [task-2] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Hồ Chí Minh: 31.5°C, Trời quang
+2025-12-28 15:22:42.687 [task-3] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bình Định: 31.2°C, Trời quang
+2025-12-28 15:22:43.120 [task-4] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Ninh Thuận: 29.0°C, Nhiều mây
+2025-12-28 15:22:43.554 [task-5] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho An Giang: 23.2°C, Ít mây
+2025-12-28 15:22:43.977 [task-6] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Kiên Giang: 21.8°C, Nhiều mây
+2025-12-28 15:22:44.391 [task-7] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Đà Nẵng: 21.6°C, Nhiều mây
+2025-12-28 15:22:44.829 [task-8] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bình Thuận: 31.0°C, Nhiều mây
+2025-12-28 15:22:45.292 [task-1] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Khánh Hòa: 31.1°C, Trời quang
+2025-12-28 15:22:45.744 [task-2] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Cần Thơ: 30.8°C, Ít mây
+2025-12-28 15:22:46.193 [task-3] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Lâm Đồng: 22.8°C, Ít mây
+2025-12-28 15:22:46.641 [task-4] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Quảng Ninh: 20.8°C, Nhiều mây
+2025-12-28 15:22:47.142 [task-5] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Lào Cai: 18.5°C, Nhiều mây
+2025-12-28 15:22:57.449 [http-nio-8080-exec-6] INFO  c.w.f.controller.WeatherController - User searching for city (POST): Bình Định
+2025-12-28 15:22:57.862 [task-6] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bình Định: 31.2°C, Trời quang
+2025-12-28 15:23:30.448 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - Searching for city: Hà Nội
+2025-12-28 15:23:52.994 [http-nio-8080-exec-6] INFO  c.w.f.controller.WeatherController - User searching for city (POST): Hồ Chí Minh
+2025-12-28 15:23:53.440 [task-9] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Hồ Chí Minh: 31.5°C, Trời quang
+2025-12-28 15:24:39.359 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - User searching for city (POST): Huế
+2025-12-28 15:24:39.790 [task-10] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Huế: 23.0°C, Ít mây
+2025-12-28 15:24:40.228 [task-11] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Huế: 23.0°C, Ít mây
+2025-12-28 15:32:44.016 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-12-28 15:32:44.026 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-12-28 15:37:04.344 [restartedMain] INFO  com.weather.forecast.Application - Starting Application using Java 17.0.17 on DESKTOP-B4U5OFT with PID 4368 (C:\Users\giapt\OneDrive\Máy tính\J2EE_weather\target\classes started by giapt in C:\Users\giapt\OneDrive\Máy tính\J2EE_weather)
+2025-12-28 15:37:04.347 [restartedMain] INFO  com.weather.forecast.Application - No active profile set, falling back to 1 default profile: "default"
+2025-12-28 15:37:07.520 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-28 15:37:07.521 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-28 15:37:07.522 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.68]
+2025-12-28 15:37:07.933 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-28 15:37:09.217 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-28 15:37:09.609 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-28 15:37:11.464 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-28 15:37:11.583 [restartedMain] INFO  com.weather.forecast.Application - Started Application in 7.792 seconds (JVM running for 8.246)
+2025-12-28 15:39:01.750 [http-nio-8080-exec-2] INFO  o.a.tomcat.util.http.parser.Cookie - A cookie header was received [g_state={"i_l":0,"i_ll":1761962380141,"i_b":"Gfn1EG2nyF/Kf52WhZUhGlDs1MljjBhh1r+jKETh+B4","i_t":1762027889487};] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2025-12-28 15:39:01.780 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-28 15:39:02.867 [http-nio-8080-exec-2] INFO  c.w.f.controller.WeatherController - Searching for city: Hà Nội
+2025-12-28 15:39:02.867 [http-nio-8080-exec-3] INFO  c.w.f.controller.WeatherController - Searching for city: Hà Nội
+2025-12-28 15:39:05.581 [task-1] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Hà Nội: 21.4°C, Ít mây
+2025-12-28 15:39:05.621 [task-2] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Hà Nội ngày 2025-12-28: max=20.0781307220459°C, min=13.878056526184082°C
+2025-12-28 15:39:05.628 [task-2] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Hà Nội ngày 2025-12-29: max=20.0781307220459°C, min=13.878056526184082°C
+2025-12-28 15:39:05.637 [task-2] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Hà Nội ngày 2025-12-30: max=20.0781307220459°C, min=13.878056526184082°C
+2025-12-28 15:39:05.647 [task-2] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Hà Nội ngày 2025-12-31: max=20.0781307220459°C, min=13.878056526184082°C
+2025-12-28 15:39:05.656 [task-2] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Hà Nội ngày 2026-01-01: max=17.83587074279785°C, min=13.29872989654541°C
+2025-12-28 15:39:05.662 [task-2] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Hà Nội ngày 2026-01-02: max=17.83587074279785°C, min=13.29872989654541°C
+2025-12-28 15:39:05.667 [task-2] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Hà Nội ngày 2026-01-03: max=17.83587074279785°C, min=13.29872989654541°C
+2025-12-28 15:39:05.674 [task-2] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Hà Nội ngày 2026-01-04: max=17.83587074279785°C, min=13.29872989654541°C
+2025-12-28 15:39:05.839 [task-3] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Hà Nội: 21.4°C, Ít mây
+2025-12-28 15:39:06.015 [task-5] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Hồ Chí Minh: 31.4°C, Trời quang
+2025-12-28 15:39:06.342 [task-6] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Hồ Chí Minh: 31.4°C, Trời quang
+2025-12-28 15:39:06.449 [task-7] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bình Định: 31.2°C, Trời quang
+2025-12-28 15:39:06.745 [task-8] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bình Định: 31.2°C, Trời quang
+2025-12-28 15:39:06.861 [task-1] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Ninh Thuận: 28.8°C, Nhiều mây
+2025-12-28 15:39:07.168 [task-2] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Ninh Thuận: 28.8°C, Nhiều mây
+2025-12-28 15:39:07.348 [task-3] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho An Giang: 23.1°C, Ít mây
+2025-12-28 15:39:07.596 [task-4] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho An Giang: 23.1°C, Ít mây
+2025-12-28 15:39:07.768 [task-5] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Kiên Giang: 21.8°C, Nhiều mây
+2025-12-28 15:39:08.003 [task-6] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Kiên Giang: 21.8°C, Nhiều mây
+2025-12-28 15:39:08.185 [task-7] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Đà Nẵng: 21.5°C, Nhiều mây
+2025-12-28 15:39:08.409 [task-8] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Đà Nẵng: 21.5°C, Nhiều mây
+2025-12-28 15:39:08.602 [task-1] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bình Thuận: 30.8°C, Nhiều mây
+2025-12-28 15:39:08.828 [task-2] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bình Thuận: 30.8°C, Nhiều mây
+2025-12-28 15:39:09.025 [task-3] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Khánh Hòa: 31.0°C, Trời quang
+2025-12-28 15:39:09.235 [task-4] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Khánh Hòa: 31.0°C, Trời quang
+2025-12-28 15:39:09.432 [task-5] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Cần Thơ: 30.6°C, Ít mây
+2025-12-28 15:39:09.638 [task-6] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Cần Thơ: 30.6°C, Ít mây
+2025-12-28 15:39:09.846 [task-7] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Lâm Đồng: 22.7°C, Ít mây
+2025-12-28 15:39:10.325 [task-8] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Quảng Ninh: 20.5°C, Nhiều mây
+2025-12-28 15:39:10.728 [task-1] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Lâm Đồng: 22.7°C, Ít mây
+2025-12-28 15:39:10.736 [task-2] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Lào Cai: 18.5°C, Nhiều mây
+2025-12-28 15:39:11.142 [task-3] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Quảng Ninh: 20.5°C, Nhiều mây
+2025-12-28 15:39:11.579 [task-4] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Lào Cai: 18.5°C, Nhiều mây
+2025-12-28 15:39:19.772 [http-nio-8080-exec-7] INFO  c.w.f.controller.WeatherController - User searching for city (POST): Hồ Chí Minh
+2025-12-28 15:39:20.195 [task-5] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Hồ Chí Minh: 31.4°C, Trời quang
+2025-12-28 15:39:20.225 [task-6] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Hồ Chí Minh ngày 2025-12-28: max=29.935916900634766°C, min=22.38401985168457°C
+2025-12-28 15:39:20.229 [task-6] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Hồ Chí Minh ngày 2025-12-29: max=29.935916900634766°C, min=22.38401985168457°C
+2025-12-28 15:39:20.237 [task-6] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Hồ Chí Minh ngày 2025-12-30: max=29.935916900634766°C, min=22.38401985168457°C
+2025-12-28 15:39:20.242 [task-6] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Hồ Chí Minh ngày 2025-12-31: max=29.935916900634766°C, min=22.38401985168457°C
+2025-12-28 15:39:20.244 [task-6] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Hồ Chí Minh ngày 2026-01-01: max=29.604063034057617°C, min=21.96310043334961°C
+2025-12-28 15:39:20.254 [task-6] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Hồ Chí Minh ngày 2026-01-02: max=29.604063034057617°C, min=21.96310043334961°C
+2025-12-28 15:39:20.257 [task-6] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Hồ Chí Minh ngày 2026-01-03: max=29.604063034057617°C, min=21.96310043334961°C
+2025-12-28 15:39:20.263 [task-6] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Hồ Chí Minh ngày 2026-01-04: max=29.604063034057617°C, min=21.96310043334961°C
+2025-12-28 15:43:51.317 [restartedMain] INFO  com.weather.forecast.Application - Starting Application using Java 17.0.17 on DESKTOP-B4U5OFT with PID 12212 (C:\Users\giapt\OneDrive\Máy tính\J2EE_weather\target\classes started by giapt in C:\Users\giapt\OneDrive\Máy tính\J2EE_weather)
+2025-12-28 15:43:51.321 [restartedMain] INFO  com.weather.forecast.Application - No active profile set, falling back to 1 default profile: "default"
+2025-12-28 15:43:54.698 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-28 15:43:54.698 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-28 15:43:54.699 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.68]
+2025-12-28 15:43:54.884 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-28 15:43:56.049 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-28 15:43:56.438 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-28 15:43:58.363 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-28 15:43:58.439 [restartedMain] INFO  com.weather.forecast.Application - Started Application in 8.136 seconds (JVM running for 8.972)
+2025-12-28 15:43:58.502 [http-nio-8080-exec-1] INFO  o.a.tomcat.util.http.parser.Cookie - A cookie header was received [g_state={"i_l":0,"i_ll":1761962380141,"i_b":"Gfn1EG2nyF/Kf52WhZUhGlDs1MljjBhh1r+jKETh+B4","i_t":1762027889487};] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2025-12-28 15:43:58.508 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-28 15:44:40.913 [http-nio-8080-exec-3] INFO  o.apache.tomcat.util.http.Parameters - Character decoding failed. Parameter [token] with value [j2weather.%s@angtesas/ang/a222/TH@2] has been ignored. Note that the name and value quoted here may be corrupted due to the failed decoding. Use debug level logging to see the original, non-corrupted values.
+ Note: further occurrences of Parameter errors will be logged at DEBUG level.
+2025-12-28 15:45:41.686 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-12-28 15:45:41.690 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-12-28 15:47:07.677 [restartedMain] INFO  com.weather.forecast.Application - Starting Application using Java 17.0.17 on DESKTOP-B4U5OFT with PID 5600 (C:\Users\giapt\OneDrive\Máy tính\J2EE_weather\target\classes started by giapt in C:\Users\giapt\OneDrive\Máy tính\J2EE_weather)
+2025-12-28 15:47:07.678 [restartedMain] INFO  com.weather.forecast.Application - No active profile set, falling back to 1 default profile: "default"
+2025-12-28 15:47:10.449 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-28 15:47:10.450 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-28 15:47:10.452 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.68]
+2025-12-28 15:47:10.594 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-28 15:47:11.453 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-28 15:47:11.822 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-28 15:47:14.173 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-28 15:47:14.278 [restartedMain] INFO  com.weather.forecast.Application - Started Application in 7.344 seconds (JVM running for 8.145)
+2025-12-28 15:47:17.484 [http-nio-8080-exec-1] INFO  o.a.tomcat.util.http.parser.Cookie - A cookie header was received [g_state={"i_l":0,"i_ll":1761962380141,"i_b":"Gfn1EG2nyF/Kf52WhZUhGlDs1MljjBhh1r+jKETh+B4","i_t":1762027889487};] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2025-12-28 15:47:17.494 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-28 15:47:18.126 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - Searching for city: Hà Nội
+2025-12-28 15:47:20.588 [task-1] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Hà Nội: 21.2°C, Ít mây
+2025-12-28 15:47:21.030 [task-3] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Hồ Chí Minh: 31.3°C, Trời quang
+2025-12-28 15:47:21.445 [task-4] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bình Định: 31.1°C, Trời quang
+2025-12-28 15:47:21.892 [task-5] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Ninh Thuận: 28.5°C, Nhiều mây
+2025-12-28 15:47:22.311 [task-6] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho An Giang: 23.0°C, Ít mây
+2025-12-28 15:47:22.732 [task-7] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Kiên Giang: 21.6°C, Nhiều mây
+2025-12-28 15:47:23.156 [task-8] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Đà Nẵng: 21.5°C, Nhiều mây
+2025-12-28 15:47:23.589 [task-1] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bình Thuận: 30.5°C, Nhiều mây
+2025-12-28 15:47:24.004 [task-2] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Khánh Hòa: 31.0°C, Trời quang
+2025-12-28 15:47:24.414 [task-3] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Cần Thơ: 30.6°C, Ít mây
+2025-12-28 15:47:24.824 [task-4] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Lâm Đồng: 22.6°C, Ít mây
+2025-12-28 15:47:25.261 [task-5] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Quảng Ninh: 20.4°C, Nhiều mây
+2025-12-28 15:47:25.680 [task-6] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Lào Cai: 18.5°C, Nhiều mây
+2025-12-28 15:48:07.234 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-12-28 15:48:07.239 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-12-29 21:12:35.591 [restartedMain] INFO  com.weather.forecast.Application - Starting Application using Java 17.0.17 on DESKTOP-B4U5OFT with PID 14320 (C:\Users\giapt\OneDrive\Máy tính\J2EE_weather\target\classes started by giapt in C:\Users\giapt\OneDrive\Máy tính\J2EE_weather)
+2025-12-29 21:12:35.595 [restartedMain] INFO  com.weather.forecast.Application - No active profile set, falling back to 1 default profile: "default"
+2025-12-29 21:12:38.770 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-29 21:12:38.772 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-29 21:12:38.773 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.68]
+2025-12-29 21:12:38.951 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-29 21:12:40.100 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-29 21:12:40.561 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-29 21:12:43.417 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-29 21:12:43.537 [restartedMain] INFO  com.weather.forecast.Application - Started Application in 8.742 seconds (JVM running for 9.444)
+2025-12-29 21:12:54.038 [http-nio-8080-exec-1] INFO  o.a.tomcat.util.http.parser.Cookie - A cookie header was received [g_state={"i_l":0,"i_ll":1761962380141,"i_b":"Gfn1EG2nyF/Kf52WhZUhGlDs1MljjBhh1r+jKETh+B4","i_t":1762027889487}] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2025-12-29 21:12:54.050 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-29 21:12:54.643 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - Searching for city: Hà Nội
+2025-12-29 21:12:57.230 [task-1] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Hà Nội: 19.7°C, Nhiều mây
+2025-12-29 21:12:57.260 [task-2] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Hà Nội ngày 2026-01-05: max=17.83587074279785°C, min=13.29872989654541°C
+2025-12-29 21:12:57.684 [task-3] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Hồ Chí Minh: 24.1°C, Nhiều mây
+2025-12-29 21:12:58.150 [task-4] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bình Định: 26.0°C, Ít mây
+2025-12-29 21:12:58.608 [task-5] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Ninh Thuận: 22.9°C, Nhiều mây
+2025-12-29 21:12:59.065 [task-6] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho An Giang: 20.7°C, Ít mây
+2025-12-29 21:12:59.537 [task-7] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Kiên Giang: 20.3°C, Ít mây
+2025-12-29 21:12:59.997 [task-8] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Đà Nẵng: 19.7°C, Nhiều mây
+2025-12-29 21:13:00.452 [task-1] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bình Thuận: 25.1°C, Trời quang
+2025-12-29 21:13:00.941 [task-2] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Khánh Hòa: 26.0°C, Nhiều mây
+2025-12-29 21:13:01.396 [task-3] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Cần Thơ: 25.2°C, Ít mây
+2025-12-29 21:13:01.849 [task-4] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Lâm Đồng: 19.4°C, Nhiều mây
+2025-12-29 21:13:02.307 [task-5] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Quảng Ninh: 19.4°C, Ít mây
+2025-12-29 21:13:02.772 [task-6] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Lào Cai: 16.6°C, Ít mây
+2025-12-29 21:13:12.839 [http-nio-8080-exec-7] INFO  c.w.f.controller.WeatherController - User searching for city (POST): Bình Định
+2025-12-29 21:13:13.307 [task-7] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bình Định: 26.0°C, Ít mây
+2025-12-29 21:13:13.341 [task-8] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Bình Định ngày 2025-12-29: max=29.01207733154297°C, min=22.358966827392578°C
+2025-12-29 21:13:13.345 [task-8] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Bình Định ngày 2025-12-30: max=29.01207733154297°C, min=22.358966827392578°C
+2025-12-29 21:13:13.350 [task-8] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Bình Định ngày 2025-12-31: max=29.01207733154297°C, min=22.358966827392578°C
+2025-12-29 21:13:13.362 [task-8] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Bình Định ngày 2026-01-01: max=29.35793113708496°C, min=21.726627349853516°C
+2025-12-29 21:13:13.366 [task-8] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Bình Định ngày 2026-01-02: max=29.35793113708496°C, min=21.726627349853516°C
+2025-12-29 21:13:13.375 [task-8] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Bình Định ngày 2026-01-03: max=29.35793113708496°C, min=21.726627349853516°C
+2025-12-29 21:13:13.382 [task-8] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Bình Định ngày 2026-01-04: max=29.35793113708496°C, min=21.726627349853516°C
+2025-12-29 21:13:13.390 [task-8] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Bình Định ngày 2026-01-05: max=29.35793113708496°C, min=21.726627349853516°C
+2025-12-29 21:28:29.912 [Thread-5] INFO  o.a.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+2025-12-29 21:28:29.985 [Thread-5] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2025-12-29 21:28:30.044 [Thread-5] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Destroying Spring FrameworkServlet 'dispatcherServlet'
+2025-12-29 21:28:30.148 [Thread-5] INFO  o.a.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+2025-12-29 21:28:30.184 [Thread-5] INFO  o.a.coyote.http11.Http11NioProtocol - Destroying ProtocolHandler ["http-nio-8080"]
+2025-12-29 21:28:30.400 [Thread-5] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-12-29 21:28:30.599 [Thread-5] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-12-29 21:29:26.951 [restartedMain] INFO  com.weather.forecast.Application - Starting Application using Java 17.0.17 on DESKTOP-B4U5OFT with PID 14320 (C:\Users\giapt\OneDrive\Máy tính\J2EE_weather\target\classes started by giapt in C:\Users\giapt\OneDrive\Máy tính\J2EE_weather)
+2025-12-29 21:29:26.956 [restartedMain] INFO  com.weather.forecast.Application - No active profile set, falling back to 1 default profile: "default"
+2025-12-29 21:29:29.926 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-29 21:29:29.934 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.68]
+2025-12-29 21:29:30.111 [restartedMain] INFO  o.a.c.c.C.[Tomcat-2].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-29 21:29:30.964 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
+2025-12-29 21:29:31.318 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
+2025-12-29 21:29:36.152 [restartedMain] INFO  com.weather.forecast.Application - Started Application in 9.694 seconds (JVM running for 1022.059)
+2025-12-29 21:30:19.888 [http-nio-8080-exec-4] INFO  o.a.c.c.C.[Tomcat-2].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-29 21:30:26.439 [http-nio-8080-exec-4] INFO  c.w.f.controller.WeatherController - User searching for city (POST): Bình Định
+2025-12-29 21:30:29.445 [task-1] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bình Định: 25.6°C, Ít mây
+2025-12-29 21:30:30.733 [task-3] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Hồ Chí Minh: 24.0°C, Nhiều mây
+2025-12-29 21:30:31.210 [task-4] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bình Định: 25.6°C, Ít mây
+2025-12-29 21:30:31.658 [task-5] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Ninh Thuận: 22.8°C, Nhiều mây
+2025-12-29 21:30:32.125 [task-6] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho An Giang: 20.6°C, Ít mây
+2025-12-29 21:30:32.566 [task-7] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Kiên Giang: 20.1°C, Ít mây
+2025-12-29 21:30:33.029 [task-8] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Đà Nẵng: 19.6°C, Nhiều mây
+2025-12-29 21:30:33.548 [task-1] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bình Thuận: 25.0°C, Trời quang
+2025-12-29 21:30:34.010 [task-2] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Khánh Hòa: 25.8°C, Nhiều mây
+2025-12-29 21:30:34.464 [task-3] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Cần Thơ: 24.8°C, Ít mây
+2025-12-29 21:30:34.925 [task-4] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Lâm Đồng: 19.3°C, Nhiều mây
+2025-12-29 21:30:35.388 [task-5] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Quảng Ninh: 19.2°C, Ít mây
+2025-12-29 21:30:35.865 [task-6] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Lào Cai: 16.4°C, Ít mây
+2025-12-29 23:00:00.099 [scheduling-1] INFO  c.w.f.s.PredictionResultService - Bắt đầu verify predictions...
+2025-12-29 23:00:00.489 [scheduling-1] INFO  c.w.f.s.PredictionResultService - Hoàn thành verify: 0/2 predictions
+2025-12-30 08:53:19.687 [restartedMain] INFO  com.weather.forecast.Application - Starting Application using Java 17.0.17 on DESKTOP-B4U5OFT with PID 11188 (C:\Users\giapt\OneDrive\Máy tính\J2EE_weather\target\classes started by giapt in C:\Users\giapt\OneDrive\Máy tính\J2EE_weather)
+2025-12-30 08:53:19.693 [restartedMain] INFO  com.weather.forecast.Application - No active profile set, falling back to 1 default profile: "default"
+2025-12-30 08:53:24.526 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-30 08:53:24.528 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-30 08:53:24.530 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.68]
+2025-12-30 08:53:24.912 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-30 08:53:27.208 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-30 08:53:28.461 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-30 08:53:32.121 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-30 08:53:32.290 [restartedMain] INFO  com.weather.forecast.Application - Started Application in 14.294 seconds (JVM running for 16.086)
+2025-12-30 08:53:33.959 [http-nio-8080-exec-1] INFO  o.a.tomcat.util.http.parser.Cookie - A cookie header was received [g_state={"i_l":0,"i_ll":1761962380141,"i_b":"Gfn1EG2nyF/Kf52WhZUhGlDs1MljjBhh1r+jKETh+B4","i_t":1762027889487}] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2025-12-30 08:53:33.994 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-30 08:53:35.316 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - Searching for city: Hà Nội
+2025-12-30 08:53:40.350 [task-1] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Hà Nội: 20.4°C, Nhiều mây
+2025-12-30 08:53:40.573 [task-2] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Hà Nội ngày 2026-01-06: max=17.83587074279785°C, min=13.29872989654541°C
+2025-12-30 08:53:41.537 [task-3] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Hồ Chí Minh: 25.4°C, Trời quang
+2025-12-30 08:53:42.560 [task-4] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bình Định: 25.5°C, Ít mây
+2025-12-30 08:53:43.445 [task-5] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Ninh Thuận: 24.5°C, Trời quang
+2025-12-30 08:53:44.400 [task-6] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho An Giang: 22.5°C, Ít mây
+2025-12-30 08:53:45.119 [task-7] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Kiên Giang: 21.8°C, Ít mây
+2025-12-30 08:53:45.947 [task-8] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Đà Nẵng: 21.3°C, Ít mây
+2025-12-30 08:53:46.592 [task-1] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bình Thuận: 26.2°C, Ít mây
+2025-12-30 08:53:47.183 [task-2] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Khánh Hòa: 25.1°C, Ít mây
+2025-12-30 08:53:47.902 [task-3] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Cần Thơ: 25.7°C, Trời quang
+2025-12-30 08:53:48.595 [task-4] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Lâm Đồng: 20.2°C, Nhiều mây
+2025-12-30 08:53:49.320 [task-5] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Quảng Ninh: 20.6°C, Sương mù
+2025-12-30 08:53:50.035 [task-6] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Lào Cai: 17.9°C, Nhiều mây
+2025-12-30 08:53:56.448 [http-nio-8080-exec-7] INFO  c.w.f.controller.WeatherController - User searching for city (POST): Hồ Chí Minh
+2025-12-30 08:53:57.203 [task-7] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Hồ Chí Minh: 25.4°C, Trời quang
+2025-12-30 08:53:57.355 [task-8] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Hồ Chí Minh ngày 2026-01-05: max=29.604063034057617°C, min=21.96310043334961°C
+2025-12-30 08:53:57.367 [task-8] INFO  c.w.f.s.PredictionResultService - ✓ Đã lưu prediction cho Hồ Chí Minh ngày 2026-01-06: max=29.604063034057617°C, min=21.96310043334961°C
+2025-12-30 08:54:04.799 [http-nio-8080-exec-4] INFO  c.w.f.controller.WeatherController - Fetching hourly details for city: Hồ Chí Minh on date: 2025-12-30
+2025-12-30 08:57:54.330 [http-nio-8080-exec-9] INFO  c.w.f.controller.WeatherController - Searching for city: Hà Nội
+2025-12-30 08:58:08.281 [http-nio-8080-exec-6] INFO  c.w.f.controller.WeatherController - Fetching weather fragment for city: Quảng Trị
+2025-12-30 08:58:10.712 [http-nio-8080-exec-5] INFO  c.w.f.controller.WeatherController - Fetching weather fragment for city: Cao Bằng
+2025-12-30 08:58:11.281 [task-10] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Quảng Trị: 20.2°C, Nhiều mây
+2025-12-30 08:58:12.305 [http-nio-8080-exec-7] INFO  c.w.f.controller.WeatherController - Fetching weather fragment for city: Hà Giang
+2025-12-30 08:58:12.734 [task-11] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Cao Bằng: 17.1°C, Nhiều mây
+2025-12-30 08:58:13.010 [task-12] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Hà Giang: 15.6°C, Ít mây
+2025-12-30 08:58:13.025 [http-nio-8080-exec-10] INFO  c.w.f.controller.WeatherController - Fetching weather fragment for city: Bắc Kạn
+2025-12-30 08:58:13.548 [http-nio-8080-exec-8] INFO  c.w.f.controller.WeatherController - Fetching weather fragment for city: Lạng Sơn
+2025-12-30 08:58:13.855 [task-13] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bắc Kạn: 17.4°C, Nhiều mây
+2025-12-30 08:58:14.282 [task-14] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Lạng Sơn: 17.1°C, Nhiều mây
+2025-12-30 08:58:14.363 [http-nio-8080-exec-9] INFO  c.w.f.controller.WeatherController - Fetching weather fragment for city: Tuyên Quang
+2025-12-30 08:58:15.221 [task-15] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Tuyên Quang: 19.8°C, Nhiều mây
+2025-12-30 08:58:16.026 [http-nio-8080-exec-2] INFO  c.w.f.controller.WeatherController - Fetching weather fragment for city: Thái Nguyên
+2025-12-30 08:58:16.809 [task-16] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Thái Nguyên: 19.0°C, Nhiều mây
+2025-12-30 08:58:17.307 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - Fetching weather fragment for city: Phú Thọ
+2025-12-30 08:58:18.134 [task-9] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Phú Thọ: 19.0°C, Nhiều mây
+2025-12-30 08:58:18.680 [http-nio-8080-exec-4] INFO  c.w.f.controller.WeatherController - Fetching weather fragment for city: Bắc Giang
+2025-12-30 08:58:19.604 [task-10] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bắc Giang: 19.9°C, Nhiều mây
+2025-12-30 08:58:28.175 [http-nio-8080-exec-9] INFO  c.w.f.controller.WeatherController - API request for chart data for city: Hà Nội
+2025-12-30 09:01:30.513 [http-nio-8080-exec-1] INFO  c.w.f.controller.WeatherController - Searching for city: Hà Nội
+2025-12-30 09:01:34.323 [task-17] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Hà Nội: 20.5°C, Nhiều mây
+2025-12-30 09:01:35.346 [task-19] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Hồ Chí Minh: 25.8°C, Ít mây
+2025-12-30 09:01:36.400 [task-20] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bình Định: 25.7°C, Ít mây
+2025-12-30 09:01:37.337 [task-21] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Ninh Thuận: 24.7°C, Trời quang
+2025-12-30 09:01:39.148 [task-22] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho An Giang: 22.5°C, Ít mây
+2025-12-30 09:01:39.991 [http-nio-8080-exec-5] INFO  c.w.f.controller.WeatherController - Searching for city: Hà Nội
+2025-12-30 09:01:40.476 [task-24] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Kiên Giang: 22.0°C, Ít mây
+2025-12-30 09:01:42.738 [task-17] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Đà Nẵng: 21.5°C, Ít mây
+2025-12-30 09:01:43.254 [task-18] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Hồ Chí Minh: 25.8°C, Ít mây
+2025-12-30 09:01:43.976 [task-19] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bình Định: 25.7°C, Ít mây
+2025-12-30 09:01:44.669 [task-20] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Ninh Thuận: 24.7°C, Trời quang
+2025-12-30 09:01:45.224 [task-21] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho An Giang: 22.5°C, Ít mây
+2025-12-30 09:01:45.410 [task-22] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bình Thuận: 26.5°C, Nhiều mây
+2025-12-30 09:01:45.892 [task-23] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Kiên Giang: 22.0°C, Ít mây
+2025-12-30 09:01:49.741 [task-24] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Khánh Hòa: 25.5°C, Ít mây
+2025-12-30 09:01:50.091 [task-17] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Đà Nẵng: 21.5°C, Ít mây
+2025-12-30 09:01:50.704 [task-18] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Cần Thơ: 26.0°C, Trời quang
+2025-12-30 09:01:51.325 [task-19] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Bình Thuận: 26.5°C, Nhiều mây
+2025-12-30 09:01:51.578 [task-20] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Lâm Đồng: 20.5°C, Nhiều mây
+2025-12-30 09:01:52.669 [task-21] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Quảng Ninh: 21.0°C, Nhiều mây
+2025-12-30 09:01:52.670 [task-22] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Khánh Hòa: 25.5°C, Ít mây
+2025-12-30 09:01:53.854 [task-24] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Cần Thơ: 26.0°C, Trời quang
+2025-12-30 09:01:53.854 [task-23] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Lào Cai: 18.1°C, Nhiều mây
+2025-12-30 09:01:54.760 [task-17] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Lâm Đồng: 20.5°C, Nhiều mây
+2025-12-30 09:01:57.276 [http-nio-8080-exec-6] INFO  c.w.f.controller.WeatherController - Searching for city: Hà Nội
+2025-12-30 09:01:57.785 [task-19] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Quảng Ninh: 21.0°C, Nhiều mây
+2025-12-30 09:01:59.346 [task-20] INFO  c.w.f.service.WeatherLogService - ✓ Đã lưu weather log cho Lào Cai: 18.1°C, Nhiều mây
+2025-12-30 09:02:52.105 [http-nio-8080-exec-4] WARN  o.a.c.util.SessionIdGeneratorBase - Creation of SecureRandom instance for session ID generation using [SHA1PRNG] took [110] milliseconds.
+2025-12-30 09:02:52.141 [http-nio-8080-exec-2] INFO  o.apache.tomcat.util.http.Parameters - Character decoding failed. Parameter [token] with value [j2weather.%s@angtesas/ang/a222/TH@2] has been ignored. Note that the name and value quoted here may be corrupted due to the failed decoding. Use debug level logging to see the original, non-corrupted values.
+ Note: further occurrences of Parameter errors will be logged at DEBUG level.
+2025-12-30 09:02:53.612 [http-nio-8080-exec-8] INFO  c.w.f.controller.WeatherController - Searching for city: Hà Nội
+2025-12-30 09:11:45.056 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-12-30 09:11:45.088 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

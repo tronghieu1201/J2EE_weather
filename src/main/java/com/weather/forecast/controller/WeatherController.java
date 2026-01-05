@@ -57,7 +57,7 @@ public class WeatherController {
     public String index(@RequestParam(name = "city", required = false) String city, Model model) {
         model.addAttribute("groupedCities", groupedCities);
         if (city == null || city.isEmpty()) {
-            city = "Hà Nội";
+            city = "Hồ Chí Minh";
         }
         logger.info("Searching for city: {}", city);
 
@@ -107,7 +107,7 @@ public class WeatherController {
     @GetMapping("/chart")
     public String showChart(@RequestParam(name = "city", required = false) String city, Model model) {
         if (city == null || city.isEmpty()) {
-            city = "Hà Nội"; // Default city
+            city = "Hồ Chí Minh"; // Default city
         }
         model.addAttribute("city", city);
         model.addAttribute("groupedCities", groupedCities); // For the navbar dropdown
@@ -293,7 +293,7 @@ public class WeatherController {
     @GetMapping("/get-weather-fragment")
     public String getWeatherFragment(@RequestParam(name = "city", required = false) String city, Model model) {
         if (city == null || city.isEmpty()) {
-            city = "Hà Nội";
+            city = "Hồ Chí Minh";
         }
         logger.info("Fetching weather fragment for city: {}", city);
 

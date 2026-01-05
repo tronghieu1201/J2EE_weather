@@ -1,0 +1,11 @@
+# Maven
+target/
+
+# Node
+node_modules/
+
+# Logs
+*.log
+
+# Binary
+*.exe
